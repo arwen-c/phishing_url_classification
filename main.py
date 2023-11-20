@@ -28,6 +28,6 @@ train_y = matrix_to_list(train_y)
 # transformation of the data into a feature vector
 
 
-# build different model to predict if a URL is a phishing URL or not
+# build different model to predict if a URL is a phishing URL or not. Begin with the most simplest ones (naive bayes and support vector machines)
 
 # test the models on the data, compare the performance of the different models

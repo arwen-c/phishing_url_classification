@@ -18,8 +18,9 @@ def int_to_char(x):
     res = "".join(
         [list(char_to_int.keys())[list(char_to_int.values()).index(i)] for i in x]
     )
+
     # remove from res the beginning of the string that had zero as a value
-    res = res[res.find("h") :]  # is every string starting with 'h'?
+    res = res.lstrip("补")
     return res
 
 
