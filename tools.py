@@ -1,9 +1,4 @@
-import os
-
 import numpy
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 from sklearn import svm, gaussianNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
@@ -16,25 +11,6 @@ def data_cleansing(dataframe):
     # remove the data with missing values
     dataframe = dataframe.dropna(subset=["URL"])
     pass
-
-
-# Transform the data back into string using the char_to_int dictionary
-def int_to_char(x):
-    res = "".join(
-        [list(char_to_int.keys())[list(char_to_int.values()).index(i)] for i in x]
-    )
-
-    # remove from res the beginning of the string that had zero as a value
-    res = res.lstrip("补")
-    return res
-
-
-# function that transforms the whole matrix into a list of strings
-def matrix_to_list(x):
-    res = []
-    for i in range(x.shape[0]):
-        res.append(int_to_char(x[i]))
-    return res
 
 
 # transformation of the data into a feature vector
