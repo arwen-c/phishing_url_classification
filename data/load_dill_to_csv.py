@@ -1,11 +1,11 @@
 import dill
+import pandas
 from tqdm import tqdm
 
 
 # the data used right now is coming from the following link: https://github.com/vonpower/PhishingDataset
 # the data is already cleaned and ready to be used, str has been converted into numbers and the data has been split into train, validation and test set. Methodology for describing the conversion from str to numbers is described in the paper: [7] An Effective Phishing Detection Model Based on Character Level Convolutional Neural Network from URL.pdf
-def load_data():
-    dill_file = "vonDataset20180426.dill"
+def load_data(dill_file):
     with open(dill_file, "rb") as f:
         pickleData = dill.load(f)
         ds_train_raw_x, ds_train_raw_y = pickleData["train_x"], pickleData["train_y"]
@@ -31,18 +31,27 @@ def load_data():
     for i, x in enumerate(ds_test_raw_x):
         ds_test_x.append("".join([int_to_char[y] for y in x if y != 0]))
 
-    return ds_train_x, train_y, ds_val_raw_x, ds_val_raw_y, ds_test_raw_x, ds_test_raw_y
+    df_train = pandas.DataFrame()
+    df_train["train_x"] = ds_train_x
+    df_train["train_y"] = ds_train_raw_y
+
+    df_val = pandas.DataFrame()
+    df_val["val_x"] = ds_val_x
+    df_val["val_y"] = ds_val_raw_y
+
+    df_test = pandas.DataFrame()
+    df_test["test_x"] = ds_test_x
+    df_test["test_y"] = ds_test_raw_y
+
+    return df_train, df_val, df_test
 
 
 if __name__ == "__main__":
-    train_x, train_y, val_x, val_y, test_x, test_y = load_data()
+    train_df, val_df, test_df = load_data("vonDataset20180426.dill")
 
-    print("Feature Shapes:\n")
-    print(
-        "Train set: {}".format(train_x.shape),
-        " Validation set: {}".format(val_x.shape),
-        " Test set: {}".format(test_x.shape),
-    )
+    train_df.to_csv("train_x.csv")
+    val_df.to_csv("val_x.csv")
+    test_df.to_csv("test_x.csv")
 
     # transformation of the data into a feature vector
 
