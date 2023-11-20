@@ -1,15 +1,20 @@
 import os
+
+import numpy
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn import svm, gaussianNB
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import MultinomialNB
 
 
 def data_cleansing(dataframe):
     # Remove duplicates and update the dataframe
-    global_dataframe = global_dataframe.drop_duplicates()
+    dataframe = dataframe.drop_duplicates()
 
     # remove the data with missing values
-    global_dataframe = global_dataframe.dropna(subset=["URL"])
+    dataframe = dataframe.dropna(subset=["URL"])
     pass
 
 
@@ -49,3 +54,24 @@ def feature_vector(x):
 
     # word detection and random word detection
     pass
+
+
+def machine_learning_models (x :numpy.ndarray[int],y :numpy.ndarray[int]):
+    # Implementation of Logistic Regression
+    logistic_classifier = LogisticRegression(penalty='l2', *, dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1,class_weight=None, random_state=None, solver='lbfgs', max_iter=100, multi_class='auto',verbose=0, warm_start=False, n_jobs=None, l1_ratio=None)
+    logistic_classifier.fit(x, y)
+    logistic_score = logistic_classifier.score(x, y)
+    print("logistic_score", logistic_score)
+    # Implementation on support vector machines
+    svm_classifier = svm.SVC()
+    svm_classifier.fit(x, y)
+    svm_score = svm_classifier.score(x, y)
+    print("svm_score", svm_score)
+    #implementation of Naive Bayes
+    bayes_classifier = MultinomialNB(force_alpha=True)
+    bayes_classifier.fit(x, y)
+    bayes_score = bayes_classifier.score(x, y)
+    print("bayes_score",bayes_score)
+    return logistic_score,svm_score,bayes_score
+
+
