@@ -4,6 +4,7 @@ import numpy
 from sklearn import preprocessing, svm, tree, ensemble
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
 
 
 def data_cleansing(dataframe):
@@ -65,7 +66,17 @@ def feature_vector(x: numpy.ndarray[str]) -> numpy.ndarray[int]:
         vector[i][7] = url.count("http")
         vector[i][8] = int(url_tld.domain == url_tld.ipv4)
         # suspicious word detection
-        suspicious_words = ["token", "confirm", "security", "PayPal", "login", "signin", "bank", "account", "update"]
+        suspicious_words = [
+            "token",
+            "confirm",
+            "security",
+            "PayPal",
+            "login",
+            "signin",
+            "bank",
+            "account",
+            "update",
+        ]
         for word in suspicious_words:
             vector[i][9] += url.count(word)
         # top level domain detection: give the rank of the first character of the top level domain in the url
@@ -74,29 +85,27 @@ def feature_vector(x: numpy.ndarray[str]) -> numpy.ndarray[int]:
     # word detection and random word detection
     ### TODO to add more high level features
 
-    # normalization of the data
-    scaler = preprocessing.StandardScaler().fit(vector)
-    vector_scaled = scaler.transform(vector)
-    return vector_scaled
+    return vector
 
 
 def machine_learning_models(x: numpy.ndarray[int], y: numpy.ndarray[int]):
+    # Preprocessing for logistic regression and svm
+    scaler = preprocessing.StandardScaler()
+    scaler.fit(x)
+    x_scaled = scaler.transform(x)
     # Implementation of Logistic Regression
-    logistic_classifier = LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, fit_intercept=True,
-                                             intercept_scaling=1, class_weight=None, random_state=None, solver='lbfgs',
-                                             max_iter=100, multi_class='auto', verbose=0, warm_start=False, n_jobs=None,
-                                             l1_ratio=None)
-    logistic_classifier.fit(x, y)
-    logistic_score = logistic_classifier.score(x, y)
+    logistic_classifier = LogisticRegression(penalty="l2")
+    logistic_classifier.fit(x_scaled, y)
+    logistic_score = logistic_classifier.score(x_scaled, y)
     print("logistic_score", logistic_score)
-    # Implementation on support vector machines
-    svm_classifier = svm.SVC()
-    svm_classifier.fit(x, y)
-    svm_score = svm_classifier.score(x, y)
-    print("svm_score", svm_score)
     # implementation of Naive Bayes
     bayes_classifier = MultinomialNB(force_alpha=True)
     bayes_classifier.fit(x, y)
     bayes_score = bayes_classifier.score(x, y)
     print("bayes_score", bayes_score)
-    return logistic_classifier, svm_classifier, bayes_classifier
+    # Implementation on support vector machines
+    svm_classifier = svm.SVC(gamma="auto", max_iter=100)
+    svm_classifier.fit(x_scaled, y)
+    svm_score = svm_classifier.score(x_scaled, y)
+    print("svm_score", svm_score)
+    return logistic_classifier, bayes_classifier, svm_classifier
