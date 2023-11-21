@@ -1,6 +1,7 @@
 import tldextract
+from tqdm import tqdm
 import numpy
-from sklearn import svm, gaussianNB
+from sklearn import preprocessing, svm, tree, ensemble
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
 
@@ -28,30 +29,55 @@ def data_cleansing(dataframe):
 
 def feature_vector(x: numpy.ndarray[str]) -> numpy.ndarray[int]:
     """
-    functions that transform the data into a 10 feature vector
+    functions that transform the data into a feature vector, inspired by the article PHISH-SAFE URL Features based Phishing Detection System using Machine Learning.pdf
     feature 1 : number of dots in the URL
     feature 2 : number of hyphens in the URL
     feature 3 : number of @ in the URL
-    feature 4 : lenght of the URL
+    feature 4 : length of the URL
     feature 5 : number of digits in the URL
+    feature 6 : number of // in the URL
+    feature 7 : use of "HTTPS"
+    feature 8 : number of time "HTTP" appears
+    feature 9 : 1 if the IP address is used rather than the domain, 0 otherwise
+    feature 10 : detection of suspicious word. equals to the number of the suspicious words, the suspicious word being in the list [token, confirm, security, PayPal, login, signin, bank, account, update]
+    feature 11 : Position of Top-Level Domain: This feature checks the position of top-level domain at proper place in URL.
 
+    Have been used in the article but won't be used in our implementation:
+    Domains count in URL: Phishing URL may contain more than one domain in URL. Two or more domains is used to redirect address.
+    DNS lookup: If the DNS record is not available then the website is phishing. The life of phishing site is very short, therefore; this DNS information may notbe available after some time.
+    Inconsistent URL: If the domain name of suspicious web page is not matched  with the WHOIS database record, then the web page is considered as phishing.
+    Age of Domain: If the age of website is less than 6 month, then chances of fake web page are more.
 
     :param x:
-    :return a vector of size 10 times the number of URL:
+    :return a vector of size number of URL * 11 :
     """
-    vector = numpy.array([x.shape[0], 10])
+    vector = numpy.zeros([x.shape[0], 11])
     # handcrafted straight forward features
-    for i, url in enumerate(x):
+    for i, url in enumerate(tqdm(x)):
+        url_tld = tldextract.extract(url)  # https://pypi.org/project/tldextract/
         vector[i][0] = url.count(".")
         vector[i][1] = url.count("-")
         vector[i][2] = url.count("@")
         vector[i][3] = len(url)
         vector[i][4] = sum(c.isdigit() for c in url)
+        vector[i][5] = url.count("//")
+        vector[i][6] = url.count("https")
+        vector[i][7] = url.count("http")
+        vector[i][8] = int(url_tld.domain == url_tld.ipv4)
+        # suspicious word detection
+        suspicious_words = ["token", "confirm", "security", "PayPal", "login", "signin", "bank", "account", "update"]
+        for word in suspicious_words:
+            vector[i][9] += url.count(word)
+        # top level domain detection: give the rank of the first character of the top level domain in the url
+        vector[i][10] = url.find(url_tld.suffix)
 
     # word detection and random word detection
-    for url in x:
-        tldextract.extract(url)  # https://pypi.org/project/tldextract/
-    return vector
+    ### TODO to add more high level features
+
+    # normalization of the data
+    scaler = preprocessing.StandardScaler().fit(vector)
+    vector_scaled = scaler.transform(vector)
+    return vector_scaled
 
 
 def machine_learning_models(x: numpy.ndarray[int], y: numpy.ndarray[int]):
@@ -73,4 +99,4 @@ def machine_learning_models(x: numpy.ndarray[int], y: numpy.ndarray[int]):
     bayes_classifier.fit(x, y)
     bayes_score = bayes_classifier.score(x, y)
     print("bayes_score", bayes_score)
-    return logistic_score, svm_score, bayes_score
+    return logistic_classifier, svm_classifier, bayes_classifier

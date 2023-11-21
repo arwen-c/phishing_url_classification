@@ -20,9 +20,6 @@ def load_data(dill_file):
     for i, x in enumerate(tqdm(ds_train_raw_x)):
         ds_train_x.append("".join([int_to_char[y] for y in x if y != 0]))
 
-    for i, x in enumerate(tqdm(ds_train_raw_x)):
-        ds_train_x.append("".join([int_to_char[y] for y in x if y != 0]))
-
     ds_val_x = []
     for i, x in enumerate(tqdm(ds_val_raw_x)):
         ds_val_x.append("".join([int_to_char[y] for y in x if y != 0]))
@@ -53,8 +50,3 @@ if __name__ == "__main__":
     val_df.to_csv("val_x.csv")
     test_df.to_csv("test_x.csv")
 
-    # transformation of the data into a feature vector
-
-    # build different model to predict if a URL is a phishing URL or not. Begin with the most simplest ones (naive bayes and support vector machines)
-
-    # test the models on the data, compare the performance of the different models
