@@ -25,7 +25,7 @@ def load_data(dill_file):
         ds_val_x.append("".join([int_to_char[y] for y in x if y != 0]))
 
     ds_test_x = []
-    for i, x in enumerate(ds_test_raw_x):
+    for i, x in enumerate(tqdm(ds_test_raw_x)):
         ds_test_x.append("".join([int_to_char[y] for y in x if y != 0]))
 
     df_train = pandas.DataFrame()
@@ -49,4 +49,3 @@ if __name__ == "__main__":
     train_df.to_csv("train_x.csv")
     val_df.to_csv("val_x.csv")
     test_df.to_csv("test_x.csv")
-
