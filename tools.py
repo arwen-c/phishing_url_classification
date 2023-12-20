@@ -83,7 +83,7 @@ def feature_vector(x: numpy.ndarray[str]) -> numpy.ndarray[int]:
         vector[i][10] = url.find(url_tld.suffix)
 
     # word detection and random word detection
-    ### TODO to add more high level features
+    ### TODO  add more high level features
 
     return vector
 
