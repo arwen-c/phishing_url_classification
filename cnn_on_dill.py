@@ -3,7 +3,7 @@ import os
 import dill
 import keras
 import matplotlib.pyplot as plt
-from keras import layers, losses
+from keras import layers, losses, models
 
 
 # 1: Load data from .dill file
@@ -98,7 +98,7 @@ if __name__ == "__main__":
     # # Step 2: Define the model hyperparameters
     # load_model = False
     # if load_model:
-    #     model = keras.models.load_model("models/dnn.keras")
+    #     model = keras.models.load_model("models/cnn.keras")
     # else:
     #     tuner = kt.Hyperband(
     #         model_builder_cnn_character_level,
@@ -120,49 +120,56 @@ if __name__ == "__main__":
     #     print(best_hps)
     #
     #     model = tuner.hypermodel.build(best_hps)
-    model = model_builder_cnn_character_level()
-    epochs = 10
-    history = model.fit(
-        X_train,
-        y_train,
-        validation_data=[X_val],
-        epochs=epochs,
-    )
 
-    if not os.path.exists("models"):
-        os.mkdir("models")
+    train = False
+    if train:
+        model = model_builder_cnn_character_level()
+        epochs = 10
+        history = model.fit(
+            X_train,
+            y_train,
+            validation_data=[X_val],
+            epochs=epochs,
+        )
 
-    model.save("models/dnn.keras")
+        if not os.path.exists("models"):
+            os.mkdir("models")
 
-    loss, accuracy = model.evaluate(X_test)
+        model.save("models/cnn.keras")
 
-    print("Loss: ", loss)
-    print("Accuracy: ", accuracy)
+    else:
+        model = models.load_model("models/cnn.keras")
 
-    history_dict = history.history
-    acc = history_dict["binary_accuracy"]
-    val_acc = history_dict["val_binary_accuracy"]
-    loss = history_dict["loss"]
-    val_loss = history_dict["val_loss"]
-
-    epochs = range(1, len(acc) + 1)
-
-    # "bo" is for "blue dot"
-    plt.plot(epochs, loss, "bo", label="Training loss")
-    # b is for "solid blue line"
-    plt.plot(epochs, val_loss, "b", label="Validation loss")
-    plt.title("Training and validation loss")
-    plt.xlabel("Epochs")
-    plt.ylabel("Loss")
-    plt.legend()
-
-    plt.show()
-
-    plt.plot(epochs, acc, "bo", label="Training acc")
-    plt.plot(epochs, val_acc, "b", label="Validation acc")
-    plt.title("Training and validation accuracy")
-    plt.xlabel("Epochs")
-    plt.ylabel("Accuracy")
-    plt.legend(loc="lower right")
-
-    plt.show()
+    result = model.evaluate(X_test, y_test)
+    print(result)
+    #
+    # print("Loss: ", loss)
+    # print("Accuracy: ", accuracy)
+    #
+    # history_dict = history.history
+    # acc = history_dict["binary_accuracy"]
+    # val_acc = history_dict["val_binary_accuracy"]
+    # loss = history_dict["loss"]
+    # val_loss = history_dict["val_loss"]
+    #
+    # epochs = range(1, len(acc) + 1)
+    #
+    # # "bo" is for "blue dot"
+    # plt.plot(epochs, loss, "bo", label="Training loss")
+    # # b is for "solid blue line"
+    # plt.plot(epochs, val_loss, "b", label="Validation loss")
+    # plt.title("Training and validation loss")
+    # plt.xlabel("Epochs")
+    # plt.ylabel("Loss")
+    # plt.legend()
+    #
+    # plt.show()
+    #
+    # plt.plot(epochs, acc, "bo", label="Training acc")
+    # plt.plot(epochs, val_acc, "b", label="Validation acc")
+    # plt.title("Training and validation accuracy")
+    # plt.xlabel("Epochs")
+    # plt.ylabel("Accuracy")
+    # plt.legend(loc="lower right")
+    #
+    # plt.show()

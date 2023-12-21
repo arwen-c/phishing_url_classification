@@ -73,7 +73,6 @@ def model_builder_cnn(hp):
     pass
 
 
-
 if __name__ == "__main__":
     model_builder = model_builder_cnn
     BATCH_SIZE = 1000
@@ -130,7 +129,7 @@ if __name__ == "__main__":
     test_ds = test_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
     if load_model:
-        model = keras.models.load_model("models/dnn.keras")
+        model = keras.models.load_model("models/cnn.keras")
     else:
         tuner = kt.Hyperband(
             model_builder,
@@ -163,7 +162,7 @@ if __name__ == "__main__":
     if not os.path.exists("models"):
         os.mkdir("models")
 
-    model.save("models/dnn.keras")
+    model.save("models/cnn.keras")
 
     loss, accuracy = model.evaluate(test_ds)
 
