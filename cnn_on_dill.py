@@ -1,9 +1,19 @@
-import os
-
 import dill
 import keras
-import matplotlib.pyplot as plt
-from keras import layers, losses, models
+from keras import layers, losses
+from tensorflow.keras.utils import to_categorical
+
+import tensorflow as tf
+
+# This line must be executed before any other TensorFlow-related code
+gpus = tf.config.experimental.list_physical_devices('GPU')
+if gpus:
+    try:
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+    except RuntimeError as e:
+        # Memory growth must be set before GPUs have been initialized
+        print(e)
 
 
 # 1: Load data from .dill file
@@ -25,9 +35,6 @@ def load_data(dill_file):
         )
 
 
-load_data("data/vonDataset20180426.dill")
-
-
 # 2: Define the CNN model using Keras
 def model_builder_cnn_character_level(hp=None):
     """
@@ -46,7 +53,6 @@ def model_builder_cnn_character_level(hp=None):
                 kernel_size=3,
                 filters=256,
                 activation="relu",
-                # input_shape=(None, 150),
             ),
             layers.MaxPooling1D(pool_size=3),
             layers.Convolution1D(kernel_size=3, filters=256, activation="relu"),
@@ -57,119 +63,86 @@ def model_builder_cnn_character_level(hp=None):
             layers.Convolution1D(kernel_size=7, filters=256, activation="relu"),
             layers.MaxPooling1D(pool_size=3),
             layers.Flatten(),
-            layers.Dense(1, activation="relu", input_shape=(None, 150)),
+            layers.Dense(2048, activation="relu"),
             layers.Dropout(0.5),
-            layers.Dense(1, activation="relu"),
+            layers.Dense(2048, activation="relu"),
             layers.Dropout(0.5),
-            layers.Dense(1, activation="relu"),
+            layers.Dense(2, activation='softmax')
         ]
     )
 
-    # hp_learning_rate = hp.Choice("learning_rate", values=[1e-2, 1e-3, 1e-4])
+    # hp_initial_learning_rate = hp.Float('initial_learning_rate', min_value=0.0001, max_value=0.001, sampling='log')
+    hp_initial_learning_rate = 0.001
+    # hp_decay_steps = hp.Int('decay_steps', min_value=100, max_value=1000, step=100)
+    # hp_decay_rate = hp.Float('decay_rate', min_value=0.9, max_value=0.99, sampling='log')
+
+    # lr_schedule = keras.optimizers.schedules.ExponentialDecay(
+    #     initial_learning_rate=hp_initial_learning_rate,
+    #     decay_steps=hp_decay_steps,
+    #     decay_rate=hp_decay_rate,
+    #     staircase=True)
 
     model.compile(
-        loss=losses.BinaryCrossentropy(from_logits=True),
-        optimizer="adam",
-        metrics=[
-            keras.metrics.BinaryAccuracy(threshold=0.5),
-            keras.metrics.Precision(thresholds=0.0),
-            keras.metrics.Recall(thresholds=0.0),
-        ],
+        loss=losses.CategoricalCrossentropy(),
+        optimizer=keras.optimizers.Adam(learning_rate=hp_initial_learning_rate),
+        metrics=[keras.metrics.Accuracy(), keras.metrics.Precision(), keras.metrics.Recall(), keras.metrics.F1Score()]
     )
+
     return model
 
 
-# Step 3: Train and test the model
-def train_and_evaluate(model, X_train, y_train, X_test, y_test):
-    model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.1)
-
-    # Evaluate the model on the test set
-    test_loss, test_accuracy = model.evaluate(X_test, y_test)
-    print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
-
-
-# Main script
 if __name__ == "__main__":
     # Step 1: Load data
     X_train, y_train, X_test, y_test, X_val, y_val = load_data(
         "data/vonDataset20180426.dill"
     )
 
-    # # Step 2: Define the model hyperparameters
-    # load_model = False
-    # if load_model:
-    #     model = keras.models.load_model("models/cnn.keras")
-    # else:
-    #     tuner = kt.Hyperband(
-    #         model_builder_cnn_character_level,
-    #         objective="val_binary_accuracy",
-    #         max_epochs=10,
-    #         factor=3,
-    #         directory="my_dir",
-    #         project_name="intro_to_kt",
-    #     )
-    #
-    #     stop_early = keras.callbacks.EarlyStopping(monitor="val_loss", patience=5)
-    #
-    #     tuner.search(
-    #         X_train, validation_data=[X_val], epochs=50, callbacks=[stop_early]
-    #     )
-    #
-    #     # Get the optimal hyperparameters
-    #     best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
-    #     print(best_hps)
-    #
-    #     model = tuner.hypermodel.build(best_hps)
+    y_train = to_categorical(y_train, num_classes=2)
+    y_test = to_categorical(y_test, num_classes=2)
+    y_val = to_categorical(y_val, num_classes=2)
 
-    train = False
-    if train:
-        model = model_builder_cnn_character_level()
-        epochs = 10
-        history = model.fit(
-            X_train,
-            y_train,
-            validation_data=[X_val],
-            epochs=epochs,
-        )
+    model = model_builder_cnn_character_level()
 
-        if not os.path.exists("models"):
-            os.mkdir("models")
+    model.summary()
 
-        model.save("models/cnn.keras")
+    history = model.fit(
+        X_train,
+        y_train,
+        batch_size=256,
+        validation_data=[X_val],
+        epochs=10,
+    )
 
-    else:
-        model = models.load_model("models/cnn.keras")
-
-    result = model.evaluate(X_test, y_test)
-    print(result)
+    # tuner = kt.Hyperband(model_builder_cnn_character_level,
+    #                      objective='val_accuracy',
+    #                      max_epochs=100,
+    #                      directory='tuner_cp',
+    #                      project_name='cnn_character_level')
     #
-    # print("Loss: ", loss)
-    # print("Accuracy: ", accuracy)
+    # stop_early = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5)
     #
-    # history_dict = history.history
-    # acc = history_dict["binary_accuracy"]
-    # val_acc = history_dict["val_binary_accuracy"]
-    # loss = history_dict["loss"]
-    # val_loss = history_dict["val_loss"]
+    # tuner.search(X_train, y_train, epochs=50, validation_data=[X_val], callbacks=[stop_early])
     #
-    # epochs = range(1, len(acc) + 1)
+    # best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
     #
-    # # "bo" is for "blue dot"
-    # plt.plot(epochs, loss, "bo", label="Training loss")
-    # # b is for "solid blue line"
-    # plt.plot(epochs, val_loss, "b", label="Validation loss")
-    # plt.title("Training and validation loss")
-    # plt.xlabel("Epochs")
-    # plt.ylabel("Loss")
-    # plt.legend()
+    # print(f"""
+    # The hyperparameter search is complete. The optimal number of units in the first densely-connected
+    # layer is {best_hps.get('units')} and the optimal learning rate for the optimizer
+    # is {best_hps.get('learning_rate')}.
+    # """)
     #
-    # plt.show()
+    # # Build the model with the optimal hyperparameters and train it on the data for 50 epochs
+    # model = tuner.hypermodel.build(best_hps)
+    # history = model.fit(X_train, y_train, epochs=100, validation_data=[X_val])
     #
-    # plt.plot(epochs, acc, "bo", label="Training acc")
-    # plt.plot(epochs, val_acc, "b", label="Validation acc")
-    # plt.title("Training and validation accuracy")
-    # plt.xlabel("Epochs")
-    # plt.ylabel("Accuracy")
-    # plt.legend(loc="lower right")
+    # val_acc_per_epoch = history.history['val_accuracy']
+    # best_epoch = val_acc_per_epoch.index(max(val_acc_per_epoch)) + 1
+    # print('Best epoch: %d' % (best_epoch,))
     #
-    # plt.show()
+    # hypermodel = tuner.hypermodel.build(best_hps)
+    #
+    # # Retrain the model
+    # hypermodel.fit(X_train, y_train, epochs=best_epoch, validation_data=[X_val])
+    #
+    # eval_result = hypermodel.evaluate(X_test, y_test)
+    # print("[test loss, test accuracy]:", eval_result)
