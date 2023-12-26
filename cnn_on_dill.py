@@ -1,7 +1,9 @@
 import dill
 import keras
+import pandas as pd
 from keras import layers, losses
-from tensorflow.keras.utils import to_categorical
+from keras.utils import to_categorical
+from matplotlib import pyplot as plt
 
 import tensorflow as tf
 
@@ -23,8 +25,6 @@ def load_data(dill_file):
         ds_train_raw_x, ds_train_raw_y = pickleData["train_x"], pickleData["train_y"]
         ds_val_raw_x, ds_val_raw_y = pickleData["val_x"], pickleData["val_y"]
         ds_test_raw_x, ds_test_raw_y = pickleData["test_x"], pickleData["test_y"]
-        print(ds_train_raw_y)
-        print(ds_test_raw_x.shape)
         return (
             ds_train_raw_x,
             ds_train_raw_y,
@@ -48,7 +48,7 @@ def model_builder_cnn_character_level(hp=None):
     # CONVOLUTIONAL NEURAL NETWORK
     model = keras.Sequential(
         [
-            layers.Reshape((150, 1), input_shape=(150,)),
+            layers.Input((150, 1)),
             layers.Convolution1D(
                 kernel_size=3,
                 filters=256,
@@ -72,7 +72,7 @@ def model_builder_cnn_character_level(hp=None):
     )
 
     # hp_initial_learning_rate = hp.Float('initial_learning_rate', min_value=0.0001, max_value=0.001, sampling='log')
-    hp_initial_learning_rate = 0.001
+    hp_initial_learning_rate = 0.0001
     # hp_decay_steps = hp.Int('decay_steps', min_value=100, max_value=1000, step=100)
     # hp_decay_rate = hp.Float('decay_rate', min_value=0.9, max_value=0.99, sampling='log')
 
@@ -101,48 +101,54 @@ if __name__ == "__main__":
     y_test = to_categorical(y_test, num_classes=2)
     y_val = to_categorical(y_val, num_classes=2)
 
-    model = model_builder_cnn_character_level()
+    checkpoint_path_loss = "cp.loss.model.keras"
+    checkpoint_path_accuracy = "cp.accuracy.model.keras"
+
+    try:
+        model = keras.models.load_model(checkpoint_path_loss)
+        print("Model loaded successfully!")
+    except Exception as e:
+        print("No model found or error in loading. Building a new model.")
+        print("Error:", e)
+        model: keras.Model = model_builder_cnn_character_level()
 
     model.summary()
 
-    history = model.fit(
+    log_path = "logs.csv"
+
+    try:
+        history_df = pd.read_csv(log_path)
+        print("Model history loaded successfully!")
+    except Exception as e:
+        print("No model history found or error in loading. Building a new history.")
+        print("Error:", e)
+        # create empty df
+        history_df = pd.DataFrame()
+
+    model.fit(
         X_train,
         y_train,
-        batch_size=256,
-        validation_data=[X_val],
-        epochs=10,
+        validation_data=(X_val, y_val),
+        callbacks=[
+            keras.callbacks.ModelCheckpoint(checkpoint_path_loss, save_best_only=True, monitor='val_loss', mode='min'),
+            keras.callbacks.ModelCheckpoint(checkpoint_path_accuracy, save_best_only=True, monitor='val_accuracy',
+                                            mode='max'),
+            keras.callbacks.CSVLogger(log_path, append=True),
+        ],
+        initial_epoch=history_df.shape[0],
+        epochs=30,
     )
 
-    # tuner = kt.Hyperband(model_builder_cnn_character_level,
-    #                      objective='val_accuracy',
-    #                      max_epochs=100,
-    #                      directory='tuner_cp',
-    #                      project_name='cnn_character_level')
-    #
-    # stop_early = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5)
-    #
-    # tuner.search(X_train, y_train, epochs=50, validation_data=[X_val], callbacks=[stop_early])
-    #
-    # best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
-    #
-    # print(f"""
-    # The hyperparameter search is complete. The optimal number of units in the first densely-connected
-    # layer is {best_hps.get('units')} and the optimal learning rate for the optimizer
-    # is {best_hps.get('learning_rate')}.
-    # """)
-    #
-    # # Build the model with the optimal hyperparameters and train it on the data for 50 epochs
-    # model = tuner.hypermodel.build(best_hps)
-    # history = model.fit(X_train, y_train, epochs=100, validation_data=[X_val])
-    #
-    # val_acc_per_epoch = history.history['val_accuracy']
-    # best_epoch = val_acc_per_epoch.index(max(val_acc_per_epoch)) + 1
-    # print('Best epoch: %d' % (best_epoch,))
-    #
-    # hypermodel = tuner.hypermodel.build(best_hps)
-    #
-    # # Retrain the model
-    # hypermodel.fit(X_train, y_train, epochs=best_epoch, validation_data=[X_val])
-    #
-    # eval_result = hypermodel.evaluate(X_test, y_test)
-    # print("[test loss, test accuracy]:", eval_result)
+    # reload history after training
+    history_df = pd.read_csv(log_path)
+
+    metrics = ['accuracy', 'loss', 'precision', 'recall']
+    for metric in metrics:
+        plt.plot(history_df[metric])
+        plt.plot(history_df['val_' + metric])
+        plt.title('Model ' + metric)
+        plt.ylabel(metric)
+        plt.xlabel('Epoch')
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
+        plt.close()
