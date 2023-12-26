@@ -85,7 +85,12 @@ def model_builder_cnn_character_level(hp=None):
     model.compile(
         loss=losses.CategoricalCrossentropy(),
         optimizer=keras.optimizers.Adam(learning_rate=hp_initial_learning_rate),
-        metrics=[keras.metrics.Accuracy(), keras.metrics.Precision(), keras.metrics.Recall(), keras.metrics.F1Score()]
+        metrics=[
+            keras.metrics.CategoricalAccuracy(name="accuracy"),
+            keras.metrics.Precision(),
+            keras.metrics.Recall(),
+            keras.metrics.F1Score(),
+        ]
     )
 
     return model
@@ -101,11 +106,12 @@ if __name__ == "__main__":
     y_test = to_categorical(y_test, num_classes=2)
     y_val = to_categorical(y_val, num_classes=2)
 
+    checkpoint_path = "cp.model.keras"
     checkpoint_path_loss = "cp.loss.model.keras"
     checkpoint_path_accuracy = "cp.accuracy.model.keras"
 
     try:
-        model = keras.models.load_model(checkpoint_path_loss)
+        model = keras.models.load_model(checkpoint_path)
         print("Model loaded successfully!")
     except Exception as e:
         print("No model found or error in loading. Building a new model.")
@@ -130,6 +136,7 @@ if __name__ == "__main__":
         y_train,
         validation_data=(X_val, y_val),
         callbacks=[
+            keras.callbacks.ModelCheckpoint(checkpoint_path),
             keras.callbacks.ModelCheckpoint(checkpoint_path_loss, save_best_only=True, monitor='val_loss', mode='min'),
             keras.callbacks.ModelCheckpoint(checkpoint_path_accuracy, save_best_only=True, monitor='val_accuracy',
                                             mode='max'),
