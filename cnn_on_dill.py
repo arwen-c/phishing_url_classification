@@ -37,7 +37,7 @@ def load_data(dill_file):
 
 
 # 2: Define the CNN model using Keras
-def model_builder_cnn_character_level(hp=None):
+def model_builder_cnn_character_level(hp=None, input_size=150):
     """
     Based on the model proposed by An Effective Phishing Detection Model Based on Character Level Convolutional Neural Network from URL
     Model relying on character level embedding as an input
@@ -49,7 +49,7 @@ def model_builder_cnn_character_level(hp=None):
     # CONVOLUTIONAL NEURAL NETWORK
     model = keras.Sequential(
         [
-            layers.Reshape((150, 1), input_shape=(150,)),
+            layers.Reshape((input_size, 1), input_shape=(input_size,)),
             layers.Convolution1D(
                 kernel_size=3,
                 filters=256,

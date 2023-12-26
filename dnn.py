@@ -1,15 +1,16 @@
-import os
-
 import keras
 import pandas as pd
 from keras import layers, losses
 from matplotlib import pyplot as plt
 
 from tools import feature_vector
+from cnn_on_dill import model_builder_cnn_character_level
 
 load_model = False
 
 # TODO: determine the best values for the hyperparameters, like the learning rate
+
+number_of_features: int = 11
 
 
 def model_builder(hp):
@@ -87,7 +88,6 @@ def model_builder_lstm(hp):
     is (3526,10,1). Through LSTM, we attempted to find
     out the possible relationship between different features
     """
-    number_of_features = 11
     model = keras.Sequential(
         [
             layers.Reshape((number_of_features, 1), input_shape=(number_of_features,)),
@@ -102,7 +102,7 @@ def model_builder_lstm(hp):
     )
 
     model.compile(
-        optimizer=keras.optimizers.Adam(learning_rate=0.001),
+        optimizer=keras.optimizers.Adam(learning_rate=0.01),
         loss="binary_crossentropy",
         metrics=["accuracy"],
     )
@@ -119,12 +119,14 @@ def model_builder_cnn(hp):
     """
     model = keras.Sequential(
         [
-            layers.Conv1D(
-                filters=32, kernel_size=3, activation="tanh", input_shape=(10, 1)
+            layers.Reshape(
+                (number_of_features, 1),
+                input_shape=(number_of_features,),
             ),
+            layers.Conv1D(filters=32, kernel_size=3, activation="tanh"),
             layers.BatchNormalization(),
             layers.MaxPooling1D(pool_size=2),
-            layers.Conv1D(filters=64, kernel_size=3, activation="tanh"),
+            layers.Conv1D(filters=16, kernel_size=3, activation="tanh"),
             layers.BatchNormalization(),
             layers.MaxPooling1D(pool_size=2),
             layers.Conv1D(filters=128, kernel_size=3, activation="tanh"),
@@ -155,7 +157,7 @@ def model_builder_cnn(hp):
 
 
 if __name__ == "__main__":
-    model = model_builder_lstm(None)
+    model = model_builder_cnn(None)
     model.summary()
 
     # import the csv data from train_x.csv, val_x.csv and test_x.csv
