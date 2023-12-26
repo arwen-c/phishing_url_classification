@@ -1,12 +1,13 @@
 import dill
 import keras
+import keras_tuner
 from keras import layers, losses
 from tensorflow.keras.utils import to_categorical
 
 import tensorflow as tf
 
 # This line must be executed before any other TensorFlow-related code
-gpus = tf.config.experimental.list_physical_devices('GPU')
+gpus = tf.config.experimental.list_physical_devices("GPU")
 if gpus:
     try:
         for gpu in gpus:
@@ -55,7 +56,9 @@ def model_builder_cnn_character_level(hp=None):
                 activation="relu",
             ),
             layers.MaxPooling1D(pool_size=3),
-            layers.Convolution1D(kernel_size=3, filters=256, activation="relu"),
+            layers.Convolution1D(
+                kernel_size=3, filters=256, activation="relu"
+            ),  # use of relu because it learns faster than sigmoid
             layers.Convolution1D(kernel_size=3, filters=256, activation="relu"),
             layers.Convolution1D(kernel_size=3, filters=256, activation="relu"),
             layers.Convolution1D(kernel_size=3, filters=256, activation="relu"),
@@ -67,7 +70,7 @@ def model_builder_cnn_character_level(hp=None):
             layers.Dropout(0.5),
             layers.Dense(2048, activation="relu"),
             layers.Dropout(0.5),
-            layers.Dense(2, activation='softmax')
+            layers.Dense(2, activation="softmax"),
         ]
     )
 
@@ -85,7 +88,12 @@ def model_builder_cnn_character_level(hp=None):
     model.compile(
         loss=losses.CategoricalCrossentropy(),
         optimizer=keras.optimizers.Adam(learning_rate=hp_initial_learning_rate),
-        metrics=[keras.metrics.Accuracy(), keras.metrics.Precision(), keras.metrics.Recall(), keras.metrics.F1Score()]
+        metrics=[
+            keras.metrics.Accuracy(),
+            keras.metrics.Precision(),
+            keras.metrics.Recall(),
+            keras.metrics.F1Score(),
+        ],
     )
 
     return model
@@ -113,11 +121,13 @@ if __name__ == "__main__":
         epochs=10,
     )
 
-    # tuner = kt.Hyperband(model_builder_cnn_character_level,
-    #                      objective='val_accuracy',
-    #                      max_epochs=100,
-    #                      directory='tuner_cp',
-    #                      project_name='cnn_character_level')
+    tuner = keras_tuner.GridSearch(
+        model_builder_cnn_character_level,
+        objective="val_accuracy",
+        max_epochs=100,
+        directory="tuner_cp",
+        project_name="cnn_character_level",
+    )
     #
     # stop_early = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5)
     #
