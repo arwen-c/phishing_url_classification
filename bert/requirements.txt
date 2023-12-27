@@ -1,0 +1,4 @@
+pandas==2.1.4
+keras==2.15.0
+tensorflow==2.15.0
+transformers==4.36.2
