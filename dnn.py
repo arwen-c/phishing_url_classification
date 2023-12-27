@@ -1,21 +1,24 @@
-import os
-
 import keras
-import keras_tuner as kt
-import tensorflow as tf
+import pandas as pd
 from keras import layers, losses
 from matplotlib import pyplot as plt
 
+from tools import feature_vector
+from cnn_on_dill import model_builder_cnn_character_level
+
 load_model = False
 
+# TODO: determine the best values for the hyperparameters, like the learning rate
 
-#    "DNN with 5 hidden layers observe the best results"
+number_of_features: int = 11
+
+
 def model_builder(hp):
     embedding_dim = hp.Int("embedding_dims", min_value=32, max_value=256, step=32)
 
     model = keras.Sequential(
         [
-            layers.Embedding(MAX_FEATURES, embedding_dim),  # Embedding layer
+            layers.Embedding(10000, embedding_dim),  # Embedding layer
             layers.Dropout(0.25),  # Dropout layer to prevent overfitting
             layers.Convolution1D(kernel_size=5, filters=256),  # Convolutional layer
             layers.ELU(),  # ELU activation function
@@ -42,6 +45,7 @@ def model_builder(hp):
     return model
 
 
+#    "DNN with 5 hidden layers observe the best results"
 def model_builder_dnn(hp):
     """
     Based on the model proposed by Efficient deep learning techniques for the detection of phishing websites
@@ -49,7 +53,26 @@ def model_builder_dnn(hp):
     :param hp:
     :return:
     """
-    pass
+
+    # Build the model
+    model = keras.Sequential(
+        [
+            layers.InputLayer(input_shape=(11,)),  # shape = number of features
+            layers.Dense(units=256, activation="relu"),
+            layers.Dense(units=128, activation="relu"),
+            layers.Dense(units=64, activation="relu"),
+            layers.Dense(units=32, activation="relu"),
+            layers.Dense(units=1, activation="sigmoid"),
+        ]
+    )
+
+    model.compile(
+        optimizer=keras.optimizers.Adam(learning_rate=0.001),
+        loss="binary_crossentropy",
+        metrics=["accuracy"],
+    )
+
+    return model
 
 
 def model_builder_lstm(hp):
@@ -58,7 +81,31 @@ def model_builder_lstm(hp):
     Model relying on feature vectors extracted from the URL
     :param hp:
     :return:
+    Notes from the author on the paper
+    "We modified the dataset dimensionality to implement LSTM.
+    We have converted 10 features to 10 time-steps; each timestep
+    consists of 1 feature. Hence, our dataset new dimension
+    is (3526,10,1). Through LSTM, we attempted to find
+    out the possible relationship between different features
     """
+    model = keras.Sequential(
+        [
+            layers.Reshape((number_of_features, 1), input_shape=(number_of_features,)),
+            layers.LSTM(
+                units=number_of_features, return_sequences=True
+            ),  # input shape to change because of the change of interpretation of the features
+            layers.LSTM(units=number_of_features, return_sequences=True),
+            layers.LSTM(units=number_of_features, return_sequences=True),
+            layers.LSTM(units=number_of_features, return_sequences=False),
+            layers.Dense(units=1, activation="sigmoid"),
+        ]
+    )
+
+    model.compile(
+        optimizer=keras.optimizers.Adam(learning_rate=0.01),
+        loss="binary_crossentropy",
+        metrics=["accuracy"],
+    )
 
     return model
 
@@ -70,108 +117,84 @@ def model_builder_cnn(hp):
     :param hp:
     :return:
     """
-    pass
+    model = keras.Sequential(
+        [
+            layers.Reshape(
+                (number_of_features, 1),
+                input_shape=(number_of_features,),
+            ),
+            layers.Conv1D(filters=32, kernel_size=3, activation="tanh"),
+            layers.BatchNormalization(),
+            layers.MaxPooling1D(pool_size=2),
+            layers.Conv1D(filters=16, kernel_size=3, activation="tanh"),
+            layers.BatchNormalization(),
+            layers.MaxPooling1D(pool_size=2),
+            layers.Conv1D(filters=128, kernel_size=3, activation="tanh"),
+            layers.BatchNormalization(),
+            layers.MaxPooling1D(pool_size=2),
+            layers.Conv1D(filters=256, kernel_size=3, activation="tanh"),
+            layers.BatchNormalization(),
+            layers.MaxPooling1D(pool_size=2),
+            layers.Conv1D(filters=512, kernel_size=3, activation="tanh"),
+            layers.BatchNormalization(),
+            layers.MaxPooling1D(pool_size=2),
+            layers.Conv1D(filters=1024, kernel_size=3, activation="tanh"),
+            layers.BatchNormalization(),
+            layers.MaxPooling1D(pool_size=2),
+            layers.Flatten(),
+            layers.Dense(units=500, activation="tanh"),
+            layers.Dense(units=1, activation="sigmoid"),
+        ]
+    )
+
+    model.compile(
+        optimizer=keras.optimizers.Adam(learning_rate=0.001),
+        loss="binary_crossentropy",
+        metrics=["accuracy"],
+    )
+
+    return model
 
 
 if __name__ == "__main__":
-    model_builder = model_builder_cnn
-    BATCH_SIZE = 1000
+    model = model_builder_cnn(None)
+    model.summary()
 
-    raw_train_ds = tf.data.experimental.make_csv_dataset(
-        "data/train_x.csv",
-        batch_size=BATCH_SIZE,
-        label_name="train_y",
-        select_columns=["train_x", "train_y"],
-        num_epochs=1,
-    ).map(lambda x, y: (x["train_x"], y))
+    # import the csv data from train_x.csv, val_x.csv and test_x.csv
+    train_df = pd.read_csv("data/train_x.csv")
+    val_df = pd.read_csv("data/val_x.csv")
+    test_df = pd.read_csv("data/test_x.csv")
 
-    raw_val_ds = tf.data.experimental.make_csv_dataset(
-        "data/val_x.csv",
-        batch_size=BATCH_SIZE,
-        label_name="val_y",
-        select_columns=["val_x", "val_y"],
-        num_epochs=1,
-    ).map(lambda x, y: (x["val_x"], y))
-
-    raw_test_ds = tf.data.experimental.make_csv_dataset(
-        "data/test_x.csv",
-        batch_size=BATCH_SIZE,
-        label_name="test_y",
-        select_columns=["test_x", "test_y"],
-        num_epochs=1,
-    ).map(lambda x, y: (x["test_x"], y))
-
-    MAX_FEATURES = 1000
-    SEQUENCE_LENGTH = 150
-
-    vectorize_layer = layers.TextVectorization(
-        max_tokens=MAX_FEATURES,
-        output_mode="int",
-        output_sequence_length=SEQUENCE_LENGTH,
-    )
-
-    # Make a text-only dataset (without labels), then call adapt
-    train_text = raw_train_ds.map(lambda x, y: x)
-    vectorize_layer.adapt(train_text)
-
-    def vectorize_text(text, label):
-        text = tf.expand_dims(text, -1)
-        return vectorize_layer(text), label
-
-    train_ds = raw_train_ds.map(vectorize_text)
-    val_ds = raw_val_ds.map(vectorize_text)
-    test_ds = raw_test_ds.map(vectorize_text)
-
-    AUTOTUNE = tf.data.AUTOTUNE
-
-    train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
-    val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
-    test_ds = test_ds.cache().prefetch(buffer_size=AUTOTUNE)
+    # transform the data into a feature vector
+    train_x = feature_vector(train_df["train_x"])
+    val_x = feature_vector(val_df["val_x"])
+    test_x = feature_vector(test_df["test_x"])
 
     if load_model:
-        model = keras.models.load_model("models/cnn.keras")
+        model = keras.models.load_model("models/dnn.keras")
     else:
-        tuner = kt.Hyperband(
-            model_builder,
-            objective="val_binary_accuracy",
-            max_epochs=10,
-            factor=3,
-            directory="my_dir",
-            project_name="intro_to_kt",
+        epochs = 10
+        history = model.fit(
+            train_x,
+            train_df["train_y"],
+            validation_data=[val_x],
+            epochs=epochs,
         )
 
-        stop_early = keras.callbacks.EarlyStopping(monitor="val_loss", patience=5)
+        # if not os.path.exists("models"):
+        #     os.mkdir("models")
+        #
+        # model.save("models/dnn.keras")
 
-        tuner.search(
-            train_ds, validation_data=val_ds, epochs=50, callbacks=[stop_early]
-        )
-
-        # Get the optimal hyperparameters
-        best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
-        print(best_hps)
-
-        model = tuner.hypermodel.build(best_hps)
-
-    epochs = 10
-    history = model.fit(
-        train_ds,
-        validation_data=val_ds,
-        epochs=epochs,
-    )
-
-    if not os.path.exists("models"):
-        os.mkdir("models")
-
-    model.save("models/cnn.keras")
-
-    loss, accuracy = model.evaluate(test_ds)
+    loss, accuracy = model.evaluate(test_x)
 
     print("Loss: ", loss)
     print("Accuracy: ", accuracy)
 
     history_dict = history.history
-    acc = history_dict["binary_accuracy"]
-    val_acc = history_dict["val_binary_accuracy"]
+    print(history_dict.keys())
+    acc = history_dict["accuracy"]
+    val_acc = history_dict["val_accuracy"]
     loss = history_dict["loss"]
     val_loss = history_dict["val_loss"]
 
