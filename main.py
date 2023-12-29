@@ -1,5 +1,5 @@
 import pandas as pd
-from tools import *
+from feature_vector import *
 from sklearn.model_selection import cross_val_score
 
 ######################             MACHINE LEARNING MODEL             ######################

@@ -3,7 +3,7 @@ import pandas as pd
 from keras import layers, losses
 from matplotlib import pyplot as plt
 
-from tools import feature_vector
+from feature_vector import feature_vector
 from cnn_on_dill import model_builder_cnn_character_level
 
 load_model = False
