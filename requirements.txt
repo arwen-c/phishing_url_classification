@@ -1,7 +1,6 @@
 dill==0.3.7
 pandas==2.1.4
 tensorflow==2.15.0
-tensorrt
 numpy==1.26.2
 matplotlib==3.8.2
 tqdm==4.66.1

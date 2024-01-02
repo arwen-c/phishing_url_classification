@@ -1,5 +1,11 @@
-import numpy
+import re
+from urllib.parse import urlparse
+
+import numpy as np
+import pandas as pd
 import tldextract
+import unicodedata
+from sklearn.feature_selection import SelectKBest, mutual_info_classif
 from tqdm import tqdm
 
 
@@ -15,7 +21,7 @@ from tqdm import tqdm
 # /[3] NLPBasedPhishingAttack.pdf , /[2] ESWA_Sahingoz_Makale.pdf , [1] Phishing_URL_Detection_A_Real-Case_Scenario_Through_Login_URLs.pdf
 
 
-def feature_vector(x: numpy.ndarray[str]) -> numpy.ndarray[int]:
+def feature_vector(x: np.ndarray[str]) -> np.ndarray[int]:
     """
     functions that transform the data into a feature vector, inspired by the article PHISH-SAFE URL Features based Phishing Detection System using Machine Learning.pdf
     feature 1 : number of dots in the URL
@@ -39,37 +45,123 @@ def feature_vector(x: numpy.ndarray[str]) -> numpy.ndarray[int]:
     :param x:
     :return a vector of size number of URL * 11 :
     """
-    vector = numpy.zeros([x.shape[0], 11])
+    vector = np.zeros([x.shape[0], 23])
     # handcrafted straight forward features
     for i, url in enumerate(tqdm(x)):
         url_tld = tldextract.extract(url)  # https://pypi.org/project/tldextract/
-        vector[i][0] = url.count(".")
-        vector[i][1] = url.count("-")
-        vector[i][2] = url.count("@")
-        vector[i][3] = len(url)
-        vector[i][4] = sum(c.isdigit() for c in url)
-        vector[i][5] = url.count("//")
-        vector[i][6] = url.count("https")
-        vector[i][7] = url.count("http")
-        vector[i][8] = int(url_tld.domain == url_tld.ipv4)
+        url_parsed = urlparse(
+            "//www.cwi.nl:80/%7Eguido/Python.html"
+        )  # https://docs.python.org/3/library/urllib.parse.html
+        j = 0
+        vector[i][j] = url.count(".")
+        j += 1
+        vector[i][j] = url.count("-")
+        j += 1
+        vector[i][j] = url.count("@")
+        j += 1
+        vector[i][j] = url.count("?")
+        j += 1
+        vector[i][j] = len(url)
+        j += 1
+        vector[i][j] = sum(c.isdigit() for c in url)
+        j += 1
+        vector[i][j] = url.count("/")
+        j += 1
+        vector[i][j] = url.count("//")
+        j += 1
+        vector[i][j] = url.count("https")
+        j += 1
+        vector[i][j] = url.count("http")
+        j += 1
+        vector[i][j] = url.count("www")
+        j += 1
+        vector[i][j] = int(url_tld.domain == url_tld.ipv4)
+        j += 1
         # suspicious word detection
-        suspicious_words = [
-            "token",
-            "confirm",
-            "security",
-            "PayPal",
-            "login",
-            "signin",
-            "bank",
-            "account",
-            "update",
-        ]
-        for word in suspicious_words:
-            vector[i][9] += url.count(word)
+        vector[i][j] = count_suspicious_words(url)
+        j += 1
         # top level domain detection: give the rank of the first character of the top level domain in the url
-        vector[i][10] = url.find(url_tld.suffix)
-
+        vector[i][j] = url.find(url_tld.suffix)
+        j += 1
+        vector[i][j] = len(url_parsed.path) / len(url)
+        j += 1
+        vector[i][j] = count_suspicious_chars(url)
+        j += 1
+        # presence of a symbol as the last character
+        vector[i][j] = url[-1] in "%#^$*&!’,:"
+        j += 1
+        # number of redirection occurrence
+        vector[i][j] = url_tld.subdomain.count(".")
+        j += 1
+        # presence of IP address
+        vector[i][j] = check_ip_address_presence(url)
+        j += 1
+        # number of subdomains
+        vector[i][j] = len(url_tld.subdomain.split("."))
+        j += 1
+        # presence of port number
+        vector[i][j] = check_port_presence(url)
+        j += 1
+        # number of unicode characters
+        vector[i][j] = sum(1 for char in url if unicodedata.category(char) != "Cc")
+        j += 1
+        # whether there is a query in the url
+        vector[i][j] = int(bool(url_parsed.query))
+        j += 1
     # word detection and random word detection
     ### TODO  add more high level features
-
+    print(j)
     return vector
+
+
+def count_suspicious_chars(url):
+    suspicious_chars = set("%#^$*&!’,:")
+    suspicious_chars_count = sum(1 for char in url if char in suspicious_chars)
+    return suspicious_chars_count
+
+
+def count_suspicious_words(url):
+    sum_suspicious_words = 0
+    suspicious_words = [
+        "token",
+        "confirm",
+        "security",
+        "PayPal",
+        "login",
+        "signin",
+        "bank",
+        "account",
+        "update",
+        "submit",
+        "logon",
+        "suspend",
+        "secure",
+        "webscr",
+        "cmd",
+        "wp",
+        "payment",
+        "home",
+        "dropbox",
+        "webhostapp",
+    ]
+    for word in suspicious_words:
+        sum_suspicious_words += url.count(word)
+    return sum_suspicious_words
+
+
+def check_ip_address_presence(url):
+    # Regular expression to match an IPv4 address
+    ip_pattern = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
+    match = ip_pattern.search(url)
+    if match:
+        return 1
+    return 0
+
+
+def check_port_presence(url):
+    # Regular expression to match a port number in the URL
+    port_pattern = re.compile(r":\d{1,5}")
+    match = port_pattern.search(url)
+    if match:
+        return 1
+    return 0
