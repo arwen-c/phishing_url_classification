@@ -1,21 +1,21 @@
-import pandas as pd
-import cuml
 import cudf
-from feature_vector import feature_vector
+import cuml
+import pandas as pd
+from hyperopt import hp, STATUS_OK, fmin, tpe, Trials, STATUS_FAIL
 
-from hyperopt import hp, STATUS_OK, fmin, tpe, Trials
+from feature_vector import feature_vector
 
 # Define the space for hyperparameters for each model
 LOGISTIC_PARAMS = {
     'penalty': hp.choice('penalty', ['l1', 'l2']),
-    'dual': hp.choice('dual', [True, False]),
+    # 'dual': hp.choice('dual', [True, False]),
     'tol': hp.loguniform('tol', -10, 10),
     'C': hp.loguniform('c', -10, 10),
     'fit_intercept': hp.choice('fit_intercept', [True, False]),
-    'intercept_scaling': hp.uniform('intercept_scaling', 0, 10),
+    # 'intercept_scaling': hp.uniform('intercept_scaling', 0, 10),
     'class_weight': hp.choice('class_weight', ['balanced', None]),
-    'random_state': hp.choice('random_state', [0]),
-    'solver': hp.choice('solver', ['lbfgs', 'liblinear', 'newton-cg', 'newton-cholesky', 'sag', 'saga']),
+    # 'random_state': hp.choice('random_state', [0]),
+    'solver': 'qn',
     'max_iter': hp.choice('max_iter', range(100, 1000)),
 }
 
@@ -35,10 +35,15 @@ def scale_data(x):
 
 # Adjust the train model functions to accept params and return a dictionary for Hyperopt
 def train_logistic_classifier(x, x_scaled, y, params):
-    classifier = cuml.linear_model.LogisticRegression(**params).fit(x_scaled, y)
-    score = classifier.score(x_scaled, y)
-    print("Logistic Score:", score)
-    return {'loss': -score, 'status': STATUS_OK}
+    try:
+        classifier = cuml.linear_model.LogisticRegression(**params).fit(x_scaled, y)
+        score = classifier.score(x_scaled, y)
+        print("Logistic Score:", score)
+        return {'loss': -score, 'status': STATUS_OK}
+    except Exception as e:
+        print(params)
+        print(e)
+        return {'status': STATUS_FAIL}
 
 
 def train_bayes_classifier(x, x_scaled, y, params):
@@ -57,25 +62,28 @@ def train_svm_classifier(x, x_scaled, y, params):
 
 def main():
     # import the csv data
-    train_df = pd.read_csv("data/train_x.csv")
+    train_df = pd.read_csv("../data/train_x.csv")
 
     # transform the data into a feature vector
+    print("Transforming data...")
     train_x = feature_vector(train_df["train_x"])
     train_x = cudf.DataFrame(train_x)
     train_y = cudf.Series(train_df["train_y"])
 
     # scale the data
+    print("Scaling data...")
     train_x_scaled = scale_data(train_x)
 
     # Define the trials
     trials = Trials()
 
+    print("Starting Hyperparameter Tuning...")
     # Example of tuning Logistic Regression Hyperparameters
     best_logistic = fmin(
         fn=lambda params: train_logistic_classifier(train_x, train_x_scaled, train_y, params),
         space=LOGISTIC_PARAMS,
         algo=tpe.suggest,
-        max_evals=100,
+        max_evals=10000,
         trials=trials
     )
     print("Best params: ", best_logistic)
