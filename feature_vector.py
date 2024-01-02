@@ -2,10 +2,8 @@ import re
 from urllib.parse import urlparse
 
 import numpy as np
-import pandas as pd
 import tldextract
 import unicodedata
-from sklearn.feature_selection import SelectKBest, mutual_info_classif
 from tqdm import tqdm
 
 
