@@ -1,0 +1,353 @@
+\documentclass{article}
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2023
+
+
+% ready for submission
+\usepackage[preprint]{neurips_2023}
+
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2023}
+
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+%     \usepackage[final]{neurips_2023}
+
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2023}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{float}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+
+\title{Machine Learning Project Report}
+
+\author{
+    Jop Zitman 2023280072\\
+    Department of Computer Science\\
+    Tsinghua University\\
+    Beijing, China \\
+    \texttt{lilw23@mails.tsinghua.edu.cn} \\
+    \And
+    Lauriane Teyssier 2023280008\\
+    Department of Computer Science\\
+    Tsinghua University\\
+    Beijing, China \\
+    \texttt{yell23@mails.tsinghua.edu.cn} \\
+}
+
+% Document
+\begin{document}
+
+    \maketitle
+
+    \begin{abstract}
+        The abstract paragraph should be indented \nicefrac{1}{2}~inch (3~picas) on
+        both the left- and right-hand margins.
+        Use 10~point type, with a vertical
+        spacing (leading) of 11~points.
+        The word \textbf{Abstract} must be centered,
+        bold, and in point size 12.
+        Two line spaces precede the abstract.
+        The abstract must be limited to one paragraph.
+    \end{abstract}
+
+
+%    \section{Jop dump}
+%
+%    https://www.kaggle.com/datasets/shawon10/url-classification-dataset-dmoz/data
+%    https://utatds.github.io/2017-01-18-URL-classification-using-DMOZ-data/
+%    https://github.com/stanfordnlp/GloVe
+%    https://spotintelligence.com/2023/02/15/word2vec-for-text-classification/
+%    https://huggingface.co/elftsdmr/malware-url-detect
+
+
+    \section{Problem description and motivation}\label{sec:problem-description-and-motivation}
+
+    What’s the background of the problem?
+    Is it theory-driven, or deeply rooted in some useful application situations?
+    Is it important or necessary?
+    What impact will it bring if you finally solve it?
+
+    Statistics on how much money phishing represents nowadays
+
+
+    \section{Related works}\label{sec:related-works}
+
+    In the realm of URL-based phishing detection, a rich literature addresses each part of the detection process, from the creation of set of databases to comparison metrics between the methodologies, including comparison of classification algorithm or data pre-processing.
+    The approach can be divided into two main groups, the authors focusing on Machine Learning and and those proposing an approach based on deep learning.
+    We will highlight references of both approaches.
+
+    \subsection{Machine Learning based approaches}\label{subsec:machine-learning-based-approaches}
+
+    \begin{itemize}
+
+        \item An URL detection method (\cite{PhishingURLDetection}) compares different Machine Learning classification algorithm.
+        Their data processing involves first the detection of words through 17 NLP handcrafted features.
+        It then relies on a Markov Chain Model to identify random word.
+        The classification is based on detecting Typosquatting and employs various algorithms like Naive Bayes, Random Forest, kNN, Adaboost, K-star, SMO, and Decision Tree.
+        The study reached 97.20\% of accuracy with Weka's RFC (Random Forest Classifier) on a 10\% sub-sample from the Ebbu2017 dataset.
+
+        \item In their paper\cite{PhishSafe}, Jain and Gupta developed an anti-phishing system employing 14 handcrafted URL descriptors.
+        They conducted tests using two classifiers: Naive Bayes, which achieved an accuracy of 76.87\%, and Support Vector Machine, demonstrating a higher accuracy of 91.28\%.
+
+        \item The study presented in\cite{LexicalFeatureSelection} implemented a classification system based on lexical features extracted from URLs. Their methodology involved a feature extraction from URLs, the selection of the most relevant features through chi-square feature selection, and the utilization of various machine learning algorithms for classification.
+        With nine selected features and a Random Forest (RF) classifier, they achieved their best accuracy of 98.57%.
+
+    \end{itemize}
+
+    \subsection{Deepl Learning based approaches}\label{subsec:deepl-learning-based-approaches}
+
+    \begin{itemize}
+        \item  The Spanish national institute for security classifies in\cite{PhishingLoginURLDetection} login form URLs into malicious or legitimate categories through two distinct techniques.
+        The first technique employs machine learning with text pre-processing, including symbol-based word separation, text conversion into feature vectors (use 38 features, among them the frequency of symbols, the number of digits, length, \ldots), and classification.
+        Eight different classifiers have been used for comparison.
+        The second technique utilizes deep learning, specifically a convolutional neural network, with no text preprocessing.
+        The results show that the best performance is archived for the machine learning NLP frequency feature extraction combined with Logistic Regression (accuracy of 96.50%).
+
+
+        \item \cite{EfficientDeepLearningPhishingDetection} introduced three Deep Learning models for classifying phishing URLs, utilizing ten of the most relevant handcrafted features out of a total of 18, which included characteristics like the number of dots, length, and the presence of HTTPS. These models included Convolutional Neural Network (CNN), Deep Neural Network (DNN), and Long Short-Term Memory (LSTM). Among these, the LSTM model achieved the best performance, boasting an impressive accuracy of 99.57\%.
+
+        \item An RCNN model to classify phishing URLs is compared with different machine learning common approaches (Naïves Bayes, Logistic Regression, random forest and XGBoost) on four different types of features (hand crafted, character embedding, character level TF-IDF and character level count vector features)\cite{CharacterLevelCNN}.
+        The URL is used as input for a tokenizer and then then transformed into a matrix using one-hot encoding.
+        Their RCNN model obtained 95:02\% accuracy.
+
+    \end{itemize}
+
+%    Different deep learning model have been used to classify websites.
+%    Two main approaches occurs when trying to analyze the web: classifying a website by analyzing its content or relying on the URL to classify it
+%
+%    Some are directly linked
+%
+%    Papers detecting phishing URL for example from 2022
+%    https://ieeexplore.ieee.org/document/9759382.
+%    In their state of the art, the author evokes different classification machine learning algorithm:
+%    - Buber et al. [25] 17 NLP (Natural Language Processing) handcrafted
+%    features such as the number of sub-domains, random words,
+%    digits, special characters and length measurements over the
+%    URL words
+%
+%    StringToWordVector
+
+
+    \section{Proposed method}\label{sec:proposed-method}
+
+
+    Method chosen: offline URL classification
+    Advantages of the method chosen: fast computation, language independent
+
+    We aim to find the bests performances on classifying malicious from legitimate URL by implementing comparative machine learning and deep learning approaches.
+
+    Regarding machine learning, the modeling process consists in three steps: pre processing (converting URL into text), extraction of feature and classification.
+    We want to compare the performance of different classifiers, by optimizing simultaneously the construction of the feature and their selection.
+
+    Regarding deep learning, the performance mainly depends on the layer architecture.
+    Our objective is to try replicating one or two neurons architectures among the more performing on previous works.
+    Some additional data treatment may be done.
+
+    Very rich literature on the subject, we want to benchmark them and compare them on the same dataset.
+
+    What are the motivations for you to choose it?
+    Which datasets do you propose to
+    experiment on?
+    What baseline approaches do you plan to compare with?
+    How do you implement your proposed method based on the dataset?
+    It is ok to change and improve it later but now try to describe it as detailed as possible.
+
+    Inspired from different techniques and analysis used to classify URL, we will try to identify the category of website the URL relates to
+
+    - test of different ML algorithm for performance comparison (linear regression, deep neural network, modification of pre train text analysis model) to compare and select the best model
+
+    - test of different datasets, and the results of training on one/test on the other (different datasets available on kaggle and on the net) - possibility on comparing the results depending on the date/epoque of the dataset, the countries they are from, \ldots and see what comes up
+
+    - what do the domain name tells us about the website?
+    do we have some better performances analyzing some complete URL? If yes, how much does it increases the performance of the model?
+
+    - Different approaches : making clusters with imposing the categories that we expect, or seeing what categories it makes on its own, by clustering and finding out what each clusters is linked with
+
+    \subsection{Model - introduction}\label{subsec:model---introduction}
+
+    A first approach of this URL classification problem could try a new machine learning method and try to apply it to this specific problem and comparing it to the different results that the literature.
+    This is very interesting to get in depth with one specific model.
+    However, we were intrigued by the different results that studied could have on same models (for example machine learning models) on similar datasets.
+    From all these studies, it seemed difficult to establish any ranking or argument comparison of the different models, since each one had the best results on its new introduced approach.
+    This is the reason why we chose to establish a benchmark of the different solutions.
+    By implementing them on the same dataset, relying on the different studies from the literature, we could establish a more objective classification.
+    Another advantage for us as student of this approach is to develop our critical sens of studies (learn to detect what can be improved from a study, from what is strong argumentation) and to get familiar with these different approaches.
+
+    We explored these different models:
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\linewidth]{report_img/modelspresentation}
+        \caption{}
+        \label{fig:model_presentation}
+    \end{figure}
+
+
+    \section{Dataset}\label{sec:dataset}
+
+    \subsection{Existing datasets}\label{subsec:datasets}
+
+    There exists multiple crowdsource based phasing URL collection applications.
+    The main ones are PhishTank~\cite{PhishTank}, OpenPhish~\cite{OpenPhish}, and PhishRepo~\cite{PhishRepo}.
+    However, due to the relatively short-lived nature of phishing sites after a phishing report, all of these do regular data cleanups.
+    They offer a data feed that you can subscribe too, meaning that if you want to create a dataset, you have to subscribe to the feed for a while, where back-filling is not completely possible.
+    Another popular dataset is Google SafeBrowsing\cite{GoogleSafeBrowsing}, which is integrated into several browsers.
+    Unfortunately, they only expose a query API to check a URL for legitimacy, rather than exposing their entire dataset.
+
+    JPCERT/CC is a Computer Security Incident Response Team established in Japan.
+    The organization coordinates with network service providers, security vendors, government agencies, as well as the industry associations\cite{JPCertCC}.
+    In 2022, they released a URL dataset of phishing sites confirmed from January 2019 to June 2022\cite{JPCertCCDataset}.
+    The dataset is available on GitHub, and although there is no concrete distinct URL count, our wild guess is that it contains about 100k unique URLs.
+
+    Another dataset published on GitHub contains about 750k malicious URLs and 750k benign URLs\cite{VisualizingRNNInURLDetection}.
+    The malicious set is collected by following the aforementioned PhishTank for a while.
+    For legitimate URLs, they followed the top Alexa websites (an organization tracking most commonly visited websites).
+
+    \cite{PhishingLoginURLDetection} mentions however that ``Existing URL datasets use the homepage URL from well-known websites as the legitimate.
+    However, we think that the challenge is to determine if a login form of a website is legitimate or phishing.
+    From our perspective, and to the best of our knowledge, publicly available datasets are not reflecting conditions that represent some real problems for phishing URL detection.''
+    This raises the question of whether the models built on home page-based legitimate websites are even valid (comparing apples and pears).
+    In their dataset (PILU-90K), they only include URLs of pages which contain password fields (suggesting it's a login page).
+    Unfortunately, the website hosting this dataset is no longer working.
+    We've requested a copy of the dataset via e-mail, but there are no guarantees that we can get access to this dataset.
+
+    These solutions have so far only looked at the URLs, however some datasets also include further data of each URL, such as the HTML title, body, or even a screenshot.
+    For example, the ``Phishing Websites Dataset''\cite{VisualizingRNNInURLDetection} contains the entire HTML of every URL, largely increasing the dataset size and the potential solutions of solving the problem.
+    You can imagine that the content of a webpage reveals much about a website's intent.
+
+    Such datasets are either constructed using DMOZ, CommonCrawl, or by manual fetching (using headless browsers\cite{PhishingLoginURLDetection} or simple HTTP clients\cite{}).
+    DMOZ~\cite{DMOZ} is a large human-edited web directory, which has been used in the past to create a dataset of legitimate URLs. However, this project has been discontinued in 2017, and the data is no longer maintained.
+    CommonCrawl~\cite{CommonCrawl} is similar to DMOZ. It is a non-profit organization that crawls the web and makes the data publicly available.
+
+    There are many more datasets to be found, but most of them are derivatives of the aforementioned datasets.
+    For example Ebbu2017~\cite{EBBU2017} and PWD2016~\cite{PWD2016}.
+
+    \subsection{Manually generating datasets}\label{subsec:manually-generating-datasets}
+
+    We've thought about manually generating datasets, in case we are unable to find public datasets.
+    For instance, we could extract malicious URLs from phishing e-mail datasets.
+    We could also manually gather URLs from PhishTank, OpenPhish, or PhishRepo, but we expect that the few weeks that we may be able to gather URLs will not give us a large enough dataset, also considering the need for verification and the unknown project grade contribution of dataset generation.
+
+    In addition, if we are unable to access the PILU-90k dataset, and we want to follow the methodology of only including login pages in the dataset, we would have to manually crawl hundreds of thousands of web pages using headless browsers in order to find the login page.
+    It is currently unknown how much resources we can receive from the department, and in what time-frame you could even complete such a task.
+    We can imagine that browsers especially take many resources and are hard to parallelize.
+    We also expect issues with running into Web Application Firewalls when visiting so many websites, further decreasing the quality of our dataset.
+
+
+    \section{Models based on handcrafted features}\label{sec:models-based-on-handcrafted-features}
+
+    Why considering approaches that relies on handcrafted features?
+    + because it enables to reduce the dimension of the data, so to have a faster treatment and analysis afterwards.
+    Intuitively, the information contained by an URL should be encoded into a far smaller dimension, which is what we try to reproduce by establishing a feature vector.
+    Goal for us is to reduce from one dimension for each character for the biggest URL to one dimension for each interesting information only (ideally we would like each feature to represent one base vector onto the vector space encoding the information).
+    In practice, we will try to find meaningful features that brings the best possible results, so there will be information loss.
+    However, we can efficiently reduce the number of dimension
+    - it reduces the number of information and introduces human intervention, which is bad in general because it introduces biases or lost of information.
+    TODO add a graph on the influence of the number of parameters that we keep on the performance of the different models
+
+    \subsection{Establishment of the feature vector}\label{subsec:establishement-of-the-feature-vector}
+
+    \subsubsection{Computations of different features}
+
+    \subsubsection{Filtering for working with the most relevant features}
+
+    \subsection{Logistic Regression}\label{subsec:logistic-regression}
+
+    \subsubsection{Motivation of this implementation}
+
+    \subsubsection{Implementation}
+
+    \subsubsection{Results}
+
+    \subsection{Support Vector Machine}\label{subsec:support-vector-machine}
+
+    \subsubsection{Motivation of this implementation}
+
+    \subsubsection{Implementation}
+
+    \subsubsection{Results}
+
+    \subsection{Naives Bayes}\label{subsec:naives-bayes}
+
+    \subsubsection{Motivation of this implementation}
+
+    \subsubsection{Implementation}
+
+    \subsubsection{Results}
+
+    \subsection{Nearest neighbours}\label{subsec:nearest-neigbours}
+
+    \subsubsection{Motivation of this implementation}
+
+    \subsubsection{Implementation}
+
+    \subsubsection{Results}
+
+    \subsection{Recurrent neural network}\label{subsec:recurrent-neural-network}
+
+    \subsubsection{Motivation of this implementation}
+
+    \subsubsection{Implementation}
+
+    \subsubsection{Results}
+
+    \subsection{Convolutional neural network}\label{subsec:convolutional-neural-network}
+
+    \subsubsection{Motivation of this implementation}
+
+    \subsubsection{Implementation}
+
+    \subsubsection{Results}
+
+    \subsection{Long Short Term memory}\label{subsec:long-short-term-memory}
+
+    \subsubsection{Motivation of this implementation}
+
+    \subsubsection{Implementation}
+
+    \subsubsection{Results}
+
+
+    \section{Models based on the string embedding}\label{sec:models-based-on-the-string-embedding}
+
+    \subsection{Character level convolutional neural network}\label{subsec:character-level-convolutional-neural-network}
+
+    \subsubsection{Motivation of this implementation}
+
+    \subsubsection{Implementation}
+
+    \subsubsection{Results}
+
+    \subsection{Large language model fine tuning}\label{subsec:large-language-model-finetuning}
+
+    \subsubsection{Motivation of this implementation}
+
+    \subsubsection{Implementation}
+
+    \subsubsection{Results}
+
+
+    \section{Conclusion}\label{sec:conclusion}
+    Bla bla on the contribution that this work brings and how nice and original it is
+    Further perspectives
+
+
+    \bibliographystyle{plain}
+    \bibliography{refs}
+
+\end{document}
