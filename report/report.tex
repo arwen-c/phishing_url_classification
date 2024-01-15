@@ -82,15 +82,28 @@
 %    Is it important or necessary?
 %    What impact will it bring if you finally solve it?
 
-    The impetus for employing machine learning in phishing URL classification stems from the escalating complexity and frequency of cyber threats in today’s digital landscape.
-    Phishing attacks, wherein attackers mimic legitimate entities to extract sensitive data, have grown in both sophistication and scope.
+    The motivation for using machine learning to classify phishing URLs gains urgency against the backdrop of an alarming rise in cyber threats.
+    Phishing, a deceptive practice where attackers pose as legitimate entities to harvest sensitive information, has not only intensified in sophistication but also in frequency.
+    The Anti-Phishing Working Group's (APWG) report for the fourth quarter of 2022 provides a stark illustration: over 4.7 million phishing attacks were recorded in 2022, marking a year-over-year increase exceeding 150\% \cite{PhishingActivityTrendsReport}.
+    The final quarter of that year alone witnessed 1,350,037 attacks, slightly up from the previous quarter's record of 1,270,883 incidents, indicating a persistent and escalating threat.
+
+    The financial sector bore the brunt of these attacks, accounting for 27.7\% of all phishing incidents.
+    Phishing attempts against webmail and software-as-a-service (SAAS) providers were also notable, comprising 17.7\% of the attacks.
+    These attacks, which involve impersonating trusted parties to manipulate victims into transferring funds or revealing sensitive data, have led to losses in the billions.
+    In the fourth quarter of 2022 alone, the average amount requested in wire transfer BEC attacks soared to \$132,559, marking a 41\% increase from the previous quarter.
+
+    In addition, the FBI’s Internet Crime Complaint Center reported a near doubling of phishing incidents from 2019 to 2020, resulting in substantial financial losses.
+
+    The methods employed in these attacks are diverse.
+    The fourth quarter of 2022 saw advance fee fraud scams surpassing gift card requests as the most popular method, accounting for 39\% of all attacks. This shift underscores the adaptability and evolving strategies of attackers. Gift cards, particularly Amazon and Apple cards, remained popular among scammers, with 60\% favoring Amazon cards.
 
     Historically, phishing attempts were more transparent and easier to spot due to their general approach and clear warning signs.
     However, the integration of AI has led to more subtle and customized phishing strategies, using personal information to boost their believability.
     This shift calls for a detection system that is both intelligent and adaptive, capable of keeping pace with these evolving threats.
 
-    The urgency of this issue is highlighted by alarming trends: the FBI’s Internet Crime Complaint Center reported a near doubling of phishing incidents from 2019 to 2020, resulting in substantial financial losses.
-    Additionally, data from the Anti-Phishing Working Group (APWG) reinforces this concern.
+    Today's method of detecting phishing URLs is to rely on blacklists, which are lists of known phishing URLs.
+
+    This landscape of escalating and evolving phishing attacks underscores the critical need for advanced detection methods, including the application of machine learning for phishing URL classification.
 
 %    TODO Statistics on how much money phishing represents nowadays
 
@@ -156,7 +169,6 @@
     \section{Proposed method}\label{sec:proposed-method}
 
 
-
 %    Method chosen: offline URL classification
 %    Advantages of the method chosen: fast computation, language independent
 %
@@ -189,7 +201,6 @@
 %
 %    - Different approaches : making clusters with imposing the categories that we expect, or seeing what categories it makes on its own, by clustering and finding out what each clusters is linked with
 
-    \subsection{Model - introduction}\label{subsec:model---introduction}
 
     A first approach of this URL classification problem could try a new machine learning method and try to apply it to this specific problem and comparing it to the different results that the literature.
     This is very interesting to get in depth with one specific model.
@@ -262,25 +273,131 @@
     \section{Models based on handcrafted features}\label{sec:models-based-on-handcrafted-features}
 
     Why considering approaches that relies on handcrafted features?
+    because we want to use ML techniques, not only neural networks.
     + because it enables to reduce the dimension of the data, so to have a faster treatment and analysis afterwards.
     Intuitively, the information contained by an URL should be encoded into a far smaller dimension, which is what we try to reproduce by establishing a feature vector.
     Goal for us is to reduce from one dimension for each character for the biggest URL to one dimension for each interesting information only (ideally we would like each feature to represent one base vector onto the vector space encoding the information).
     In practice, we will try to find meaningful features that brings the best possible results, so there will be information loss.
     However, we can efficiently reduce the number of dimension
     - it reduces the number of information and introduces human intervention, which is bad in general because it introduces biases or lost of information.
-    TODO add a graph on the influence of the number of parameters that we keep on the performance of the different models
 
     \subsection{Establishment of the feature vector}\label{subsec:establishement-of-the-feature-vector}
 
+    TTo start, we're creating a feature vector from URLs - this is our first step in using stats to identify phishing sites.
+    We've picked various features based on existing research, but we've left out those that need complex language processing.
+    Also, we've added some new features we thought would be useful.
+
+    We know some of these features might overlap or be more useful than others.
+    Our plan is to figure out which features are really important and then narrow them down to keep only the best ones for spotting phishing URLs.
+
     \subsubsection{Computations of different features}
 
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{|c|l|p{6cm}|c|c|l|}
+            \hline
+            \textbf{No.} & \textbf{Feature Name} & \textbf{Feature Description}                 & \textbf{Chi Score} & \textbf{Chi Ranking} & \textbf{Source} \\ \hline
+            1            & Number of Dots        & Number of '.' in the URL                     & 64369              & 10                   &                 \\ \hline
+            2            & Number of Hyphens     & Number of '-' in the URL                     & 519064             & 2                    &                 \\ \hline
+            3            & Number of @           & Number of '@' in the URL                     & 4470               & 16                   &                 \\ \hline
+            4            & Number of ?           & Number of '?' in the URL                     & 9005               & 13                   &                 \\ \hline
+            5            & URL Length            & Length of the URL                            & 291630             & 4                    &                 \\ \hline
+            6            & Number of Digits      & Number of digits in the URL                  & 312999             & 3                    &                 \\ \hline
+            7            & Number of /           & Number of '/' in the URL                     & 25734              & 12                   &                 \\ \hline
+            8            & Number of //          & Number of '//' in the URL                    & 194                & 21                   &                 \\ \hline
+            9            & Use of HTTPS          & Counts occurrences of 'https'                & 164580             & 5                    &                 \\ \hline
+            10           & Use of HTTP           & Counts occurrences of 'http'                 & 214                & 20                   &                 \\ \hline
+            11           & Use of WWW            & Counts occurrences of 'www'                  & 1155               & 19                   &                 \\ \hline
+            12           & IP Address Usage      & 1 if IP address is used, 0 otherwise         & 20048              & 14                   &                 \\ \hline
+            13           & Suspicious Word Count & Counts suspicious words in the URL           & 518695             & 1                    &                 \\ \hline
+            14           & TLD Position          & Position of Top-Level Domain in URL          & 19567              & 15                   &                 \\ \hline
+            15           & Path Length Ratio     & Ratio of path length to URL length           & 64                 & 23                   &                 \\ \hline
+            16           & Suspicious Char Count & Counts suspicious characters in URL          & 96471              & 9                    &                 \\ \hline
+            17           & Symbol as Last Char   & 1 if last character is a symbol, 0 otherwise & 0                  & 24                   &                 \\ \hline
+            18           & Redirection Count     & Counts number of '.' in subdomain            & 264180             & 6                    &                 \\ \hline
+            19           & IP Address Presence   & 1 if IP address present, 0 otherwise         & 19912              & 17                   &                 \\ \hline
+            20           & Subdomain Count       & Number of subdomains                         & 67397              & 11                   &                 \\ \hline
+            21           & Port Presence         & 1 if port number present, 0 otherwise        & 385                & 22                   &                 \\ \hline
+            22           & Unicode Char Count    & Number of unicode characters                 & 291297             & 7                    &                 \\ \hline
+            23           & Query Presence        & 1 if query present in the URL, 0 otherwise   & 0                  & 25                   &                 \\ \hline
+        \end{tabular}
+        \caption{Summary of Features Implemented for Phishing URL Detection}
+        \label{table:features}
+    \end{table}
+
     \subsubsection{Filtering for working with the most relevant features}
+
+    We expect some of them to be correlated, and some of them to be irrelevant.
+    To improve our method in terms of computation speed as well as interpretability, we want to keep only the most relevant features.
+    As provided in\cite{LexicalFeatureSelection}, we expect only a small number of features to be improve the accuracy.
+    As showed on their graph below, above a threshold, the accuracy of their model do not increase anymore with the number of features used.
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics{C:\Users\lauri\Documents\_tsinghua\machine_learning\Project\code_git\URL_classification\report\report_img\lexicalfeatureselectionaccuracygraph}
+        \caption{Feature wise accuracy of classifiers from\cite{LexicalFeatureSelection}}
+        \label{fig:}
+    \end{figure}
+
+    Lots of different methods exist to select the most relevant features, among them
+    \begin{itemize}
+        \item Principal Component Analysis (PCA)
+        \item Chi-Square
+        \item Information Gain
+        \item Anova % TODO complete with other methods
+    \end{itemize}
+
+    % TODO justify the analysis of these specific methods
+    In the context of feature selection for binary classification of phishing URLs, we examined the advantages and disadvantages of Principal Component Analysis (PCA), Chi-Square, and Information Gain.
+
+    PCA is a dimensionality reduction method.
+    It is interesting in our context were numerous features may be related.
+    However, we decided to discard it because:
+    \begin{enumerate}
+        \item we loose the interpretability of the features, which is the main motive behind handcrafted features.
+        \item the encoding of a new URL for testing it is more complex, compared to feature selection.
+        Therefore, we loose the practicality of the approach.
+    \end{enumerate}
+
+    We then considered Information Gain, as used in\cite{EfficientDeepLearningPhishingDetection} to feed into neural networks.
+    However, we decided to discard it because:
+
+    In the realm of binary classification for phishing URL detection, we evaluated the suitability of Principal Component Analysis (PCA), Chi-Square, and Information Gain as feature selection methods.
+
+    PCA, known for its dimensionality reduction capabilities, initially seemed promising given the potential interrelation among numerous features.
+    However, we ultimately opted against it due to two primary reasons:
+    \begin{enumerate}
+        \item PCA looses the interpretability of handcrafted features, which is our main motive behind handcrafted features.
+        \item encoding a new URL for testing becomes markedly more complex, detracting from the method's practicality.
+    \end{enumerate}
+
+    Our attention then shifted to Information Gain, as demonstrated in\cite{EfficientDeepLearningPhishingDetection} for feeding into neural networks.
+    While Information Gain excels in measuring entropy reduction and is effective with both categorical and continuous variables, it falls short in capturing the correlation between features since it assesses them in isolation.
+
+    This led us to Chi-Square, used in\cite{LexicalFeatureSelection}, a method renowned for its effectiveness in assessing the relevance of categorical features in classification tasks.
+    Chi-square score is computed using the observed and expected frequencies of the features following the formula:
+    \begin{e}
+        \chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}
+    \end{e}
+    where \( \chi^2 \) is the Chi-Square statistic, \( O_i \) is the observed frequency, and \( E_i \) is the expected frequency under the null hypothesis that the feature and the target are independent.
+
+    Chi-Square quantifies the independence, or lack thereof, between categorical variables and the target variable, offering a straightforward and computationally efficient approach for binary classification.
+
+    Considering these factors, Chi-Square emerged as the most appropriate technique for our study.
+    Its simplicity, efficiency, and focus on categorical feature relevance align well with the nature of our dataset and the objectives of our phishing URL classification project.
+
+
+%    TODO add a graph on the influence of the number of parameters that we keep on the performance of the different models for one or several easy ML models + conclusion on the number k used afterwards
+
+    \subsection{Implementation}\label{subsec:implementation}
+    % @Jop
+    % comment on speeding hyper parameter optimization, how to implement all the different models with the same frameworks, etc.
+    % table with the recap of all hyper parameters, the ranges that have been tried and the best values obtained?
 
     \subsection{Logistic Regression}\label{subsec:logistic-regression}
 
     \subsubsection{Motivation of this implementation}
-
-    \subsubsection{Implementation}
+    We wanted to implement a simple model to have a baseline for the performance of the other models.
 
     \subsubsection{Results}
 
@@ -288,23 +405,18 @@
 
     \subsubsection{Motivation of this implementation}
 
-    \subsubsection{Implementation}
-
     \subsubsection{Results}
 
     \subsection{Naives Bayes}\label{subsec:naives-bayes}
 
     \subsubsection{Motivation of this implementation}
 
-    \subsubsection{Implementation}
-
     \subsubsection{Results}
 
     \subsection{Nearest neighbours}\label{subsec:nearest-neigbours}
 
     \subsubsection{Motivation of this implementation}
-
-    \subsubsection{Implementation}
+    Motivation of this implementation is to have a model that provides non linear decision boundaries.
 
     \subsubsection{Results}
 
@@ -312,23 +424,17 @@
 
     \subsubsection{Motivation of this implementation}
 
-    \subsubsection{Implementation}
-
     \subsubsection{Results}
 
     \subsection{Convolutional neural network}\label{subsec:convolutional-neural-network}
 
     \subsubsection{Motivation of this implementation}
 
-    \subsubsection{Implementation}
-
     \subsubsection{Results}
 
     \subsection{Long Short Term memory}\label{subsec:long-short-term-memory}
 
     \subsubsection{Motivation of this implementation}
-
-    \subsubsection{Implementation}
 
     \subsubsection{Results}
 
