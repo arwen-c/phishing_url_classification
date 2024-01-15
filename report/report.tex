@@ -66,6 +66,10 @@
         The abstract must be limited to one paragraph.
     \end{abstract}
 
+    \newpage
+    \tableofcontents
+    \newpage
+
 
 %    \section{Jop dump}
 %
@@ -118,7 +122,7 @@
 
     \begin{itemize}
 
-        \item An URL detection method (\cite{PhishingURLDetection}) compares different Machine Learning classification algorithm.
+        \item An phishing URL detection method (\cite{PhishingURLDetection}) compares different Machine Learning classification algorithm.
         Their data processing involves first the detection of words through 17 NLP handcrafted features.
         It then relies on a Markov Chain Model to identify random word.
         The classification is based on detecting Typosquatting and employs various algorithms like Naive Bayes, Random Forest, kNN, Adaboost, K-star, SMO, and Decision Tree.
@@ -132,14 +136,14 @@
 
     \end{itemize}
 
-    \subsection{Deepl Learning based approaches}\label{subsec:deepl-learning-based-approaches}
+    \subsection{Deep Learning based approaches}\label{subsec:deep-learning-based-approaches}
 
     \begin{itemize}
         \item  The Spanish national institute for security classifies in\cite{PhishingLoginURLDetection} login form URLs into malicious or legitimate categories through two distinct techniques.
         The first technique employs machine learning with text pre-processing, including symbol-based word separation, text conversion into feature vectors (use 38 features, among them the frequency of symbols, the number of digits, length, \ldots), and classification.
         Eight different classifiers have been used for comparison.
         The second technique utilizes deep learning, specifically a convolutional neural network, with no text preprocessing.
-        The results show that the best performance is archived for the machine learning NLP frequency feature extraction combined with Logistic Regression (accuracy of 96.50%).
+        The results show that the best performance is archived for the machine learning NLP frequency feature extraction combined with Logistic Regression (accuracy of 96.50\%).
 
 
         \item \cite{EfficientDeepLearningPhishingDetection} introduced three Deep Learning models for classifying phishing URLs, utilizing ten of the most relevant handcrafted features out of a total of 18, which included characteristics like the number of dots, length, and the presence of HTTPS. These models included Convolutional Neural Network (CNN), Deep Neural Network (DNN), and Long Short-Term Memory (LSTM). Among these, the LSTM model achieved the best performance, boasting an impressive accuracy of 99.57\%.
@@ -149,6 +153,45 @@
         Their RCNN model obtained 95:02\% accuracy.
 
     \end{itemize}
+
+    \subsection{Datasets}\label{subsec:datasets}
+
+    There exists multiple crowdsource based phasing URL collection applications.
+    The main ones are PhishTank~\cite{PhishTank}, OpenPhish~\cite{OpenPhish}, and PhishRepo~\cite{PhishRepo}.
+    However, due to the relatively short-lived nature of phishing sites after a phishing report, all of these do regular data cleanups.
+    They offer a data feed that you can subscribe too, meaning that if you want to create a dataset, you have to subscribe to the feed for a while, where back-filling is not completely possible.
+    Another popular dataset is Google SafeBrowsing\cite{GoogleSafeBrowsing}, which is integrated into several browsers.
+    Unfortunately, they only expose a query API to check a URL for legitimacy, rather than exposing their entire dataset.
+
+    JPCERT/CC is a Computer Security Incident Response Team established in Japan.
+    The organization coordinates with network service providers, security vendors, government agencies, as well as the industry associations\cite{JPCertCC}.
+    In 2022, they released a URL dataset of phishing sites confirmed from January 2019 to June 2022\cite{JPCertCCDataset}.
+
+    Another dataset published on GitHub contains about 750k malicious URLs and 750k benign URLs\cite{VisualizingRNNInURLDetection}.
+    The malicious set is collected by following the aforementioned PhishTank for a while.
+    For legitimate URLs, they followed the top Alexa websites (an organization tracking most commonly visited websites).
+
+    \subsubsection{Login page based dataset}\label{subsubsec:login-page-based-dataset}
+    In \cite{PhishingLoginURLDetection}, it is mentioned that ``Existing URL datasets use the homepage URL from well-known websites as the legitimate.
+    However, we think that the challenge is to determine if a login form of a website is legitimate or phishing.
+    From our perspective, and to the best of our knowledge, publicly available datasets are not reflecting conditions that represent some real problems for phishing URL detection.''
+    This raises the question of whether the models built on home page-based legitimate websites are even valid (comparing apples and pears).
+    In their dataset (PILU-90K), they only include URLs of pages which contain password fields (suggesting it's a login page).
+
+    \subsubsection{Additional data}\label{subsec:additional-data}
+    These solutions have so far only looked at the URLs, however some datasets also include further data of each URL, such as the HTML title, body, or even a screenshot.
+    For example, the ``Phishing Websites Dataset''\cite{VisualizingRNNInURLDetection} contains the entire HTML of every URL, largely increasing the dataset size and the potential solutions of solving the problem.
+    You can imagine that the content of a webpage reveals much about a website's intent.
+
+    Such datasets are either constructed using DMOZ, CommonCrawl, or by manual fetching (using headless browsers\cite{PhishingLoginURLDetection} or simple HTTP clients).%add citation for http client
+    DMOZ~\cite{DMOZ} is a large human-edited web directory, which has been used in the past to create a dataset of legitimate URLs. However, this project has been discontinued in 2017, and the data is no longer maintained.
+    CommonCrawl~\cite{CommonCrawl} is similar to DMOZ. It is a non-profit organization that crawls the web and makes the data publicly available.
+
+    There are many more datasets to be found, but most of them are derivatives of the aforementioned datasets.
+    For example Ebbu2017~\cite{EBBU2017} and PWD2016~\cite{PWD2016}.
+
+    \subsection{Large Language Models}\label{subsec:large-language-models}
+    PhishBert~\cite{PhishBert} is a large language model
 
 %    Different deep learning model have been used to classify websites.
 %    Two main approaches occurs when trying to analyze the web: classifying a website by analyzing its content or relying on the URL to classify it
@@ -220,43 +263,6 @@
 
 
     \section{Dataset}\label{sec:dataset}
-
-    \subsection{Existing datasets}\label{subsec:datasets}
-
-    There exists multiple crowdsource based phasing URL collection applications.
-    The main ones are PhishTank~\cite{PhishTank}, OpenPhish~\cite{OpenPhish}, and PhishRepo~\cite{PhishRepo}.
-    However, due to the relatively short-lived nature of phishing sites after a phishing report, all of these do regular data cleanups.
-    They offer a data feed that you can subscribe too, meaning that if you want to create a dataset, you have to subscribe to the feed for a while, where back-filling is not completely possible.
-    Another popular dataset is Google SafeBrowsing\cite{GoogleSafeBrowsing}, which is integrated into several browsers.
-    Unfortunately, they only expose a query API to check a URL for legitimacy, rather than exposing their entire dataset.
-
-    JPCERT/CC is a Computer Security Incident Response Team established in Japan.
-    The organization coordinates with network service providers, security vendors, government agencies, as well as the industry associations\cite{JPCertCC}.
-    In 2022, they released a URL dataset of phishing sites confirmed from January 2019 to June 2022\cite{JPCertCCDataset}.
-    The dataset is available on GitHub, and although there is no concrete distinct URL count, our wild guess is that it contains about 100k unique URLs.
-
-    Another dataset published on GitHub contains about 750k malicious URLs and 750k benign URLs\cite{VisualizingRNNInURLDetection}.
-    The malicious set is collected by following the aforementioned PhishTank for a while.
-    For legitimate URLs, they followed the top Alexa websites (an organization tracking most commonly visited websites).
-
-    \cite{PhishingLoginURLDetection} mentions however that ``Existing URL datasets use the homepage URL from well-known websites as the legitimate.
-    However, we think that the challenge is to determine if a login form of a website is legitimate or phishing.
-    From our perspective, and to the best of our knowledge, publicly available datasets are not reflecting conditions that represent some real problems for phishing URL detection.''
-    This raises the question of whether the models built on home page-based legitimate websites are even valid (comparing apples and pears).
-    In their dataset (PILU-90K), they only include URLs of pages which contain password fields (suggesting it's a login page).
-    Unfortunately, the website hosting this dataset is no longer working.
-    We've requested a copy of the dataset via e-mail, but there are no guarantees that we can get access to this dataset.
-
-    These solutions have so far only looked at the URLs, however some datasets also include further data of each URL, such as the HTML title, body, or even a screenshot.
-    For example, the ``Phishing Websites Dataset''\cite{VisualizingRNNInURLDetection} contains the entire HTML of every URL, largely increasing the dataset size and the potential solutions of solving the problem.
-    You can imagine that the content of a webpage reveals much about a website's intent.
-
-    Such datasets are either constructed using DMOZ, CommonCrawl, or by manual fetching (using headless browsers\cite{PhishingLoginURLDetection} or simple HTTP clients).%add citation for http client
-    DMOZ~\cite{DMOZ} is a large human-edited web directory, which has been used in the past to create a dataset of legitimate URLs. However, this project has been discontinued in 2017, and the data is no longer maintained.
-    CommonCrawl~\cite{CommonCrawl} is similar to DMOZ. It is a non-profit organization that crawls the web and makes the data publicly available.
-
-    There are many more datasets to be found, but most of them are derivatives of the aforementioned datasets.
-    For example Ebbu2017~\cite{EBBU2017} and PWD2016~\cite{PWD2016}.
 
     \subsection{Manually generating datasets}\label{subsec:manually-generating-datasets}
 
@@ -332,12 +338,13 @@
     As provided in\cite{LexicalFeatureSelection}, we expect only a small number of features to be improve the accuracy.
     As showed on their graph below, above a threshold, the accuracy of their model do not increase anymore with the number of features used.
 
-    \begin{figure}[H]
-        \centering
-        \includegraphics{C:\Users\lauri\Documents\_tsinghua\machine_learning\Project\code_git\URL_classification\report\report_img\lexicalfeatureselectionaccuracygraph}
-        \caption{Feature wise accuracy of classifiers from\cite{LexicalFeatureSelection}}
-        \label{fig:}
-    \end{figure}
+% TODO: add graph from LexicalFeatureSelection
+%    \begin{figure}[H]
+%        \centering
+%        \includegraphics{lexicalfeatureselectionaccuracygraph}
+%        \caption{Feature wise accuracy of classifiers from\cite{LexicalFeatureSelection}}
+%        \label{fig:}
+%    \end{figure}
 
     Lots of different methods exist to select the most relevant features, among them
     \begin{itemize}
@@ -376,9 +383,9 @@
 
     This led us to Chi-Square, used in\cite{LexicalFeatureSelection}, a method renowned for its effectiveness in assessing the relevance of categorical features in classification tasks.
     Chi-square score is computed using the observed and expected frequencies of the features following the formula:
-    \begin{e}
+    \begin{equation}
         \chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}
-    \end{e}
+    \end{equation}
     where \( \chi^2 \) is the Chi-Square statistic, \( O_i \) is the observed frequency, and \( E_i \) is the expected frequency under the null hypothesis that the feature and the target are independent.
 
     Chi-Square quantifies the independence, or lack thereof, between categorical variables and the target variable, offering a straightforward and computationally efficient approach for binary classification.
