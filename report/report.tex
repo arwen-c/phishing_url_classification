@@ -77,13 +77,22 @@
 
 
     \section{Problem description and motivation}\label{sec:problem-description-and-motivation}
+%    What’s the background of the problem?
+%    Is it theory-driven, or deeply rooted in some useful application situations?
+%    Is it important or necessary?
+%    What impact will it bring if you finally solve it?
 
-    What’s the background of the problem?
-    Is it theory-driven, or deeply rooted in some useful application situations?
-    Is it important or necessary?
-    What impact will it bring if you finally solve it?
+    The impetus for employing machine learning in phishing URL classification stems from the escalating complexity and frequency of cyber threats in today’s digital landscape.
+    Phishing attacks, wherein attackers mimic legitimate entities to extract sensitive data, have grown in both sophistication and scope.
 
-    Statistics on how much money phishing represents nowadays
+    Historically, phishing attempts were more transparent and easier to spot due to their general approach and clear warning signs.
+    However, the integration of AI has led to more subtle and customized phishing strategies, using personal information to boost their believability.
+    This shift calls for a detection system that is both intelligent and adaptive, capable of keeping pace with these evolving threats.
+
+    The urgency of this issue is highlighted by alarming trends: the FBI’s Internet Crime Complaint Center reported a near doubling of phishing incidents from 2019 to 2020, resulting in substantial financial losses.
+    Additionally, data from the Anti-Phishing Working Group (APWG) reinforces this concern.
+
+%    TODO Statistics on how much money phishing represents nowadays
 
 
     \section{Related works}\label{sec:related-works}
@@ -147,37 +156,38 @@
     \section{Proposed method}\label{sec:proposed-method}
 
 
-    Method chosen: offline URL classification
-    Advantages of the method chosen: fast computation, language independent
 
-    We aim to find the bests performances on classifying malicious from legitimate URL by implementing comparative machine learning and deep learning approaches.
-
-    Regarding machine learning, the modeling process consists in three steps: pre processing (converting URL into text), extraction of feature and classification.
-    We want to compare the performance of different classifiers, by optimizing simultaneously the construction of the feature and their selection.
-
-    Regarding deep learning, the performance mainly depends on the layer architecture.
-    Our objective is to try replicating one or two neurons architectures among the more performing on previous works.
-    Some additional data treatment may be done.
-
-    Very rich literature on the subject, we want to benchmark them and compare them on the same dataset.
-
-    What are the motivations for you to choose it?
-    Which datasets do you propose to
-    experiment on?
-    What baseline approaches do you plan to compare with?
-    How do you implement your proposed method based on the dataset?
-    It is ok to change and improve it later but now try to describe it as detailed as possible.
-
-    Inspired from different techniques and analysis used to classify URL, we will try to identify the category of website the URL relates to
-
-    - test of different ML algorithm for performance comparison (linear regression, deep neural network, modification of pre train text analysis model) to compare and select the best model
-
-    - test of different datasets, and the results of training on one/test on the other (different datasets available on kaggle and on the net) - possibility on comparing the results depending on the date/epoque of the dataset, the countries they are from, \ldots and see what comes up
-
-    - what do the domain name tells us about the website?
-    do we have some better performances analyzing some complete URL? If yes, how much does it increases the performance of the model?
-
-    - Different approaches : making clusters with imposing the categories that we expect, or seeing what categories it makes on its own, by clustering and finding out what each clusters is linked with
+%    Method chosen: offline URL classification
+%    Advantages of the method chosen: fast computation, language independent
+%
+%    We aim to find the bests performances on classifying malicious from legitimate URL by implementing comparative machine learning and deep learning approaches.
+%
+%    Regarding machine learning, the modeling process consists in three steps: pre processing (converting URL into text), extraction of feature and classification.
+%    We want to compare the performance of different classifiers, by optimizing simultaneously the construction of the feature and their selection.
+%
+%    Regarding deep learning, the performance mainly depends on the layer architecture.
+%    Our objective is to try replicating one or two neurons architectures among the more performing on previous works.
+%    Some additional data treatment may be done.
+%
+%    Very rich literature on the subject, we want to benchmark them and compare them on the same dataset.
+%
+%    What are the motivations for you to choose it?
+%    Which datasets do you propose to
+%    experiment on?
+%    What baseline approaches do you plan to compare with?
+%    How do you implement your proposed method based on the dataset?
+%    It is ok to change and improve it later but now try to describe it as detailed as possible.
+%
+%    Inspired from different techniques and analysis used to classify URL, we will try to identify the category of website the URL relates to
+%
+%    - test of different ML algorithm for performance comparison (linear regression, deep neural network, modification of pre train text analysis model) to compare and select the best model
+%
+%    - test of different datasets, and the results of training on one/test on the other (different datasets available on kaggle and on the net) - possibility on comparing the results depending on the date/epoque of the dataset, the countries they are from, \ldots and see what comes up
+%
+%    - what do the domain name tells us about the website?
+%    do we have some better performances analyzing some complete URL? If yes, how much does it increases the performance of the model?
+%
+%    - Different approaches : making clusters with imposing the categories that we expect, or seeing what categories it makes on its own, by clustering and finding out what each clusters is linked with
 
     \subsection{Model - introduction}\label{subsec:model---introduction}
 
