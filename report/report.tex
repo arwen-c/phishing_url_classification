@@ -172,7 +172,7 @@
     For legitimate URLs, they followed the top Alexa websites (an organization tracking most commonly visited websites).
 
     \subsubsection{Login page based dataset}\label{subsubsec:login-page-based-dataset}
-    In \cite{PhishingLoginURLDetection}, it is mentioned that ``Existing URL datasets use the homepage URL from well-known websites as the legitimate.
+    In\cite{PhishingLoginURLDetection}, it is mentioned that ``Existing URL datasets use the homepage URL from well-known websites as the legitimate.
     However, we think that the challenge is to determine if a login form of a website is legitimate or phishing.
     From our perspective, and to the best of our knowledge, publicly available datasets are not reflecting conditions that represent some real problems for phishing URL detection.''
     This raises the question of whether the models built on home page-based legitimate websites are even valid (comparing apples and pears).
@@ -338,13 +338,12 @@
     As provided in\cite{LexicalFeatureSelection}, we expect only a small number of features to be improve the accuracy.
     As showed on their graph below, above a threshold, the accuracy of their model do not increase anymore with the number of features used.
 
-% TODO: add graph from LexicalFeatureSelection
-%    \begin{figure}[H]
-%        \centering
-%        \includegraphics{lexicalfeatureselectionaccuracygraph}
-%        \caption{Feature wise accuracy of classifiers from\cite{LexicalFeatureSelection}}
-%        \label{fig:}
-%    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics{report_img/lexicalfeatureselectionaccuracygraph}
+        \caption{Feature wise accuracy of classifiers from\cite{LexicalFeatureSelection}}
+        \label{fig:}
+    \end{figure}
 
     Lots of different methods exist to select the most relevant features, among them
     \begin{itemize}
@@ -405,12 +404,17 @@
 
     \subsubsection{Motivation of this implementation}
     We wanted to implement a simple model to have a baseline for the performance of the other models.
+    Its easy implementation makes it a practical model for experimenting.
+    It also provides a good interpretability of the results.
 
     \subsubsection{Results}
 
     \subsection{Support Vector Machine}\label{subsec:support-vector-machine}
 
     \subsubsection{Motivation of this implementation}
+    Idea behind the choice of Support Vector Machine was to chose a non linear kernel, and to have a model that provides non linear decision boundaries.
+    However, for optimization reasons, we chose to use a linear kernel, because it is the fastest to train on our dataset using scikit-learn, and the only available method using cumul.
+    We, of course, find the same results than the linear regression, but we run it as a test to check that this implementation and linear regression are both working.
 
     \subsubsection{Results}
 

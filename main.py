@@ -1,4 +1,6 @@
 import pandas as pd
+from sklearn.feature_selection import SelectKBest, chi2
+
 from feature_vector import *
 from sklearn.model_selection import cross_val_score
 
@@ -15,36 +17,36 @@ if __name__ == "__main__":
     val_x = feature_vector(val_df["val_x"])
     # test_x = feature_vector(test_df["test_x"])
 
-    # INFORMATION GAIN feature selection - better suited for correlated data
-
-    # Calculate Information Gain using mutual_info_classif
-    info_gain_selector = SelectKBest(mutual_info_classif, k=10)
-    info_gain_selector.fit(train_x, train_df["train_y"])
-
-    # Get the information gain scores and corresponding feature names
-    info_gain_scores = info_gain_selector.scores_
-
+    # # INFORMATION GAIN feature selection - better suited for correlated data
+    #
+    # # Calculate Information Gain using mutual_info_classif
+    # info_gain_selector = SelectKBest(mutual_info_classif, k=10)
+    # info_gain_selector.fit(train_x, train_df["train_y"])
+    #
+    # # Get the information gain scores and corresponding feature names
+    # info_gain_scores = info_gain_selector.scores_
+    #
     # # Print information gain scores and feature names
     # print("Information Gain Scores:")
     # for feature, score in enumerate(info_gain_scores):
     #     print(f"{feature}: {score}")
 
-    # convert the data into a feature vector with only the selected features
-    selected_feature_indices = info_gain_selector.get_support(indices=True)
-    train_x = train_x[:, selected_feature_indices]
+    # CHI SQUARE
 
-    # # CHI SQUARE
-    #
-    # chi2_selector = SelectKBest(chi2, k="all")
-    # chi2_selector.fit(train_x, train_y)
-    #
-    # # Get the chi-square scores and corresponding feature names
-    # chi2_scores = chi2_selector.scores_
-    #
-    # # Print chi-square scores and feature names
-    # print("\nChi-Square Scores:")
-    # for feature, score in enumerate(chi2_scores):
-    #     print(f"{feature}: {score}")
+    chi2_selector = SelectKBest(score_func=chi2, k="all")
+    chi2_selector.fit(train_x, train_df["train_y"])
+
+    # Get the chi-square scores and corresponding feature names
+    chi2_scores = chi2_selector.scores_
+
+    # Print chi-square scores and feature names
+    print("\nChi-Square Scores:")
+    for feature, score in enumerate(chi2_scores):
+        print(f"{feature}: {score}")
+
+    # convert the data into a feature vector with only the selected features
+    selected_feature_indices = chi2_selector.get_support(indices=True)
+    train_x = train_x[:, selected_feature_indices]
 
     # train the model
     logistic_classifier, bayes_classifier, svm_classifier = machine_learning_models(

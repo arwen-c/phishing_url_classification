@@ -10,7 +10,7 @@ load_model = False
 
 # TODO: determine the best values for the hyperparameters, like the learning rate
 
-number_of_features: int = 11
+number_of_features: int = 23
 
 
 def model_builder(hp):
@@ -157,7 +157,8 @@ def model_builder_cnn(hp):
 
 
 if __name__ == "__main__":
-    model = model_builder_cnn(None)
+    # model = model_builder_dnn(None)
+    model = model_builder_lstm(None)
     model.summary()
 
     # import the csv data from train_x.csv, val_x.csv and test_x.csv
