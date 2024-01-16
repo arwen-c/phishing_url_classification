@@ -32,7 +32,8 @@
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
-\usepackage{xcolor}         % colors
+\usepackage{xcolor}
+\usepackage{cleveref}         % colors
 
 \title{Machine Learning Project Report}
 
@@ -154,6 +155,11 @@
 
     \end{itemize}
 
+    \subsection{Large Language Models}\label{subsec:large-language-models}
+    PhishBert~\cite{PhishBert} is a Bert based model that is pretrained with the manipulated token detection objective on 3 billion URLs.
+    A classification layer is then added and fine-tuned on a smaller dataset with the objective of detecting phishing URLs.
+    The model achieves an unspecified, but close to 100 percent accuracy depending on the amount of data in their pre-training stage.
+
     \subsection{Datasets}\label{subsec:datasets}
 
     There exists multiple crowdsource based phasing URL collection applications.
@@ -189,9 +195,6 @@
 
     There are many more datasets to be found, but most of them are derivatives of the aforementioned datasets.
     For example Ebbu2017~\cite{EBBU2017} and PWD2016~\cite{PWD2016}.
-
-    \subsection{Large Language Models}\label{subsec:large-language-models}
-    PhishBert~\cite{PhishBert} is a large language model
 
 %    Different deep learning model have been used to classify websites.
 %    Two main approaches occurs when trying to analyze the web: classifying a website by analyzing its content or relying on the URL to classify it
@@ -262,19 +265,18 @@
     \end{figure}
 
 
-    \section{Dataset}\label{sec:dataset}
+    \subsection{Dataset}\label{sec:dataset}
+    In our initial project proposal, we intended to utilize the PILU-90K~\cite{PhishingURLDetection}. However, accessing this dataset proved to be challenging due to the requirement of a formal request by a professor supervising the project. Consequently, we shifted our focus to the most extensive dataset identified in our research, specifically the one proposed in~\cite{VisualizingRNNInURLDetection}. Among the available datasets with sufficient volume for neural network model training, this particular dataset is the most recent and provides open access.
 
-    \subsection{Manually generating datasets}\label{subsec:manually-generating-datasets}
+    Originally, this dataset is tailored for training Recurrent Neural Network (RNN) models, with its data already encoded in integer array formats. To adapt this dataset for broader Machine Learning applications, we undertook a preprocessing step to convert these integer arrays back into textual URL formats. Furthermore, in our exploration of neural network methodologies, we are not only utilizing the original vectorization techniques of the dataset but also experimenting with alternative vectorization strategies.
 
     We've thought about manually generating datasets, in case we are unable to find public datasets.
     For instance, we could extract malicious URLs from phishing e-mail datasets.
     We could also manually gather URLs from PhishTank, OpenPhish, or PhishRepo, but we expect that the few weeks that we may be able to gather URLs will not give us a large enough dataset, also considering the need for verification and the unknown project grade contribution of dataset generation.
 
-    In addition, if we are unable to access the PILU-90k dataset, and we want to follow the methodology of only including login pages in the dataset, we would have to manually crawl hundreds of thousands of web pages using headless browsers in order to find the login page.
-    It is currently unknown how much resources we can receive from the department, and in what time-frame you could even complete such a task.
-    We can imagine that browsers especially take many resources and are hard to parallelize.
-    We also expect issues with running into Web Application Firewalls when visiting so many websites, further decreasing the quality of our dataset.
-
+    In addition, if we want to follow the methodology described in ~\cite{PhishingLoginURLDetection}, we would have to manually crawl hundreds of thousands of web pages using headless browsers in order to find the login page.
+    We did not consider this option because of the time and resources required, especially since browsers take many resources and are hard to parallelize.
+    We also expected issues with running into Web Application Firewalls when visiting so many websites, further decreasing the quality of our dataset.
 
     \section{Models based on handcrafted features}\label{sec:models-based-on-handcrafted-features}
 
@@ -396,6 +398,31 @@
 %    TODO add a graph on the influence of the number of parameters that we keep on the performance of the different models for one or several easy ML models + conclusion on the number k used afterwards
 
     \subsection{Implementation}\label{subsec:implementation}
+
+    \subsubsection{Preprocessing}\label{subsubsec:preprocessing}
+    Since we are building models based on both handcrafted features and on the string embedding, we need to preprocess the data differently.
+    In the directory \texttt{data\textbackslash convert}, we provide a script \texttt{dill\_to\_csv.py} to convert the dill dataset from the integer array format to a textual URL format.
+    The result is stored in \texttt{data\textbackslash csv\textbackslash (test/train/val).csv}.
+    The other script \texttt{csv\_to\_feature\_vector.py} converts this csv from textual URL format to a feature vector using the feature selection described in \Cref{subsec:establishement-of-the-feature-vector}.
+    The results are stored in \texttt{data\textbackslash feature\_vector\textbackslash (k)\textbackslash (test\_x/train\_x/val\_x).csv} where is k refers to the k in top k selected features.
+
+    \subsubsection{Machine Learning}
+    For the machine learning framework, we decided to use RAPIDS AI’s cuML over sklearn due to its significant performance advantages when dealing with large datasets.
+    Leveraging the GPU, cuML achieves a 10 to 50 times speedup compared to CPU-bound libraries like sklearn.
+    Unlike sklearn, which operates primarily on CPUs and can struggle with scalability, cuML is designed to handle vast amounts of data more efficiently.
+    Additionally, its API mirrors that of sklearn, offering ease of use and a familiar environment for those accustomed to sklearn, but with the added benefit of GPU acceleration.
+    This makes cuML an attractive choice for projects without the need for extensive adjustment to new programming paradigms.
+
+    The framework does not provide solutions to perform hyperparameter optimization, so we picked another library called hyperopt for this.
+    Hyperopt is a powerful and versatile library for hyperparameter optimization in machine learning algorithms.
+    Hyperopt employs Bayesian optimization, specifically the Tree of Parzen Estimators (TPE) algorithm, which stands out for its efficiency in navigating the hyperparameter space.
+    Unlike the exhaustive search approach used in sklearn's GridSearchCV or the randomness of RandomizedSearchCV, Hyperopt's method is more focused and informed, learning from each iteration to concentrate on the most promising hyperparameter combinations.
+    Optuna is another library that offers similar features.
+    Hyperopt was a more appropriate choice for this project due to our experience with it and its ability to serve all our hyperparameter needs.
+
+    Since most of the tested Machine Learning algorithms are quick and require little memory, we used hyperopt's \texttt{MongoTrials} to parallelize the parameter search.
+    A simple Docker Compose yaml file is provided.
+
     % @Jop
     % comment on speeding hyper parameter optimization, how to implement all the different models with the same frameworks, etc.
     % table with the recap of all hyper parameters, the ranges that have been tried and the best values obtained?

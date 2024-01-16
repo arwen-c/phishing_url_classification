@@ -1,9 +1,9 @@
 import cuml
 import cupy as cp
-import pandas as pd
-from hyperopt import hp, STATUS_OK, fmin, tpe, Trials, STATUS_FAIL
+from hyperopt import hp, STATUS_OK, fmin, tpe, STATUS_FAIL
+from hyperopt.mongoexp import MongoTrials
 
-from feature_vector import feature_vector
+from data.load.load import load_feature_vector
 
 
 def scale_data(x):
@@ -205,23 +205,16 @@ def train_kernel_ridge_regression_params(train_x, train_y,
 
 
 def main():
-    # import the csv data
-    train_df = pd.read_csv("data/train_x.csv")
-    val_df = pd.read_csv("data/val_x.csv")
+    train_x, train_y, val_x, val_y, _, _ = load_feature_vector(k=10)
 
     # NOTE: convert to float when using kernel ridge
-    # transform the data into a feature vector
-    print("Transforming data...")
-    train_x_fv = feature_vector(train_df["train_x"])
-    train_x = cp.asarray(train_x_fv).astype(cp.float64)
-    train_y = cp.asarray(train_df["train_y"]).astype(cp.float64)
+    train_x = cp.asarray(train_x).astype(cp.float64)
+    train_y = cp.asarray(train_y).astype(cp.float64)
+    val_x = cp.asarray(val_x).astype(cp.float64)
+    val_y = cp.asarray(val_y).astype(cp.float64)
 
-    val_x_fv = feature_vector(val_df["val_x"])
-    val_x = cp.asarray(val_x_fv).astype(cp.float64)
-    val_y = cp.asarray(val_df["val_y"]).astype(cp.float64)
-
-    # Define the trials
-    trials = Trials()
+    # Define the trials with password
+    trials = MongoTrials('mongo://root:example@localhost:27017/hyperopt/jobs', exp_key='exp1')
 
     print("Starting Hyperparameter Tuning...")
     # Example of tuning Logistic Regression Hyperparameters
