@@ -1,4 +1,5 @@
 import tensorflow as tf
+from tqdm import tqdm
 from transformers import TFBertForSequenceClassification, BertTokenizer
 
 from data.load.load import load_csv
@@ -10,7 +11,7 @@ def encode(urls):
     input_ids = []
     attention_masks = []
 
-    for url in urls:
+    for url in tqdm(urls):
         inputs = tokenizer.encode_plus(
             url,
             max_length=160,
@@ -25,7 +26,6 @@ def encode(urls):
 
 def main():
     train_x, train_y, val_x, val_y, test_x, test_y = load_csv()
-    train_x, train_y, val_x, val_y, test_x, test_y = list(train_x), list(train_y), list(val_x), list(val_y), list(test_x), list(test_y)
 
     input_ids_train, attention_masks_train = encode(train_x)
     input_ids_val, attention_masks_val = encode(val_x)

@@ -5,7 +5,7 @@
 ```shell
 conda create --solver=libmamba -n rapids-23.12 -c rapidsai -c conda-forge -c nvidia cudf=23.12 cuml=23.12 python=3.10 cuda-version=12.0
 conda activate rapids-23.12
-conda install tldextract tqdm pymongo
+conda install tldextract tqdm pymongo matplotlib
 ```
 
 ### Performance
@@ -24,7 +24,8 @@ Best params:  {'alpha': 0.12695561035635183, 'fit_prior': 0}
 
 Nearest Neigbors:
 100%|██████████| 1000/1000 [4:08:21<0:00:00, 15.33s/trial, best loss: -0.9260850548744202]
+Best params:  {'metric': 3, 'n_neighbors': 2}
 
-Kernel Ridge Regression:
-100%|██████████| 1000/1000 [08:49<00:00,  1.89trial/s, best loss: -0.5592113795959864]
-Best params:  {'alpha': 2.7303479146265746, 'coef0': 6.739039719036026, 'degree': 6, 'gamma': 8.3768284075967, 'kernel': 1}
+Random Forest:
+100%|██████████| 50/50 [02:55<00:00,  3.51s/trial, best loss: -0.7207251787185669]
+Best params:  {'bootstrap': 1, 'max_depth': 0, 'max_samples': 0.24595877227188392, 'min_impurity_decrease': 0.09423017634336195, 'min_samples_leaf': 3, 'min_samples_split': 3, 'n_bins': 0, 'n_estimators': 1}

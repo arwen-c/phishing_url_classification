@@ -6,8 +6,8 @@ import numpy as np
 import tldextract
 import unicodedata
 from fuzzywuzzy import process
-from sklearn.feature_selection import SelectKBest, chi2
 from tqdm import tqdm
+from sklearn.feature_selection import SelectKBest, chi2, mutual_info_classif
 
 from data.load.load import load_csv
 
@@ -126,6 +126,7 @@ def feature_vector(x):
         j += 1
         # check whether the URL contains misspelled words
         vector[i][j] = is_misspelled(url)
+        j += 1
     # word detection and random word detection
     print(f"Number of features: {j}")
     return vector
@@ -252,50 +253,43 @@ def main():
 
     os.makedirs(f"{p}/feature_vector", exist_ok=True)
 
-    np.savez_compressed(f"{p}/feature_vector/train_y.npz", train_y.to_numpy())
-    np.savez_compressed(f"{p}/feature_vector/val_y.npz", val_y.to_numpy())
-    np.savez_compressed(f"{p}/feature_vector/test_y.npz", test_y.to_numpy())
+    np.savez_compressed(f"{p}/feature_vector/train_y.npz", train_y)
+    np.savez_compressed(f"{p}/feature_vector/val_y.npz", val_y)
+    np.savez_compressed(f"{p}/feature_vector/test_y.npz", test_y)
 
     # for the top k features
-    for k in [10, 20, 30, 40]:
-        os.makedirs(f"feature_vector/{k}", exist_ok=True)
+    for k in [1, 2, 3, 4, 5, 10, 15, 20, train_x.shape[1]]:
+        for score_func in [chi2, mutual_info_classif]:
+            b = f"{p}/feature_vector/{score_func.__name__}"
+            os.makedirs(f"{b}", exist_ok=True)
+            b += f"/{k}"
+            os.makedirs(f"{b}", exist_ok=True)
 
-        # # INFORMATION GAIN feature selection - better suited for correlated data
-        #
-        # # Calculate Information Gain using mutual_info_classif
-        # info_gain_selector = SelectKBest(mutual_info_classif, k=10)
-        # info_gain_selector.fit(train_x, train_df["train_y"])
-        #
-        # # Get the information gain scores and corresponding feature names
-        # info_gain_scores = info_gain_selector.scores_
-        #
-        # # Print information gain scores and feature names
-        # print("Information Gain Scores:")
-        # for feature, score in enumerate(info_gain_scores):
-        #     print(f"{feature}: {score}")
+            selector = SelectKBest(score_func=score_func, k=k)
+            selector.fit(train_x, train_y)
 
-        # CHI SQUARE
+            # Get the scores and corresponding feature names
+            scores = selector.scores_
 
-        chi2_selector = SelectKBest(score_func=chi2, k="all")
-        chi2_selector.fit(train_x, train_y)
+            # Print chi-square scores and feature names
+            print("\nScores:")
+            for feature, score in enumerate(scores):
+                print(f"{feature}: {score}")
 
-        # Get the chi-square scores and corresponding feature names
-        chi2_scores = chi2_selector.scores_
+            # convert the data into a feature vector with only the selected features
+            selected_feature_indices = selector.get_support(indices=True)
+            train_x_k = train_x[:, selected_feature_indices]
+            val_x_k = val_x[:, selected_feature_indices]
+            test_x_k = test_x[:, selected_feature_indices]
 
-        # Print chi-square scores and feature names
-        print("\nChi-Square Scores:")
-        for feature, score in enumerate(chi2_scores):
-            print(f"{feature}: {score}")
+            np.savez_compressed(f"{b}/train_x.npz", train_x_k)
+            np.savez_compressed(f"{b}/val_x.npz", val_x_k)
+            np.savez_compressed(f"{b}/test_x.npz", test_x_k)
 
-        # convert the data into a feature vector with only the selected features
-        selected_feature_indices = chi2_selector.get_support(indices=True)
-        train_x_k = train_x[:, :selected_feature_indices]
-        val_x_k = val_x[:, :selected_feature_indices]
-        test_x_k = test_x[:, :selected_feature_indices]
-
-        np.savez_compressed(f"{p}/feature_vector/{k}/train_x.npz", train_x_k)
-        np.savez_compressed(f"{p}/feature_vector/{k}/val_x.npz", val_x_k)
-        np.savez_compressed(f"{p}/feature_vector/{k}/test_x.npz", test_x_k)
+            # write the selected indices to a readme file
+            with open(f"{b}/readme.txt", "w") as f:
+                f.write(f"Selected feature indices: {selected_feature_indices}\n")
+                f.write(f"Feature scores: {scores}")
 
 
 if __name__ == "__main__":

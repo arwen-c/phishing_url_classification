@@ -36,7 +36,6 @@
 \usepackage{cleveref}
 \usepackage{enumerate}
 \usepackage{listings}         % colors
-\usepackage{xcolor}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -350,8 +349,8 @@
     Optuna is another library that offers similar features.
     Hyperopt was a more appropriate choice for this project due to our experience with it and its ability to serve all our hyperparameter needs.
 
-    Since most of the tested Machine Learning algorithms are quick and require little memory, we used hyperopt's \texttt{MongoTrials} to parallelize the parameter search.
-    A simple Docker Compose yaml file is provided.
+    Considering that most of the tested Machine Learning algorithms require little memory, we tried to use hyperopt's \texttt{MongoTrials} to parallelize the parameter search.
+    We saw however that it led to no speedup, as the process was mainly GPU processing bound.
 
     \subsection{Deep Learning Frameworks}
     For the deep learning framework, we decided to use Keras due to its simplicity and ease of use.
@@ -643,16 +642,16 @@
     Simple neural network for serving as a baseline for the other models.
 
     \begin{lstlisting}[language=Python, caption=DNN on feature vector architecture]
-        model = keras.Sequential(
-            [
-                layers.InputLayer(input_shape=(number_of_features,)),
-                layers.Dense(units=256, activation="relu"),
-                layers.Dense(units=128, activation="relu"),
-                layers.Dense(units=64, activation="relu"),
-                layers.Dense(units=32, activation="relu"),
-                layers.Dense(units=1, activation="sigmoid"),
-            ]
-        )
+model = keras.Sequential(
+    [
+        layers.InputLayer(input_shape=(number_of_features,)),
+        layers.Dense(units=256, activation="relu"),
+        layers.Dense(units=128, activation="relu"),
+        layers.Dense(units=64, activation="relu"),
+        layers.Dense(units=32, activation="relu"),
+        layers.Dense(units=1, activation="sigmoid"),
+    ]
+)
     \end{lstlisting}
 
     \subsubsection{Convolutional neural network}
@@ -663,32 +662,32 @@
     CNN models are usually used for finding patterns in images or other big dimension data that have spatial arrangement or hierarchy.
 
     \begin{lstlisting}[language=Python, caption=CNN on feature vector architecture]
-        model = keras.Sequential(
-            [
-                layers.Reshape((number_of_features, 1), input_shape=(number_of_features,)),
-                layers.Conv1D(filters=32, kernel_size=3, activation="tanh"),
-                layers.BatchNormalization(),
-                layers.MaxPooling1D(pool_size=2),
-                layers.Conv1D(filters=16, kernel_size=3, activation="tanh"),
-                layers.BatchNormalization(),
-                layers.MaxPooling1D(pool_size=2),
-                layers.Conv1D(filters=128, kernel_size=3, activation="tanh"),
-                layers.BatchNormalization(),
-                layers.MaxPooling1D(pool_size=2),
-                layers.Conv1D(filters=256, kernel_size=3, activation="tanh"),
-                layers.BatchNormalization(),
-                layers.MaxPooling1D(pool_size=2),
-                layers.Conv1D(filters=512, kernel_size=3, activation="tanh"),
-                layers.BatchNormalization(),
-                layers.MaxPooling1D(pool_size=2),
-                layers.Conv1D(filters=1024, kernel_size=3, activation="tanh"),
-                layers.BatchNormalization(),
-                layers.MaxPooling1D(pool_size=2),
-                layers.Flatten(),
-                layers.Dense(units=500, activation="tanh"),
-                layers.Dense(units=1, activation="sigmoid"),
-            ]
-        )
+model = keras.Sequential(
+    [
+        layers.Reshape((number_of_features, 1), input_shape=(number_of_features,)),
+        layers.Conv1D(filters=32, kernel_size=3, activation="tanh"),
+        layers.BatchNormalization(),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Conv1D(filters=16, kernel_size=3, activation="tanh"),
+        layers.BatchNormalization(),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Conv1D(filters=128, kernel_size=3, activation="tanh"),
+        layers.BatchNormalization(),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Conv1D(filters=256, kernel_size=3, activation="tanh"),
+        layers.BatchNormalization(),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Conv1D(filters=512, kernel_size=3, activation="tanh"),
+        layers.BatchNormalization(),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Conv1D(filters=1024, kernel_size=3, activation="tanh"),
+        layers.BatchNormalization(),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Flatten(),
+        layers.Dense(units=500, activation="tanh"),
+        layers.Dense(units=1, activation="sigmoid"),
+    ]
+)
     \end{lstlisting}
 
     \subsubsection{Long Short Term memory}
@@ -699,17 +698,17 @@
 
 
     \begin{lstlisting}[language=Python, caption=LSTM on feature vector architecture]
-        model = keras.Sequential(
-            [
-                # input shape to change because of the change of interpretation of the features
-                layers.Reshape((number_of_features, 1), input_shape=(number_of_features,)),
-                layers.LSTM(units=number_of_features, return_sequences=True),
-                layers.LSTM(units=number_of_features, return_sequences=True),
-                layers.LSTM(units=number_of_features, return_sequences=True),
-                layers.LSTM(units=number_of_features, return_sequences=False),
-                layers.Dense(units=1, activation="sigmoid"),
-            ]
-        )
+model = keras.Sequential(
+    [
+        # input shape to change because of the change of interpretation of the features
+        layers.Reshape((number_of_features, 1), input_shape=(number_of_features,)),
+        layers.LSTM(units=number_of_features, return_sequences=True),
+        layers.LSTM(units=number_of_features, return_sequences=True),
+        layers.LSTM(units=number_of_features, return_sequences=True),
+        layers.LSTM(units=number_of_features, return_sequences=False),
+        layers.Dense(units=1, activation="sigmoid"),
+    ]
+)
     \end{lstlisting}
 
     \subsection{Results}\label{subsec:results2}
@@ -776,14 +775,44 @@
     \subsection{Large language model fine tuning}\label{subsec:large-language-model-finetuning}
 
     \subsubsection{Motivation of this implementation}
-    @Jop complete
-    Personal motivation to want to play with LLM. As well, it is a very recent approach, and we wanted to see how it performs on this problem.
-    Moreover, few studies have been done on this approach, so we found it interesting to propose our new approach and modeling.
+
+    Considering the recent success of large language models in Natural Language Processing (NLP) tasks, we decided to explore the potential of this approach for phishing URL detection. The objective is to leverage the pre-trained language model's knowledge of the English language, such as phishing terminology and common misspellings, to achieve a high accuracy. We expect this approach to be more efficient than the character-level embedding because it is able to learn the spelling of words and the context in which they are used. Besides having a personal interest in LLM, only a few studies have been done on this approach, so we found it interesting to propose our new approach and modeling.
 
     \subsubsection{Implementation}
 
+    The Python package \texttt{transformers} from HuggingFace provides many pre-trained language models that can be directly applied on a task or fine-tuned on a specific dataset. We chose to use Bert because it is the most popular language model and it has been shown to be effective on many NLP task. HuggingFace provides a multilingual version of Bert since our dataset contains URLs in different languages.
+
+    First, we tokenize our dataset into Bert embeddings using the \texttt{transformer} library's provided \texttt{BertTokenizer}.
+
+    \begin{lstlisting}[language=Python, caption=Tokenizing using Bert]
+tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-uncased')
+
+def encode(x): # simplified definition of encode
+    return tokenizer.encode(x)
+
+input_ids_train, attention_masks_train = encode(train_x)
+input_ids_val, attention_masks_val = encode(val_x)
+input_ids_test, attention_masks_test = encode(test_x)
+    \end{lstlisting}
+
+    We then used the \texttt{TFBertForSequenceClassification} class to train the model on our dataset. This model is a Bert model with a classification layer on top of it (i.e. dropout and dense layer). The entire model is fine-tuned on our dataset. We train the model for 3 epochs and a learning rate of 2e-5 such as recommended in the Bert paper\cite{devlin2018bert}.
+
+    \begin{lstlisting}[language=Python, caption=Fine tuning Bert]
+model = TFBertForSequenceClassification.from_pretrained('bert-base-multilingual-uncased')
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=2e-5), loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics="accuracy")
+
+model.fit(
+    [input_ids_train, attention_masks_train],
+    labels_train,
+    validation_data=([input_ids_val, attention_masks_val], labels_val),
+    batch_size=6,
+    epochs=3
+)
+    \end{lstlisting}
+
     \subsubsection{Results}
 
+    Since we're using the \texttt{transformers} library, we cannot easily create a graph of the accuracy and loss over the epochs. However, we can see that the accuracy on the validation set is 98.5\% after 3 epochs. We can also see that the loss on the validation set is still decreasing after 3 epochs, so we could train the model for more epochs to improve the accuracy.
 
     \section{Conclusion}\label{sec:conclusion}
     % TODO the conclusion
