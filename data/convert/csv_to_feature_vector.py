@@ -1,20 +1,15 @@
 import os
 import re
 from urllib.parse import urlparse
-import unicodedata
 
 import numpy as np
 import tldextract
+import unicodedata
+from fuzzywuzzy import process
+from sklearn.feature_selection import SelectKBest, chi2
 from tqdm import tqdm
 
 from data.load.load import load_csv
-
-
-import pandas as pd
-from sklearn.feature_selection import SelectKBest, chi2
-
-from feature_vector import *
-from sklearn.model_selection import cross_val_score
 
 
 # transformation of the data into a feature vector
@@ -53,7 +48,7 @@ def feature_vector(x):
     :param x:
     :return a vector of size number of URL * 11 :
     """
-    vector = np.zeros([x.shape[0], 23])
+    vector = np.zeros([x.shape[0], 26])
 
     url_parsed = urlparse(
         "//www.cwi.nl:80/%7Eguido/Python.html"
@@ -93,7 +88,9 @@ def feature_vector(x):
         vector[i][j] = int(url_tld.domain == url_tld.ipv4)
         j += 1
         # suspicious word detection
-        vector[i][j] = count_suspicious_words(url)
+        vector[i][j] = count_suspicious_study_words(url)
+        j += 1
+        vector[i][j] = count_suspicious_gift_cards_words(url)
         j += 1
         # top level domain detection: give the rank of the first character of the top level domain in the url
         vector[i][j] = url.find(url_tld.suffix)
@@ -123,8 +120,13 @@ def feature_vector(x):
         # whether there is a query in the url
         vector[i][j] = int(bool(url_parsed.query))
         j += 1
+        # Finds the ratio of total number of special characters
+        # to the length of URL
+        vector[i][j] = sum(1 for char in url if not char.isalnum()) / len(url)
+        j += 1
+        # check whether the URL contains misspelled words
+        vector[i][j] = is_misspelled(url)
     # word detection and random word detection
-    ### TODO  add more high level features
     print(f"Number of features: {j}")
     return vector
 
@@ -135,7 +137,7 @@ def count_suspicious_chars(url):
     return suspicious_chars_count
 
 
-def count_suspicious_words(url):
+def count_suspicious_study_words(url):
     sum_suspicious_words = 0
     suspicious_words = [
         "token",
@@ -164,6 +166,14 @@ def count_suspicious_words(url):
     return sum_suspicious_words
 
 
+def count_suspicious_gift_cards_words(url):
+    sum_suspicious_words = 0
+    suspicious_words = ["giftcard", "gift_card", "gift-card"]
+    for word in suspicious_words:
+        sum_suspicious_words += url.count(word)
+    return sum_suspicious_words
+
+
 def check_ip_address_presence(url):
     # Regular expression to match an IPv4 address
     ip_pattern = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
@@ -179,6 +189,55 @@ def check_port_presence(url):
     match = port_pattern.search(url)
     if match:
         return 1
+    return 0
+
+
+def is_misspelled(string, threshold_low=80, threshold_high=98):
+    """
+    Function checks whether there are at least one misspelling in a URL by comparing the spell of words used with the real
+    spelling 25 regular misspelled words in phishing URL. Words are retrieved by splitting between any non letter characters
+
+    :param string: URL
+    :param threshold_low: minimum threshold of similarity to be considered matching one of the common legit names
+    :param threshold_high: maximum threshold of similarity to be considered misspelled compared to the legit name
+    :return: an approximation of the number of misspelled words that the URL contains. Do not take misspelling using
+    numbers into account
+    """
+    legit_names_misspelled = [
+        "google",
+        "microsoft",
+        "facebook",
+        "apple",
+        "amazon",
+        "paypal",
+        "linkedin",
+        "yahoo",
+        "twitter",
+        "instagram",
+        "netflix",
+        "ebay",
+        "spotify",
+        "adobe",
+        "dropbox",
+        "wordpress",
+        "github",
+        "uber",
+        "airbnb",
+        "visa",
+        "mastercard",
+        "americanexpress",
+        "walmart",
+        "cisco",
+        "oracle",
+    ]
+    words = re.split(r"[^a-zA-Z]", string)  # split the URL in parts of words
+    words = [word for word in words if word]  # remove empty words
+    for word in words:
+        # Check if the word is misspelled by comparing it to the list of common legit names
+        match, score = process.extractOne(word, legit_names_misspelled)
+        if threshold_low <= score <= threshold_high:
+            return 1
+
     return 0
 
 

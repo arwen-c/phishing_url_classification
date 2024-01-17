@@ -374,6 +374,11 @@
         \label{tab:features}
     \end{table}
 
+    Some features have been designed by ourselves after reading on phishing.
+    For example, because gift cards are a lot target by phishing attacks, we decided add a criteria to check whether the URL contains words like gift cards with different spelling.
+    In our training dataset, it represents 200 URL.
+    We also added a custom parameters that checks whether the URL contains misspelling using fuzzywuzzy import process and the similarity to a list of common misspelled names in URL
+
     Not use of some features proposed by the articles like:
     \begin{itemize}
         \item DNS lookup from\cite{PhishSafe} because we want to avoid the DNS call
@@ -382,7 +387,7 @@ with the WHOIS database record, then the web page is considered as phishing from
         \item Age of Domain: If the age of website is less than 6 month, then chances of fake
 web page are more from\cite{PhishSafe}
     \end{itemize}
-    The three firsts featurse have not been chosen because they require additional information than the URL itself
+    The three firsts features have not been chosen because they require additional information than the URL itself
 
     \subsubsection{Filtering for working with the most relevant features}
 
@@ -398,13 +403,16 @@ web page are more from\cite{PhishSafe}
         \label{fig:}
     \end{figure}
 
-    Lots of different methods exist to select the most relevant features, among them
+    Lots of different methods exist to select the most relevant features, among them:
     \begin{itemize}
         \item Principal Component Analysis (PCA)
+        \item Singular Value Decomposition (SVD)
+        \item Variance Thresholding
         \item Chi-Square
         \item Information Gain
-        \item Anova % TODO complete with other methods
     \end{itemize}
+
+    However, some methods like PCA or SVD are built for dealing with large dimensions datasets, which is not adapted to our small feature selection.
 
     % TODO justify the analysis of these specific methods
     In the context of feature selection for binary classification of phishing URLs, we examined the advantages and disadvantages of Principal Component Analysis (PCA), Chi-Square, and Information Gain.
@@ -490,6 +498,9 @@ web page are more from\cite{PhishSafe}
     Interesting with this model is also the interpretability that it could provide for further studies.
 
     \subsubsection{Kernel Ridge Regression}
+
+    Different kernel function that we tried:
+    `linear', `additive\_chi2', `chi2', `cosine', `laplacian', `polynomial', `poly', `rbf', `sigmoid'
     % TODO complete
 
     \subsubsection{Random Forest}
@@ -499,13 +510,6 @@ web page are more from\cite{PhishSafe}
     Provide a measure of feature importance, which is interesting for us to compare with our feature selection is relevant.
     Easy to train in parallel, which is interesting for our set up, and handle large datasets easily.
     % TODO: remove the last sentence or give a ranking of the most important features according to this model, or conslude that it could be used in further studies to improve the feature selection
-
-    \subsubsection{MBSGD Classifier}
-    % TODO complete
-    
-    \subsubsection{SGD Classifier}
-    % TODO complete
-
 
     \subsection{Results}\label{subsec:results}
 
