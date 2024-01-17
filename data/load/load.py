@@ -54,17 +54,17 @@ def remove_rows_only_zero(x, y):
     return x[non_empty_indices], y[non_empty_indices]
 
 
-def load_feature_vector(k=10, *kwargs):
+def load_feature_vector(k=10, score_func="chi2", *kwargs):
     import numpy as np
 
     p = os.path.dirname(os.path.abspath(__file__)) + "/.."
 
     # Loading the compressed .npz files and extracting the first array in each file
-    train_x = np.load(f"{p}/feature_vector/{k}/train_x.npz")['arr_0']
+    train_x = np.load(f"{p}/feature_vector/{score_func}/{k}/train_x.npz")['arr_0']
     train_y = np.load(f"{p}/feature_vector/train_y.npz")['arr_0']
-    val_x = np.load(f"{p}/feature_vector/{k}/val_x.npz")['arr_0']
+    val_x = np.load(f"{p}/feature_vector/{score_func}/{k}/val_x.npz")['arr_0']
     val_y = np.load(f"{p}/feature_vector/val_y.npz")['arr_0']
-    test_x = np.load(f"{p}/feature_vector/{k}/test_x.npz")['arr_0']
+    test_x = np.load(f"{p}/feature_vector/{score_func}/{k}/test_x.npz")['arr_0']
     test_y = np.load(f"{p}/feature_vector/test_y.npz")['arr_0']
 
     return train_x, train_y, val_x, val_y, test_x, test_y

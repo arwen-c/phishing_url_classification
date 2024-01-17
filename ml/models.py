@@ -1,10 +1,5 @@
 import cuml
-import cupy as cp
-from hyperopt import hp, STATUS_OK, fmin, tpe, STATUS_FAIL
-from hyperopt.mongoexp import MongoTrials
-from sklearn.metrics import accuracy_score
-
-from data.load.load import load_feature_vector
+from hyperopt import hp, STATUS_OK, STATUS_FAIL
 
 
 def scale_data(x):
@@ -159,6 +154,7 @@ def train_naive_bayes(train_x, train_y, val_x, val_y, params):
 
 NEAREST_NEIGHBORS_CLASSIFICATION_PARAMS = {
     "n_neighbors": hp.choice("n_neighbors", [2, 4, 8, 16, 32, 64, 128, 256, 512]),
+    "metric": hp.choice("metric", cuml.neighbors.VALID_METRICS["brute"]),
 }
 
 
@@ -172,60 +168,3 @@ def train_nearest_neighbors_classification(train_x, train_y, val_x, val_y, param
         print(params)
         print(e)
         return {"status": STATUS_FAIL}
-
-
-KERNEL_RIDGE_REGRESSION_PARAMS = {
-    "alpha": hp.uniform("alpha", 0.1, 10),
-    "kernel": hp.choice("kernel", list(cuml.metrics.PAIRWISE_KERNEL_FUNCTIONS.keys())),
-    "gamma": hp.uniform("gamma", 0.1, 10),
-    "degree": hp.choice("degree", [2, 4, 8, 16, 32, 64, 128, 256, 512]),
-    "coef0": hp.uniform("coef0", 0.1, 10),
-}
-
-
-def train_kernel_ridge_regression_params(train_x, train_y, val_x, val_y, params):
-    try:
-        classifier = cuml.KernelRidge(**params)
-        classifier.fit(train_x, train_y)
-        y_pred_continuous = classifier.predict(val_x)
-
-        threshold = 0.5
-        y_pred_binary = (y_pred_continuous > threshold).astype(
-            int
-        )  # Apply a threshold to convert continuous predictions to binary predictions
-        score = accuracy_score(val_y, y_pred_binary)
-        return {"loss": -score, "status": STATUS_OK}
-    except Exception as e:
-        print(params)
-        print(e)
-        return {"status": STATUS_FAIL}
-
-
-def main():
-    train_x, train_y, val_x, val_y, _, _ = load_feature_vector(k=10)
-
-    # NOTE: convert to float when using kernel ridge
-    train_x = cp.asarray(train_x).astype(cp.float64)
-    train_y = cp.asarray(train_y).astype(cp.float64)
-    val_x = cp.asarray(val_x).astype(cp.float64)
-    val_y = cp.asarray(val_y).astype(cp.float64)
-
-    # Define the trials with password
-    trials = MongoTrials(
-        "mongo://root:example@localhost:27017/hyperopt/jobs", exp_key="exp1"
-    )
-
-    print("Starting Hyperparameter Tuning...")
-    # Example of tuning Logistic Regression Hyperparameters
-    best_logistic = fmin(
-        fn=lambda params: train_random_forest(train_x, train_y, val_x, val_y, params),
-        space=RANDOM_FOREST_PARAMS,
-        algo=tpe.suggest,
-        max_evals=1000,
-        trials=trials,
-    )
-    print("Best params: ", best_logistic)
-
-
-if __name__ == "__main__":
-    main()
