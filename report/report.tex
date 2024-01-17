@@ -347,8 +347,8 @@
     Optuna is another library that offers similar features.
     Hyperopt was a more appropriate choice for this project due to our experience with it and its ability to serve all our hyperparameter needs.
 
-    Since most of the tested Machine Learning algorithms are quick and require little memory, we used hyperopt's \texttt{MongoTrials} to parallelize the parameter search.
-    A simple Docker Compose yaml file is provided.
+    Considering that most of the tested Machine Learning algorithms require little memory, we tried to use hyperopt's \texttt{MongoTrials} to parallelize the parameter search.
+    We saw however that it led to no speedup, as the process was mainly GPU processing bound.
 
     \subsection{Deep Learning Frameworks}
     For the deep learning framework, we decided to use Keras due to its simplicity and ease of use.
@@ -628,16 +628,16 @@
     Simple neural network for serving as a baseline for the other models.
 
     \begin{lstlisting}[language=Python, caption=DNN on feature vector architecture]
-        model = keras.Sequential(
-            [
-                layers.InputLayer(input_shape=(number_of_features,)),
-                layers.Dense(units=256, activation="relu"),
-                layers.Dense(units=128, activation="relu"),
-                layers.Dense(units=64, activation="relu"),
-                layers.Dense(units=32, activation="relu"),
-                layers.Dense(units=1, activation="sigmoid"),
-            ]
-        )
+model = keras.Sequential(
+    [
+        layers.InputLayer(input_shape=(number_of_features,)),
+        layers.Dense(units=256, activation="relu"),
+        layers.Dense(units=128, activation="relu"),
+        layers.Dense(units=64, activation="relu"),
+        layers.Dense(units=32, activation="relu"),
+        layers.Dense(units=1, activation="sigmoid"),
+    ]
+)
     \end{lstlisting}
 
     \subsubsection{Convolutional neural network}
@@ -648,32 +648,32 @@
     CNN models are usually used for finding patterns in images or other big dimension data that have spatial arrangement or hierarchy.
 
     \begin{lstlisting}[language=Python, caption=CNN on feature vector architecture]
-        model = keras.Sequential(
-            [
-                layers.Reshape((number_of_features, 1), input_shape=(number_of_features,)),
-                layers.Conv1D(filters=32, kernel_size=3, activation="tanh"),
-                layers.BatchNormalization(),
-                layers.MaxPooling1D(pool_size=2),
-                layers.Conv1D(filters=16, kernel_size=3, activation="tanh"),
-                layers.BatchNormalization(),
-                layers.MaxPooling1D(pool_size=2),
-                layers.Conv1D(filters=128, kernel_size=3, activation="tanh"),
-                layers.BatchNormalization(),
-                layers.MaxPooling1D(pool_size=2),
-                layers.Conv1D(filters=256, kernel_size=3, activation="tanh"),
-                layers.BatchNormalization(),
-                layers.MaxPooling1D(pool_size=2),
-                layers.Conv1D(filters=512, kernel_size=3, activation="tanh"),
-                layers.BatchNormalization(),
-                layers.MaxPooling1D(pool_size=2),
-                layers.Conv1D(filters=1024, kernel_size=3, activation="tanh"),
-                layers.BatchNormalization(),
-                layers.MaxPooling1D(pool_size=2),
-                layers.Flatten(),
-                layers.Dense(units=500, activation="tanh"),
-                layers.Dense(units=1, activation="sigmoid"),
-            ]
-        )
+model = keras.Sequential(
+    [
+        layers.Reshape((number_of_features, 1), input_shape=(number_of_features,)),
+        layers.Conv1D(filters=32, kernel_size=3, activation="tanh"),
+        layers.BatchNormalization(),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Conv1D(filters=16, kernel_size=3, activation="tanh"),
+        layers.BatchNormalization(),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Conv1D(filters=128, kernel_size=3, activation="tanh"),
+        layers.BatchNormalization(),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Conv1D(filters=256, kernel_size=3, activation="tanh"),
+        layers.BatchNormalization(),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Conv1D(filters=512, kernel_size=3, activation="tanh"),
+        layers.BatchNormalization(),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Conv1D(filters=1024, kernel_size=3, activation="tanh"),
+        layers.BatchNormalization(),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Flatten(),
+        layers.Dense(units=500, activation="tanh"),
+        layers.Dense(units=1, activation="sigmoid"),
+    ]
+)
     \end{lstlisting}
 
     \subsubsection{Long Short Term memory}
@@ -684,17 +684,17 @@
 
 
     \begin{lstlisting}[language=Python, caption=LSTM on feature vector architecture]
-        model = keras.Sequential(
-            [
-                # input shape to change because of the change of interpretation of the features
-                layers.Reshape((number_of_features, 1), input_shape=(number_of_features,)),
-                layers.LSTM(units=number_of_features, return_sequences=True),
-                layers.LSTM(units=number_of_features, return_sequences=True),
-                layers.LSTM(units=number_of_features, return_sequences=True),
-                layers.LSTM(units=number_of_features, return_sequences=False),
-                layers.Dense(units=1, activation="sigmoid"),
-            ]
-        )
+model = keras.Sequential(
+    [
+        # input shape to change because of the change of interpretation of the features
+        layers.Reshape((number_of_features, 1), input_shape=(number_of_features,)),
+        layers.LSTM(units=number_of_features, return_sequences=True),
+        layers.LSTM(units=number_of_features, return_sequences=True),
+        layers.LSTM(units=number_of_features, return_sequences=True),
+        layers.LSTM(units=number_of_features, return_sequences=False),
+        layers.Dense(units=1, activation="sigmoid"),
+    ]
+)
     \end{lstlisting}
 
     \subsection{Results}\label{subsec:results2}
