@@ -126,7 +126,7 @@
 
     \begin{figure}
         \centering
-        \includegraphics{report_img/shartincreasingphishing}
+        \includegraphics[width=0.8\textwidth]{report_img/shartincreasingphishing}
         \caption{Evolution of phishing from 2019 to 2022 according to APWG\cite{PhishingActivityTrendsReport}}
         \label{fig:figure}
     \end{figure}
@@ -292,7 +292,9 @@
 %
 %    - Different approaches : making clusters with imposing the categories that we expect, or seeing what categories it makes on its own, by clustering and finding out what each clusters is linked with
 
-
+    We want a fast approach to classify URL instantly, that could be integrated within navigator to complete blacklists.
+    To achieve time efficiency, we want to only rely on the URL, not on the content of the page or any content that would need to send a request to the website.
+    Therefore, we chose to classify phishing websites relying on their URL only.
     A first approach of this URL classification problem could try a new machine learning method and try to apply it to this specific problem and comparing it to the different results that the literature.
     This is very interesting to get in depth with one specific model.
     However, we were intrigued by the different results that studied could have on same models (for example machine learning models) on similar datasets.
@@ -385,38 +387,42 @@
 
     \begin{table}[H]
         \centering
-        \begin{tabular}{|c|l|p{6cm}|c|c|c|c|}
+        \begin{tabular}{|c|l|p{6cm}|c|c|c|l|}
             \hline
-            \textbf{No.} & \textbf{Feature Name}    & \textbf{Feature Description}                        & \textbf{Chi Score} & \textbf{Chi Ranking} & \textbf{Info Gain Score} & \textbf{Source} \\ \hline
-            1            & Number of Dots           & Number of `.' in the URL                            & 64216.34           & 10                   & 0.0944                   & \cite{LexicalFeatureSelection}                  \\ \hline
-            2            & Number of Hyphens        & Number of `-' in the URL                            & 517655.65          & 2                    & 0.0747                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-            3            & Number of @              & Number of `@' in the URL                            & 4465.27            & 16                   & 0.0022                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-            4            & Number of ?              & Number of `?' in the URL                            & 9006.72            & 13                   & 0.0129                   & \cite{LexicalFeatureSelection}                  \\ \hline
-            5            & URL Length               & Length of the URL                                   & 291038.97          & 4                    & 0.0283                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-            6            & Number of Digits         & Number of digits in the URL                         & 312225.09          & 3                    & 0.1280                   &                                                 \\ \hline
-            7            & Number of /              & Number of `/' in the URL                            & 25682.89           & 12                   & 0.0621                   & \cite{LexicalFeatureSelection}                  \\ \hline
-            8            & Number of //             & Number of `//' in the URL                           & 194.38             & 21                   & 0.1334                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-            9            & Use of HTTPS             & Counts occurrences of `https'                       & 164109.06          & 5                    & 0.1230                   & \cite{PhishSafe}                                \\ \hline
-            10           & Use of HTTP              & Counts occurrences of `http'                        & 215.22             & 20                   & 0.1470                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-            11           & Use of WWW               & Counts occurrences of `www'                         & 1150.42            & 19                   & 0.0482                   &                                                 \\ \hline
-            12           & IP Address Usage         & 1 if IP address is used, 0 otherwise                & 19994.97           & 14                   & 0.0113                   &                                                 \\ \hline
-            13           & Suspicious Word Count    & Counts suspicious words in the URL                  & 517281.65          & 1                    & 0.1526                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-            14           & TLD Position             & Position of Top-Level Domain in URL                 & 19567              & 15                   & 0.0                      & \cite{PhishSafe}                                \\ \hline
-            15           & Path Length Ratio        & Ratio of path length to URL length                  & 64                 & 23                   & 0.0867                   & \cite{LexicalFeatureSelection}                  \\ \hline
-            16           & Suspicious Char Count    & Counts suspicious characters in URL                 & 96221.30           & 9                    & 0.0510                   & \cite{LexicalFeatureSelection}                  \\ \hline
-            17           & Symbol as Last Char      & 1 if the last character is a symbol, 0 otherwise    & 0                  & 24                   & 0.0 & \cite{LexicalFeatureSelection} \\ \hline
-            18           & Redirection Count        & Counts the number of `.' in subdomain               & 264180             & 6                    & 0.0400                   &                                                 \\ \hline
-            19           & IP Address Presence      & 1 if IP address present, 0 otherwise                & 19912              & 17                   & 0.0102                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-            20           & Subdomain Count          & Number of subdomains                                & 67397              & 11                   & 0.1247                   & \cite{PhishSafe}                                \\ \hline
-            21           & Port Presence            & 1 if port number present, 0 otherwise               & 385                & 22                   & 0.0                      & \cite{LexicalFeatureSelection}                  \\ \hline
-            22           & Unicode Char Count       & Number of unicode characters                        & 290705.11          & 7                    & 0.0279                   & \cite{LexicalFeatureSelection}                  \\ \hline
-            23           & Query Presence           & 1 if query present in the URL, 0 otherwise          & 0                  & 25                   & 0.0                      & \cite{LexicalFeatureSelection}                  \\ \hline
-            24           & Special Char Ratio       & Ratio of special characters to URL length           & 559.19             & 8                    & 0.0867                   &                                                 \\ \hline
-            25           & Misspelled Word Presence & 1 if the URL contains misspelled words, 0 otherwise & 9199.83            & 18                   & 0.1170                   &  personal                                               \\ \hline
+            \textbf{No.} & \textbf{Feature Name}           & \textbf{Feature Description}                   & \textbf{Chi Score} & \textbf{Chi Ranking} & \textbf{Info Gain Score} & \textbf{Source} \\ \hline
+            1            & Number of Dots                  & Number of '.' in the URL                       & 64216.34           & 7                    & 0.0944                   & \cite{LexicalFeatureSelection}                  \\ \hline
+            2            & Number of Hyphens               & Number of '-' in the URL                       & 517655.65          & 1                    & 0.0747                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
+            3            & Number of @                     & Number of '@' in the URL                       & 4465.27            & 14                   & 0.0022                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
+            4            & Number of ?                     & Number of '?' in the URL                       & 9006.72            & 11                   & 0.0129                   & \cite{LexicalFeatureSelection}                  \\ \hline
+            5            & URL Length                      & Length of the URL                              & 291038.97          & 6                    & 0.0283                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
+            6            & Number of Digits                & Number of digits in the URL                    & 312225.09          & 5                    & 0.1280                   &                                                 \\ \hline
+            7            & Number of /                     & Number of '/' in the URL                       & 25682.89           & 8                    & 0.0621                   & \cite{LexicalFeatureSelection}                  \\ \hline
+            8            & Number of //                    & Number of '//' in the URL                      & 194.38             & 16                   & 0.1334                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
+            9            & Use of HTTPS                    & Counts occurrences of 'https'                  & 164109.06          & 4                    & 0.1229                   & \cite{PhishSafe}                                \\ \hline
+            10           & Use of HTTP                     & Counts occurrences of 'http'                   & 215.22             & 15                   & 0.1470                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
+            11           & Use of WWW                      & Counts occurrences of 'www'                    & 1150.42            & 13                   & 0.0482                   &                                                 \\ \hline
+            12           & IP Address Usage                & 1 if IP address is used, 0 otherwise           & 19994.97           & 9                    & 0.0113                   &                                                 \\ \hline
+            13           & Suspicious Word Count           & Counts suspicious words in the URL             & 517281.65          & 2                    & 0.1526                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
+            14           & Gift Card Suspicious Word Count & Counts gift card suspicious words in the URL   & 20.61              & 26                   & 0.0                      & new feature \\ \hline
+            15           & TLD Position                    & Position of Top-Level Domain in URL            & 19567.30           & 10                   & 0.0410                   & \cite{PhishSafe}                                \\ \hline
+            16           & Path Length Ratio               & Ratio of path length to URL length             & 65.01              & 20                   & 0.0246                   & \cite{LexicalFeatureSelection}                  \\ \hline
+            17           & Suspicious Char Count           & Counts suspicious characters in URL            & 96221.30           & 7                    & 0.0510                   & \cite{LexicalFeatureSelection}                  \\ \hline
+            18           & Symbol as Last Char             & 1 if last character is a symbol, 0 otherwise   & 0.00               & 21                   & 8.97e-05                 & \cite{LexicalFeatureSelection} \\ \hline
+            19           & Redirection Count               & Counts number of '.' in subdomain              & 263490.59          & 12                   & 0.0400                   &                                                 \\ \hline
+            20           & IP Address Presence             & 1 if IP address present, 0 otherwise           & 19861.37           & 17                   & 0.0102                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
+            21           & Subdomain Count                 & Number of subdomains                           & 67213.42           & 14                   & 0.1247                   & \cite{PhishSafe}                                \\ \hline
+            22           & Port Presence                   & 1 if port number present, 0 otherwise          & 387.36             & 18                   & 0.0                      & \cite{LexicalFeatureSelection}                  \\ \hline
+            23           & Unicode Char Count              & Number of unicode characters                   & 290705.11          & 6                    & 0.0279                   & \cite{LexicalFeatureSelection}                  \\ \hline
+            24           & Query Presence                  & 1 if query present in the URL, 0 otherwise     & 0.00               & 22                   & 0.0                      & \cite{LexicalFeatureSelection}                  \\ \hline
+            25           & Special Char Ratio              & Ratio of special characters to URL length      & 559.19             & 25                   & 0.0867                   & new feature\\ \hline
+            26           & Misspelled Word Presence        & 1 if misspelled words are present, 0 otherwise & 9199.83 & 24 & 0.1170 & \\ \hline
         \end{tabular}
         \caption{Summary of Features Implemented for Phishing URL Detection}
         \label{tab:features}
     \end{table}
+
+
+
 
 
     Some features have been designed by ourselves after reading on phishing.
@@ -609,13 +615,21 @@
 
     \cite{LexicalFeatureSelection} Using Random Forest on Lexical features of URL 276640 98.57, Precision 97.63%
     \cite{LexicalFeatureSelection} Using Naive Bayes on Lexical features of URL 276640 82.46
-    \cite{LexicalFeatureSelection} Using Naive Bayes on Lexical features of URL 276640 93.21
+    \cite{LexicalFeatureSelection} Using SVM on Lexical features of URL 276640 93.21
     \cite[]{PhishSafe} on 10 000 URL Naive Bayes 64.74
     \cite[]{PhishSafe} on 10 000 URL SVM 76.04
     \cite[]{PhishSafe} on 25 000 URL Naives Bayes 76.87
     \cite[]{PhishSafe} on 25 000 URL SVM 91.28
     \cite{NLPPhishingURLDetection} Random Forest 97.2 using additional NLP and wordtovec techniques to reach 278 features vector, dataset:73,575 URLs including 37,175 malicious URLs and 36,400 legal URLs.
     \cite{NLPPhishingURLDetection} Naïve Bayes 75.5 using additional NLP and wordtovec techniques to reach 278 features vector, dataset: 73,575 URLs including 37,175 malicious URLs and 36,400 legal URLs.
+    \cite{PhishingURLDetection} datasets:36,400 legitimate URLs and 37,175 phishing URLs kNN 95.86\% on ML features
+    \cite{PhishingURLDetection} datasets:36,400 legitimate URLs and 37,175 phishing URLs Random forest 97.98\%
+    \cite{PhishingURLDetection} datasets:36,400 legitimate URLs and 37,175 phishing URLs Naive Bayes 95.98 \%
+    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing random forest 94.42
+    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing kNN 93.18
+    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing Naive Bayes 87.72
+    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing Logistic Regression 92.33
+    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing SVM 93.59
 
 
     \section{Deep Learning Models based on handcrafted features}\label{sec:deep-learning-models}
@@ -701,6 +715,13 @@
     \subsection{Results}\label{subsec:results2}
     @Jop for running the algorithm and providing the results + comment above on improvements on the implementation if needed
 
+    \cite{EfficientDeepLearningPhishingDetection} DNN 99.52
+    \cite{EfficientDeepLearningPhishingDetection} CNN 99.57
+    \cite{EfficientDeepLearningPhishingDetection} LSTM 99.43
+    Results using hyperlinks in the source code of a website and one third party (Alexa ranking, that tries to predict phishing by providing a trust ranking of websites)
+    Comment: we know nothing about their running time our computation resources
+    Not much information on their dataset...
+
 
     \section{Models based on the string embedding}\label{sec:models-based-on-the-string-embedding}
 
@@ -750,6 +771,8 @@
 
     \subsubsection{Results}
 
+    \cite{CharacterLevelCNN} ACCURACY 95.46
+
     \subsection{Large language model fine tuning}\label{subsec:large-language-model-finetuning}
 
     \subsubsection{Motivation of this implementation}
@@ -777,42 +800,42 @@
 
     Extract from another paper for ideas:
     Machine learning-based methods are generally fast and
-effective. They cope well with zero-hour attacks and allow
-on-the-fly detection of phishing web pages. Nevertheless, the
-performance of these methods varies and mainly depends on
-the features extracted from web pages and on the composition
-of the training datasets. In general, features extracted from
-page URL are obtained quickly, although they are vulnerable
-to URL manipulations. On the contrary, features extracted
-from page source codes are robust to the evasion techniques
-implemented by attackers, even though page downloads are
-needed to obtain these features, thus causing delays and safety
-issues. Despite these issues, machine learning models are
-a valid and promising solution for detecting phishing web
-pages.
+    effective. They cope well with zero-hour attacks and allow
+    on-the-fly detection of phishing web pages. Nevertheless, the
+    performance of these methods varies and mainly depends on
+    the features extracted from web pages and on the composition
+    of the training datasets. In general, features extracted from
+    page URL are obtained quickly, although they are vulnerable
+    to URL manipulations. On the contrary, features extracted
+    from page source codes are robust to the evasion techniques
+    implemented by attackers, even though page downloads are
+    needed to obtain these features, thus causing delays and safety
+    issues. Despite these issues, machine learning models are
+    a valid and promising solution for detecting phishing web
+    pages.
     An important research gap refers to the increased use by
-attackers of URL shortening services that mask the real phishing
-URLs. These short URLs create an additional challenge
-to list-based approaches and in particular to the management
-of blacklists. Similarly, these URLs affect machine learningbased
-approaches since most URL features suggested in the
-literature become meaningless in this context, thus making
-the detection mechanisms fail.
+    attackers of URL shortening services that mask the real phishing
+    URLs. These short URLs create an additional challenge
+    to list-based approaches and in particular to the management
+    of blacklists. Similarly, these URLs affect machine learningbased
+    approaches since most URL features suggested in the
+    literature become meaningless in this context, thus making
+    the detection mechanisms fail.
 
     Need to retrain the algorithm regularuly to have the detection up to date, performance decrease with time
 
-Model explainability is another interesting research direction
-in the context of machine learning. In fact, understanding
-the decisions taken by machine learning algorithms, that is,
-what characteristics make a web page phishing or legitimate,
-has several important implications for the design of security
-systems. Adversarial attacks should also be investigated to
-make the machine learning models more robust.
-It is also important to outline that, to ensure the advancement
-of the state of the art, experiments should be made reproducible.
-This means that all implementation details should
-be clearly specified and the datasets used should be made
-publicly available.
+    Model explainability is another interesting research direction
+    in the context of machine learning. In fact, understanding
+    the decisions taken by machine learning algorithms, that is,
+    what characteristics make a web page phishing or legitimate,
+    has several important implications for the design of security
+    systems. Adversarial attacks should also be investigated to
+    make the machine learning models more robust.
+    It is also important to outline that, to ensure the advancement
+    of the state of the art, experiments should be made reproducible.
+    This means that all implementation details should
+    be clearly specified and the datasets used should be made
+    publicly available.
 
     Importance of public datasets to reproduce the issues
 
