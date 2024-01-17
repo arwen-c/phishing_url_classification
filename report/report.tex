@@ -80,6 +80,7 @@
 %    https://spotintelligence.com/2023/02/15/word2vec-for-text-classification/
 %    https://huggingface.co/elftsdmr/malware-url-detect
 
+    % TODO read all the articles and provide their different results and our comparison
 
     \section{Problem description and motivation}\label{sec:problem-description-and-motivation}
 %    What’s the background of the problem?
@@ -108,11 +109,14 @@
     However, the integration of AI has led to more subtle and customized phishing strategies, using personal information to boost their believability.
     This shift calls for a detection system that is both intelligent and adaptive, capable of keeping pace with these evolving threats.
 
-    Today's method of detecting phishing URLs is to rely on blacklists, which are lists of known phishing URLs.
+    Today's method of detecting phishing URLs mainly rely on blacklists, which are lists of known phishing URLs.
+    These are largely implemented in navigators.
+    However, these methods lack in speed detection for being more efficient.
+    \cite{PhishingExperimentalBlackLists2009} reports after empirical analysis than less than 20\% of their phishing campaigns have been caught.
+    \cite{PhishingBlackLists} reports only 12\% overlap between two of the main phishing blacklists.
 
     This landscape of escalating and evolving phishing attacks underscores the critical need for advanced detection methods, including the application of machine learning for phishing URL classification.
 
-    % TODO add statistc on the efficiency of the blacklist method
 
     \section{Related works}\label{sec:related-works}
 
@@ -273,7 +277,7 @@
     Consequently, we shifted our focus to the most extensive dataset identified in our research, specifically the one proposed in~\cite{VisualizingRNNInURLDetection}.
     Among the available datasets with sufficient volume for neural network model training, this particular dataset is the most recent and provides open access.
 
-    Originally, this dataset is tailored for training Recurrent Neural Network (RNN) models, with its data already encoded in integer array formats.
+    Originally, this dataset is tailored for training Neural Network models, with its data already encoded in integer array formats.
     To adapt this dataset for broader Machine Learning applications, we undertook a preprocessing step to convert these integer arrays back into textual URL formats.
     Furthermore, in our exploration of neural network methodologies, we are not only utilizing the original vectorization techniques of the dataset but also experimenting with alternative vectorization strategies.
 
@@ -412,10 +416,8 @@ web page are more from\cite{PhishSafe}
         \item Information Gain
     \end{itemize}
 
-    However, some methods like PCA or SVD are built for dealing with large dimensions datasets, which is not adapted to our small feature selection.
-
-    % TODO justify the analysis of these specific methods
-    In the context of feature selection for binary classification of phishing URLs, we examined the advantages and disadvantages of Principal Component Analysis (PCA), Chi-Square, and Information Gain.
+    In the context of feature selection for binary classification of phishing URLs, we examined the advantages and disadvantages of Principal Component Analysis (PCA), Singular Value Decomposition (SVD), Variance Thresholding, Chi-Square, and Information Gain.
+    Choice has been made to consider these methods as they are the most frequently encountered.
 
     PCA is a dimensionality reduction method.
     It is interesting in our context were numerous features may be related.
@@ -425,18 +427,12 @@ web page are more from\cite{PhishSafe}
         \item the encoding of a new URL for testing it is more complex, compared to feature selection.
         Therefore, we loose the practicality of the approach.
     \end{enumerate}
+    This solution is more interesting for high dimensional data, and data where the different meanings of the features do not matter.
 
-    We then considered Information Gain, as used in\cite{EfficientDeepLearningPhishingDetection} to feed into neural networks.
-    However, we decided to discard it because:
+    The same reasons also applies to singular value decomposition, that transforms the encoding of the features as well.
 
-    In the realm of binary classification for phishing URL detection, we evaluated the suitability of Principal Component Analysis (PCA), Chi-Square, and Information Gain as feature selection methods.
-
-    PCA, known for its dimensionality reduction capabilities, initially seemed promising given the potential interrelation among numerous features.
-    However, we ultimately opted against it due to two primary reasons:
-    \begin{enumerate}
-        \item PCA looses the interpretability of handcrafted features, which is our main motive behind handcrafted features.
-        \item encoding a new URL for testing becomes markedly more complex, detracting from the method's practicality.
-    \end{enumerate}
+    We then examined Variance Thresholding, however we have two types of features: binary, and counts.
+    Even if we normalize all features between zero and one, the variance is influenced by the nature of the feature.
 
     Our attention then shifted to Information Gain, as demonstrated in\cite{EfficientDeepLearningPhishingDetection} for feeding into neural networks.
     While Information Gain excels in measuring entropy reduction and is effective with both categorical and continuous variables, it falls short in capturing the correlation between features since it assesses them in isolation.
@@ -454,7 +450,8 @@ web page are more from\cite{PhishSafe}
     Its simplicity, efficiency, and focus on categorical feature relevance align well with the nature of our dataset and the objectives of our phishing URL classification project.
 
 
-%    TODO add a graph on the influence of the number of parameters that we keep on the performance of the different models for one or several easy ML models + conclusion on the number k used afterwards
+%    TODO add a graph on the influence of the number of parameters that we keep on the performance of the different models for one or several easy ML models + conclusion on the number k used afterwards, with comments on the shape and what it says on using chi square as a feature selection
+    % TODO add graph for IG and conclude on our choice
 
     \subsubsection{Implementation}\label{subsubsec:implementation}
 
@@ -498,6 +495,8 @@ web page are more from\cite{PhishSafe}
     Interesting with this model is also the interpretability that it could provide for further studies.
 
     \subsubsection{Kernel Ridge Regression}
+
+    Because non linear Support Vector Machine algorithm (using the kernel trick) was not available on cuml, we
 
     Different kernel function that we tried:
     `linear', `additive\_chi2', `chi2', `cosine', `laplacian', `polynomial', `poly', `rbf', `sigmoid'
@@ -571,7 +570,7 @@ web page are more from\cite{PhishSafe}
     
     \subsection{Motivation between the choices of the different machine learning models}\label{subsec:motivation-between-the-choices-of-the-different-machine-learning-models}
     For comparing with the first statistical models, we chose to implement different neural network architecture as per the literature.
-
+    % TODO add comments on the architecture
     \subsubsection{Dense neural network}
     Reasons for choosing this model:
     Simple neural network for serving as a baseline for the other models.
@@ -625,6 +624,16 @@ web page are more from\cite{PhishSafe}
     \end{enumerate}
 
     \subsubsection{Implementation}
+    % TODO speak about the encoding and the implementation/optimization for running
+    Structure of the CNN has been taken from\cite{CharacterLevelCNN}, the study that provides the dataset that we are using.
+
+    Here is the structure:
+    \begin{figure}
+        \centering
+        \includegraphics{C:\Users\lauri\Documents\_tsinghua\machine_learning\Project\code_git\URL_classification\report\report_img\cnn_configuration}
+        \caption{}
+        \label{fig:CNN}
+    \end{figure}
 
     \subsubsection{Results}
 
@@ -642,6 +651,8 @@ web page are more from\cite{PhishSafe}
 
 
     \section{Conclusion}\label{sec:conclusion}
+    % TODO the conclusion
+
     Bla bla on the contribution that this work brings and how nice and original it is
     Further perspectives
 
