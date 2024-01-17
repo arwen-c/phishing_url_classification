@@ -58,14 +58,13 @@
     \maketitle
 
     \begin{abstract}
-        The abstract paragraph should be indented \nicefrac{1}{2}~inch (3~picas) on
-        both the left- and right-hand margins.
-        Use 10~point type, with a vertical
-        spacing (leading) of 11~points.
-        The word \textbf{Abstract} must be centered,
-        bold, and in point size 12.
-        Two line spaces precede the abstract.
-        The abstract must be limited to one paragraph.
+        The increasing sophistication and frequency of phishing attacks pose a significant threat in the digital era, highlighting the need for advanced detection methodologies.
+        This study explores the application of machine learning and deep learning techniques to classify phishing URLs in the wake of an alarming escalation in cyber threats.
+        Our research encompasses a comprehensive evaluation of various machine learning and deep learning models, including Logistic Regression, Support Vector Machine, Naive Bayes, Nearest Neighbors, and sophisticated neural network architectures like CNNs and LSTMs. We also delve into the realm of Large Language Models (LLMs) for phishing URL detection.
+
+        By establishing a benchmark on a unified dataset, we aim to provide an objective comparison of different models, thereby contributing significantly to the field of cybersecurity.
+
+        The outcomes of our research not only shed light on the efficacy of various models in phishing URL detection but also offer insights into the future directions for enhancing the accuracy and efficiency of such systems.
     \end{abstract}
 
     \newpage
@@ -98,7 +97,7 @@
     These attacks, which involve impersonating trusted parties to manipulate victims into transferring funds or revealing sensitive data, have led to losses in the billions.
     In the fourth quarter of 2022 alone, the average amount requested in wire transfer BEC attacks soared to \$132,559, marking a 41\% increase from the previous quarter.
 
-    In addition, the FBI’s Internet Crime Complaint Center reported a near doubling of phishing incidents from 2019 to 2020, resulting in substantial financial losses.
+    In addition, the FBI’s Internet Crime Complaint Center reported a near doubling of phishing incidents from 2019 to 2020.
 
     The methods employed in these attacks are diverse.
     The fourth quarter of 2022 saw advance fee fraud scams surpassing gift card requests as the most popular method, accounting for 39\% of all attacks.
@@ -113,7 +112,7 @@
 
     This landscape of escalating and evolving phishing attacks underscores the critical need for advanced detection methods, including the application of machine learning for phishing URL classification.
 
-
+    % TODO add statistc on the efficiency of the blacklist method
 
     \section{Related works}\label{sec:related-works}
 
@@ -320,7 +319,7 @@
     It also provides built-in metric functions, such as accuracy, precision, recall, and F1 score.
 
 
-    \section{Models based on handcrafted features}\label{sec:models-based-on-handcrafted-features}
+    \section{ML models based on handcrafted features}\label{sec:models-based-on-handcrafted-features}
 
     Why considering approaches that relies on handcrafted features?
     because we want to use ML techniques, not only neural networks.
@@ -347,33 +346,43 @@
         \begin{tabular}{|c|l|p{6cm}|c|c|l|}
             \hline
             \textbf{No.} & \textbf{Feature Name} & \textbf{Feature Description}                 & \textbf{Chi Score} & \textbf{Chi Ranking} & \textbf{Source} \\ \hline
-            1            & Number of Dots        & Number of \'.' in the URL                    & 64369              & 10                   &                 \\ \hline
-            2            & Number of Hyphens     & Number of \'-' in the URL                    & 519064             & 2                    &                 \\ \hline
-            3            & Number of @           & Number of \'@' in the URL                    & 4470               & 16                   &                 \\ \hline
-            4            & Number of ?           & Number of \'?' in the URL                    & 9005               & 13                   &                 \\ \hline
-            5            & URL Length            & Length of the URL                            & 291630             & 4                    &                 \\ \hline
+            1            & Number of Dots        & Number of \'.' in the URL                    & 64369              & 10                   &    \cite{LexicalFeatureSelection}             \\ \hline
+            2            & Number of Hyphens     & Number of \'-' in the URL                    & 519064             & 2                    &    \cite{PhishSafe} \cite{LexicalFeatureSelection}             \\ \hline
+            3            & Number of @           & Number of \'@' in the URL                    & 4470               & 16                   &  \cite{PhishSafe}  \cite{LexicalFeatureSelection}            \\ \hline
+            4            & Number of ?           & Number of \'?' in the URL                    & 9005               & 13                   &   \cite{LexicalFeatureSelection}              \\ \hline
+            5            & URL Length            & Length of the URL                            & 291630             & 4                    &   \cite{PhishSafe} \cite{LexicalFeatureSelection}             \\ \hline
             6            & Number of Digits      & Number of digits in the URL                  & 312999             & 3                    &                 \\ \hline
-            7            & Number of /           & Number of \'/' in the URL                    & 25734              & 12                   &                 \\ \hline
-            8            & Number of //          & Number of \'//' in the URL                   & 194                & 21                   &                 \\ \hline
-            9            & Use of HTTPS          & Counts occurrences of \'https'               & 164580             & 5                    &                 \\ \hline
-            10           & Use of HTTP           & Counts occurrences of \'http'                & 214                & 20                   &                 \\ \hline
+            7            & Number of /           & Number of \'/' in the URL                    & 25734              & 12                   &    \cite{LexicalFeatureSelection}            \\ \hline
+            8            & Number of //          & Number of \'//' in the URL                   & 194                & 21                   &   \cite{PhishSafe} \cite{LexicalFeatureSelection}             \\ \hline
+            9            & Use of HTTPS          & Counts occurrences of \'https'               & 164580             & 5                    &   \cite{PhishSafe}              \\ \hline
+            10           & Use of HTTP           & Counts occurrences of \'http'                & 214                & 20                   &  \cite{PhishSafe} \cite{LexicalFeatureSelection}               \\ \hline
             11           & Use of WWW            & Counts occurrences of \'www'                 & 1155               & 19                   &                 \\ \hline
             12           & IP Address Usage      & 1 if IP address is used, 0 otherwise         & 20048              & 14                   &                 \\ \hline
-            13           & Suspicious Word Count & Counts suspicious words in the URL           & 518695             & 1                    &                 \\ \hline
-            14           & TLD Position          & Position of Top-Level Domain in URL          & 19567              & 15                   &                 \\ \hline
-            15           & Path Length Ratio     & Ratio of path length to URL length           & 64                 & 23                   &                 \\ \hline
-            16           & Suspicious Char Count & Counts suspicious characters in URL          & 96471              & 9                    &                 \\ \hline
-            17           & Symbol as Last Char   & 1 if last character is a symbol, 0 otherwise & 0                  & 24                   &                 \\ \hline
+            13           & Suspicious Word Count & Counts suspicious words in the URL           & 518695             & 1                    & \cite{PhishSafe} \cite{LexicalFeatureSelection}              \\ \hline
+            14           & TLD Position          & Position of Top-Level Domain in URL          & 19567              & 15                   &  \cite{PhishSafe}               \\ \hline
+            15           & Path Length Ratio     & Ratio of path length to URL length           & 64                 & 23                   &    \cite{LexicalFeatureSelection}             \\ \hline
+            16           & Suspicious Char Count & Counts suspicious characters in URL          & 96471              & 9                    &    \cite{LexicalFeatureSelection}             \\ \hline
+            17           & Symbol as Last Char   & 1 if last character is a symbol, 0 otherwise & 0                  & 24                   &    \cite{LexicalFeatureSelection}             \\ \hline
             18           & Redirection Count     & Counts number of \'.' in subdomain           & 264180             & 6                    &                 \\ \hline
-            19           & IP Address Presence   & 1 if IP address present, 0 otherwise         & 19912              & 17                   &                 \\ \hline
-            20           & Subdomain Count       & Number of subdomains                         & 67397              & 11                   &                 \\ \hline
-            21           & Port Presence         & 1 if port number present, 0 otherwise        & 385                & 22                   &                 \\ \hline
-            22           & Unicode Char Count    & Number of unicode characters                 & 291297             & 7                    &                 \\ \hline
-            23           & Query Presence        & 1 if query present in the URL, 0 otherwise   & 0                  & 25                   &                 \\ \hline
+            19           & IP Address Presence   & 1 if IP address present, 0 otherwise         & 19912              & 17                   &   \cite{PhishSafe} \cite{LexicalFeatureSelection}              \\ \hline
+            20           & Subdomain Count       & Number of subdomains                         & 67397              & 11                   &    \cite{PhishSafe}             \\ \hline
+            21           & Port Presence         & 1 if port number present, 0 otherwise        & 385                & 22                   &   \cite{LexicalFeatureSelection}              \\ \hline
+            22           & Unicode Char Count    & Number of unicode characters                 & 291297             & 7                    &    \cite{LexicalFeatureSelection}             \\ \hline
+            23           & Query Presence        & 1 if query present in the URL, 0 otherwise   & 0                  & 25                   &    \cite{LexicalFeatureSelection}             \\ \hline
         \end{tabular}
         \caption{Summary of Features Implemented for Phishing URL Detection}
         \label{tab:features}
     \end{table}
+
+    Not use of some features proposed by the articles like:
+    \begin{itemize}
+        \item DNS lookup from\cite{PhishSafe} because we want to avoid the DNS call
+        \item Inconsistent URL: If the domain name of suspicious web page is not matched
+with the WHOIS database record, then the web page is considered as phishing from\cite{PhishSafe}
+        \item Age of Domain: If the age of website is less than 6 month, then chances of fake
+web page are more from\cite{PhishSafe}
+    \end{itemize}
+    The three firsts featurse have not been chosen because they require additional information than the URL itself
 
     \subsubsection{Filtering for working with the most relevant features}
 
@@ -384,7 +393,7 @@
 
     \begin{figure}[H]
         \centering
-        \includegraphics{report_img/lexicalfeatureselectionaccuracygraph}
+        \includegraphics[width=\textwidth]{report_img/lexicalfeatureselectionaccuracygraph}
         \caption{Feature wise accuracy of classifiers from\cite{LexicalFeatureSelection}}
         \label{fig:}
     \end{figure}
@@ -427,7 +436,7 @@
     This led us to Chi-Square, used in\cite{LexicalFeatureSelection}, a method renowned for its effectiveness in assessing the relevance of categorical features in classification tasks.
     Chi-square score is computed using the observed and expected frequencies of the features following the formula:
     \begin{equation}
-        \chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}
+        \chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}\label{eq:equation}
     \end{equation}
     where \( \chi^2 \) is the Chi-Square statistic, \( O_i \) is the observed frequency, and \( E_i \) is the expected frequency under the null hypothesis that the feature and the target are independent.
 
@@ -480,32 +489,27 @@
     However, we can ask Python in built library to work on trying to find this best initialization.
     Interesting with this model is also the interpretability that it could provide for further studies.
 
-%    \textbf{True Positive Rate (TPR) or Sensitivity or Recall:}
-%    \[
-%    TPR = \frac{TP}{TP + FN}
-%    \]
-%
-%    \textbf{True Negative Rate (TNR) or Specificity:}
-%    \[
-%    TNR = \frac{TN}{TN + FP}
-%    \]
-%
-%    \textbf{Accuracy (ACC):}
-%    \[
-%    ACC = \frac{TP + TN}{TP + TN + FP + FN}
-%    \]
-%
-%    \textbf{Precision (PRE) or Positive Predictive Value (PPV):}
-%    \[
-%    PRE = \frac{TP}{TP + FP}
-%    \]
-%
-%    \textbf{F-Score (FSC) or F1-Score:}
-%    \[
-%    FSC = \frac{2 \times PRE \times TPR}{PRE + TPR}
-%    \]
+    \subsubsection{Kernel Ridge Regression}
+    % TODO complete
+
+    \subsubsection{Random Forest}
+    Random Forest is a non linear classifier for comparison of performances of at least two non linear usual classifiers.
+    From\cite{MLmodelsComparison}, it is a model that in general has good performances.
+    They are not likely to overfit on our big set of data.
+    Provide a measure of feature importance, which is interesting for us to compare with our feature selection is relevant.
+    Easy to train in parallel, which is interesting for our set up, and handle large datasets easily.
+    % TODO: remove the last sentence or give a ranking of the most important features according to this model, or conslude that it could be used in further studies to improve the feature selection
+
+    \subsubsection{MBSGD Classifier}
+    % TODO complete
+    
+    \subsubsection{SGD Classifier}
+    % TODO complete
+
 
     \subsection{Results}\label{subsec:results}
+
+    % TODO complete with the results of the different models
 
     \begin{table}[h]
         \centering
@@ -524,14 +528,43 @@
     % TODO use of different metrics than accuracy? Like Positive Rate (TPR), True Negative Rate (TNR), Accuracy (ACC), Precision (PRE) and F-Score (FSC), recall, \ldots + comment on which one is the most interesting in our case (we don't want to miss any fishing website, so we prefer to have a high recall, even if it means having a lower precision).
     % TODO comments and explain the results, for example on the risk of overfit
 
-    \subsubsection{Random Forest}
-    Random Forest is a non linear classifier for comparison of performances of at least two non linear usual classifiers.
-    From\cite{MLmodelsComparison}, it is a model that in general has good performances.
-    They are not likely to overfit on our big set of data.
-    Provide a measure of feature importance, which is interesting for us to compare with our feature selection is relevant.
-    Easy to train in parallel, which is interesting for our set up, and handle large datasets easily.
-    % TODO: remove the last sentence or give a ranking of the most important features according to this model, or conslude that it could be used in further studies to improve the feature selection
+        %    \textbf{True Positive Rate (TPR) or Sensitivity or Recall:}
+    %    \[
+    %    TPR = \frac{TP}{TP + FN}
+    %    \]
+    %
+    %    \textbf{True Negative Rate (TNR) or Specificity:}
+    %    \[
+    %    TNR = \frac{TN}{TN + FP}
+    %    \]
+    %
+    %    \textbf{Accuracy (ACC):}
+    %    \[
+    %    ACC = \frac{TP + TN}{TP + TN + FP + FN}
+    %    \]
+    %
+    %    \textbf{Precision (PRE) or Positive Predictive Value (PPV):}
+    %    \[
+    %    PRE = \frac{TP}{TP + FP}
+    %    \]
+    %
+    %    \textbf{F-Score (FSC) or F1-Score:}
+    %    \[
+    %    FSC = \frac{2 \times PRE \times TPR}{PRE + TPR}
+    %    \]
 
+    Comparison of our results with the literature:
+
+    \cite{LexicalFeatureSelection} Using Random Forest on Lexical  features of URL 276640 98.57, Precision 97.63%
+     \cite{LexicalFeatureSelection} Using Naive Bayes on Lexical  features of URL 276640 82.46
+    \cite{LexicalFeatureSelection} Using Naive Bayes on Lexical  features of URL 276640 93.21
+    \cite[]{PhishSafe} on 10 000 URL Naive Bayes 64.74
+    \cite[]{PhishSafe} on 10 000 URL SVM 76.04
+    \cite[]{PhishSafe} on 25 000 URL Naives Bayes 76.87
+    \cite[]{PhishSafe} on 25 000 URL SVM 91.28
+    
+    \section{Deep Learning Models based on handcrafted features}\label{sec:deep-learning-models}
+    
     \subsection{Motivation between the choices of the different machine learning models}\label{subsec:motivation-between-the-choices-of-the-different-machine-learning-models}
     For comparing with the first statistical models, we chose to implement different neural network architecture as per the literature.
 
@@ -594,6 +627,7 @@
     \subsection{Large language model fine tuning}\label{subsec:large-language-model-finetuning}
 
     \subsubsection{Motivation of this implementation}
+    @Jop complete
     Personal motivation to want to play with LLM. As well, it is a very recent approach, and we wanted to see how it performs on this problem.
     Moreover, few studies have been done on this approach, so we found it interesting to propose our new approach and modeling.
 
@@ -612,6 +646,7 @@
     Possibility to run the experiments on a new dataset.
     For example, we could try to generate a new dataset by crawling the web, or by using the PhishTank API.
 
+    Further improvements and study to improve the detection?
 
     \bibliographystyle{plain}
     \bibliography{refs}
