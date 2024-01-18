@@ -616,17 +616,6 @@ model = keras.Sequential(
 )
     \end{lstlisting}
 
-    Structure of the CNN comes from\cite{CharacterLevelCNN}, the study that provides the dataset that we are using.
-    Interesting for us in replicating the algorithm of a study on their same dataset is to provide a comparison with the previous model and CNN implemented earlier with similar computing resources.
-
-    Here is the structure of our model:
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.8\linewidth]{report_img/cnn_configuration}
-        \caption{CNN on character level embedding architecture}
-        \label{fig:CNN}
-    \end{figure}
-
     \subsubsection{Long Short Term memory}
     Reasons for choosing this model:
     - LSTMs excel at learning long-term dependencies, which is beneficial if the relationship between features in the vector and the classification outcome extends over multiple features or if the context.
@@ -692,18 +681,19 @@ model = keras.Sequential(
 
     \begin{table}[H]
         \centering
-        \begin{tabular}{|l|l|l|}
+        \begin{tabular}{|l|l|l|l|}
             \hline
-            \textbf{Study}                                 & \textbf{DNN Accuracy} & \textbf{CNN Accuracy} & \textbf{LSTM Accuracy} \\ \hline
-            ~\cite{EfficientDeepLearningPhishingDetection} & 99.52\%               & 99.57\%               & 99.43\%                \\ \hline
-            Our Study                                      & 94.58\%               & 93.64\%               & 93.78\%                \\ \hline
+            \textbf{Study}                                & \textbf{DNN Accuracy} & \textbf{CNN Accuracy} & \textbf{LSTM Accuracy} \\ \hline
+            \cite{EfficientDeepLearningPhishingDetection} & 99.52\%               & 99.57\%               & 99.43\%                \\ \hline
+            Our Study                                     & 94.58\%               & 93.64\%               & 93.78\%                \\ \hline
         \end{tabular}
         \caption{Comparison of Accuracy Results between Studies}
         \label{tab:accuracy_comparison}
     \end{table}
 
-A key factor contributing to this gap is the concurrent study's use of additional data sources, including hyperlinks and website requests.
-Furthermore, they incorporate a third-party score, the Alexa ranking, which assesses website trustworthiness to predict phishing.
+    A key factor contributing to this gap is the concurrent study's use of additional data sources, including hyperlinks and website requests.
+    Furthermore, they incorporate a third-party score, the Alexa ranking, which assesses website trustworthiness to predict phishing.
+
 
     \section{Models based on the string embedding}\label{sec:models-based-on-the-string-embedding}
 
@@ -738,13 +728,21 @@ Furthermore, they incorporate a third-party score, the Alexa ranking, which asse
         \item \textbf{Efficiency on GPU}: CNNs offer computational efficiency, particularly on GPU setups.
     \end{enumerate}
 
-    \subsubsection{Implementation}
-    % @Jop TODO speak about the implementation/optimization for running
+    Structure of the CNN comes from\cite{CharacterLevelCNN}, the study that provides the dataset that we are using.
+    Interesting for us in replicating the algorithm of a study on their same dataset is to provide a comparison with the previous model and CNN implemented earlier with similar computing resources.
+
+    Here is the structure of our model:
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\linewidth]{report_img/cnn_configuration}
+        \caption{CNN on character level embedding architecture}
+        \label{fig:CNN}
+    \end{figure}
 
     \subsubsection{Results}
 
 
-
+    Our result : 0.9851
 
     \cite{CharacterLevelCNN} ACCURACY 95.46
     \cite{PhishingLoginURLDetection} Accuracy 96.43 on PIU 60k dataset
