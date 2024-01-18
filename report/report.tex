@@ -646,6 +646,17 @@ model = keras.Sequential(
 )
     \end{lstlisting}
 
+    Structure of the CNN comes from\cite{CharacterLevelCNN}, the study that provides the dataset that we are using.
+    Interesting for us in replicating the algorithm of a study on their same dataset is to provide a comparison with the previous model and CNN implemented earlier with similar computing resources.
+
+    Here is the structure of our model:
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\linewidth]{report_img/cnn_configuration}
+        \caption{CNN on character level embedding architecture}
+        \label{fig:CNN}
+    \end{figure}
+
     \subsubsection{Long Short Term memory}
     Reasons for choosing this model:
     - LSTMs excel at learning long-term dependencies, which is beneficial if the relationship between features in the vector and the classification outcome extends over multiple features or if the context.
@@ -668,7 +679,21 @@ model = keras.Sequential(
     \end{lstlisting}
 
     \subsection{Results}\label{subsec:results2}
-    @Jop for running the algorithm and providing the results + comment above on improvements on the implementation if needed
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|l|l|l|l|l|l|}
+            \hline
+            \textbf{Model} & \textbf{Accuracy} & \textbf{Loss} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+            DNN            & 94.58\%           & 0.1417        & 95.34\%            & 89.06\%         & 94.69\%           \\ \hline
+            CNN            & 93.64\%           & 0.1602        & 93.29\%            & 88.11\%         & 93.66\%           \\ \hline
+            LSTM           & 93.78\%           & 0.1568        & 95.56\%            & 90.45\%         & 93.92\%           \\ \hline
+        \end{tabular}
+        \caption{Comparison of Machine Learning Models for Phishing URL Detection}
+        \label{tab:feature_vector_nn_model_comparison}
+    \end{table}
+
+    %TODO: comment above on improvements on the implementation if needed
 
     \cite{EfficientDeepLearningPhishingDetection} DNN 99.52
     \cite{EfficientDeepLearningPhishingDetection} CNN 99.57
@@ -713,16 +738,7 @@ model = keras.Sequential(
 
     \subsubsection{Implementation}
     % @Jop TODO speak about the implementation/optimization for running
-    Structure of the CNN comes from\cite{CharacterLevelCNN}, the study that provides the dataset that we are using.
-    Interesting for us in replicating the algorithm of a study on their same dataset is to provide a comparison with the previous model and CNN implemented earlier with similar computing resources.
 
-    Here is the structure of our model:
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.8\linewidth]{report_img/cnn_configuration}
-        \caption{CNN on character level embedding architecture}
-        \label{fig:CNN}
-    \end{figure}
 
     \subsubsection{Results}
 
