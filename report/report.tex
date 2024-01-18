@@ -611,7 +611,7 @@ model = keras.Sequential(
         layers.Dense(units=128, activation="relu"),
         layers.Dense(units=64, activation="relu"),
         layers.Dense(units=32, activation="relu"),
-        layers.Dense(units=1, activation="sigmoid"),
+        layers.Dense(units=2, activation="sigmoid"),
     ]
 )
     \end{lstlisting}
@@ -627,27 +627,21 @@ model = keras.Sequential(
 model = keras.Sequential(
     [
         layers.Reshape((number_of_features, 1), input_shape=(number_of_features,)),
-        layers.Conv1D(filters=32, kernel_size=3, activation="tanh"),
+        layers.Conv1D(filters=256, kernel_size=3, padding='same', activation="tanh"),
         layers.BatchNormalization(),
         layers.MaxPooling1D(pool_size=2),
-        layers.Conv1D(filters=16, kernel_size=3, activation="tanh"),
+        layers.Conv1D(filters=128, kernel_size=3, padding='same', activation="tanh"),
         layers.BatchNormalization(),
         layers.MaxPooling1D(pool_size=2),
-        layers.Conv1D(filters=128, kernel_size=3, activation="tanh"),
+        layers.Conv1D(filters=64, kernel_size=3, padding='same', activation="tanh"),
         layers.BatchNormalization(),
         layers.MaxPooling1D(pool_size=2),
-        layers.Conv1D(filters=256, kernel_size=3, activation="tanh"),
-        layers.BatchNormalization(),
-        layers.MaxPooling1D(pool_size=2),
-        layers.Conv1D(filters=512, kernel_size=3, activation="tanh"),
-        layers.BatchNormalization(),
-        layers.MaxPooling1D(pool_size=2),
-        layers.Conv1D(filters=1024, kernel_size=3, activation="tanh"),
+        layers.Conv1D(filters=32, kernel_size=3, padding='same', activation="tanh"),
         layers.BatchNormalization(),
         layers.MaxPooling1D(pool_size=2),
         layers.Flatten(),
         layers.Dense(units=500, activation="tanh"),
-        layers.Dense(units=1, activation="sigmoid"),
+        layers.Dense(units=2, activation="sigmoid"),
     ]
 )
     \end{lstlisting}
@@ -668,7 +662,7 @@ model = keras.Sequential(
         layers.LSTM(units=number_of_features, return_sequences=True),
         layers.LSTM(units=number_of_features, return_sequences=True),
         layers.LSTM(units=number_of_features, return_sequences=False),
-        layers.Dense(units=1, activation="sigmoid"),
+        layers.Dense(units=2, activation="sigmoid"),
     ]
 )
     \end{lstlisting}
@@ -840,77 +834,197 @@ model.fit(
     \appendix
     \section{Appendix A: k search graphs}\label{sec:appendixA}
 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/k_search/linear_svc}
+        \caption{Linear SVC accuracy depending on the k number of chosen features}
+        \label{fig:}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/k_search/logistic_regression}
+        \caption{Logistic regression accuracy depending on the k number of chosen features}
+        \label{fig:}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/k_search/naive_bayes}
+        \caption{Naive Bayes accuracy depending on the k number of chosen features}
+        \label{fig:}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/k_search/nearest_neighbors}
+        \caption{Nearest Neighbours accuracy depending on the k number of chosen features}
+        \label{fig:}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/k_search/random_forest}
+        \caption{Random Forest accuracy depending on the k number of chosen features}
+        \label{fig:}
+    \end{figure}
+
+        \section{Appendix B: param search}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\textwidth]{report_img/param_search/linear_svc}
+        \caption{Parameter search for linear SVC}
+        \label{fig:}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\textwidth]{report_img/param_search/logistic_regression}
+        \caption{Parameter search for logistic regression}
+        \label{fig:}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\textwidth]{report_img/param_search/naive_bayes}
+        \caption{Parameter search for Naive Bayes}
+        \label{fig:}
+    \end{figure}
+
     \begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/k_search/linear_svc}
-    \caption{Linear SVC accuracy depending on the k number of chosen features}
-    \label{fig:}
-\end{figure}
+        \centering
+        \includegraphics[width=0.5\textwidth]{report_img/param_search/nearest_neighbors}
+        \caption{Parameter search for Nearest Neighbours}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/k_search/logistic_regression}
-    \caption{Logistic regression accuracy depending on the k number of chosen features}
-    \label{fig:}
-\end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\textwidth]{report_img/param_search/random_forest}
+        \caption{Parameter search for random forest}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/k_search/naive_bayes}
-    \caption{Naive Bayes accuracy depending on the k number of chosen features}
-    \label{fig:}
-\end{figure}
+    \section{Appendix C: neural network results}\label{sec:appendix-b-neural-network-results}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/k_search/nearest_neighbors}
-    \caption{Nearest Neighbours accuracy depending on the k number of chosen features}
-    \label{fig:}
-\end{figure}
+    \subsection{Feature Based CNN}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/k_search/random_forest}
-    \caption{Random Forest accuracy depending on the k number of chosen features}
-    \label{fig:}
-\end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_cnn_26/metric_accuracy}
+        \caption{CNN accuracy}
+        \label{fig:}
+    \end{figure}
 
-    \section{Appendix B: param search}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_cnn_26/metric_loss}
+        \caption{CNN loss}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/param_search/linear_svc}
-    \caption{Parameter search for linear SVC}
-    \label{fig:}
-\end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_cnn_26/metric_loss}
+        \caption{CNN loss}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/param_search/logistic_regression}
-    \caption{Parameter search for logistic regression}
-    \label{fig:}
-\end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_cnn_26/metric_precision}
+        \caption{CNN precision}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/param_search/naive_bayes}
-    \caption{Parameter search for Naive Bayes}
-    \label{fig:}
-\end{figure}
+    \subsection{Feature Based DNN}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/param_search/nearest_neighbors}
-    \caption{Parameter search for Nearest Neighbours}
-    \label{fig:}
-\end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_dnn_26/metric_150_accuracy}
+        \caption{DNN accuracy}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/param_search/random_forest}
-    \caption{Parameter search for random forest}
-    \label{fig:}
-\end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_dnn_26/metric_150_loss}
+        \caption{DNN loss}
+        \label{fig:}
+    \end{figure}
 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_dnn_26/metric_150_loss}
+        \caption{DNN loss}
+        \label{fig:}
+    \end{figure}
 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_dnn_26/metric_150_precision}
+        \caption{DNN precision}
+        \label{fig:}
+    \end{figure}
+
+    \subsection{Feature Based LSTM}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_lstm_26/metric_accuracy}
+        \caption{LSTM accuracy}
+        \label{fig:}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_lstm_26/metric_loss}
+        \caption{LSTM loss}
+        \label{fig:}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_lstm_26/metric_loss}
+        \caption{LSTM loss}
+        \label{fig:}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_lstm_26/metric_precision}
+        \caption{LSTM precision}
+        \label{fig:}
+    \end{figure}
+
+    \subsection{String Embedding Based CNN}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/string_embedding_cnn_26/metric_accuracy}
+        \caption{CNN accuracy}
+        \label{fig:}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/string_embedding_cnn_26/metric_loss}
+        \caption{CNN loss}
+        \label{fig:}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/string_embedding_cnn_26/metric_loss}
+        \caption{CNN loss}
+        \label{fig:}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/string_embedding_cnn_26/metric_precision}
+        \caption{CNN precision}
+        \label{fig:}
+    \end{figure}
 \end{document}
