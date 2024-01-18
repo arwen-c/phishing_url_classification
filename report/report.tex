@@ -349,16 +349,8 @@
     Humans are able to understand the meaning of an URL by recognizing certain features, such as the presence of a brand name or the words in the path.
     For this project, we will try to find such meaningful features.
     In addition, we will attempt to select the best number of features, so that we can reduce the dimensionality of the data as much as possible, while still achieving good results.
-    There may be some information loss, but we can efficiently reduce the number of dimensions.
 
-    Why considering approaches that relies on handcrafted features?
-    because we want to use ML techniques, not only neural networks.
-    + because it enables to reduce the dimension of the data, so to have a faster treatment and analysis afterwards.
-    Intuitively, the information contained by an URL should be encoded into a far smaller dimension, which is what we try to reproduce by establishing a feature vector.
-    Goal for us is to reduce from one dimension for each character for the biggest URL to one dimension for each interesting information only (ideally we would like each feature to represent one base vector onto the vector space encoding the information).
-    In practice, we will try to find meaningful features that brings the best possible results, so there will be information loss.
-    However, we can efficiently reduce the number of dimension
-    - it reduces the number of information and introduces human intervention, which is bad in general because it introduces biases or lost of information.
+    On the other hand, it is important to note that handcrafted features require human interpretation of the URL, which is bad in general because it introduces biases or lost of information that a machine learning algorithm could have found.
 
     \subsection{Establishment of the feature vector}\label{subsec:establishement-of-the-feature-vector}
 
