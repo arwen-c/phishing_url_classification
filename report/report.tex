@@ -456,37 +456,35 @@
     The accuracy constantly increases showing that combination of parameters bears meaning and helps the model improving even with the last features.
     By looking at the graphs plotted in \Cref{sec:appendixA}, we observed that each model has a different behavior towards the features.
     Moreover, the computing time associated to using the full feature vector for computing results or fitting the model compared to a reduced version of it is not significant.
-    Therefore, we chose to work with the full feature vector of 26 features.
+    Therefore, for the rest of this project, we chose to work with the full feature vector of 26 features.
 
     \subsubsection{Implementation}\label{subsubsec:implementation}
 
     \subsection{Motivation between the choices of the different machine learning models}\label{subsec:motivation-between-the-choices-of-the-different-machine-learning-models2}
 
-    Different statistical approaches has been chosen to model our binary classification problem, as well linear than non linear models.
-    We relied on the literature to chose the different models, as we want to replicate them and have a transversal comparison of the different models.
-    Moreover, we also wanted to have a good coverage of the different types of models, to have a good overview of the different approaches and their performances.
-    We also wanted to have models that made sens for our problem, and it was important for us to detail the strength and weaknesses of each model, to have a good understanding of the results that we obtained, and provide the reader with a good understanding of the different models, and the reason of the application in this problem.
+    We have chosen various statistical methods to address our binary classification problem, encompassing both linear and non-linear models.
+    Our selection of these models was influenced by existing research as we aimed to replicate them and conduct a thorough cross-sectional comparison.
+    Additionally, we aimed to ensure a comprehensive representation of different model types to gain a well-rounded perspective on various approaches and their performances.
+    We thoroughly describe the strengths and weaknesses of each model, allowing us to gain a deep understanding of our results and provide readers with a clear comprehension of the different models and their relevance to our problem.
 
     \subsubsection{Logistic Regression}
-    We wanted to implement a simple model to have a baseline for the performance of the other models.
-    Its easy implementation makes it a practical model for experimenting.
-    It also provides a good interpretability of the results.
+    To establish a baseline for comparing the performance of our other models, we decided to implement a simple model.
+    Its simplicity allows for practical experimentation and ensures that the results are easily interpretable.
 
     \subsubsection{Support Vector Machine}\label{subsubsec:support-vector-machine}
-    Idea behind the choice of Support Vector Machine was to chose a non linear kernel, and to have a model that provides non linear decision boundaries using the kernel trick.
-    However, for optimization reasons, we were forced to chose to use a linear kernel, because it is the fastest to train on our dataset using scikit-learn, and the only available method using cumul.
-    We then find analog results from the logistic regression, but we run it as a test to check that this implementation and linear regression are both coherent.
+    The reason behind selecting the Support Vector Machine (SVM) was to use a non-linear kernel and obtain non-linear decision boundaries through the kernel trick.
+    However, due to optimization constraints, we had to settle for a linear kernel as it proved to be the fastest for training on our dataset, and it was the only available method when using cuML.
+    As a result, we expect a similar outcome to logistic regression, but we still trained this model to confirm our reasoning.
 
     \subsubsection{Naives Bayes}
-
-    Naive Bayes is a linear classifier as well.
-    It relies on the assumption of independence between the features.
-    Even though we try through our feature selection to select features that are the least correlated, we expect some correlation.
+    Naive Bayes is a linear classifier as well, relying on the assumption of independence between the features.
+    Even though we try to select only relevant features through our feature selection process, we still expect some correlation between the features.
     Therefore, we expect this model to perform worse than the previous ones.
     In addition, empirical studies like\cite{MLmodelsComparison} shows that this model in general performs worse than other models.
-    However, it is interesting to verify this hypothesis.
-    We seek to see how much worse it is in our comparison, to compare our results with some of the studies that uses it.
-    As precised in\cite{NaiveBayesBackground}, \"As we observed before, the strength of feature dependencies (i.e. the class-conditional mutual information between the features) ’ignored’ by naive Bayes is not a good predictor of its classification error\".
+    However, it may still be interesting to verify this hypothesis, comparing our results with the other models and some of the studies that uses it.
+
+    On another note, considering that the performance of this model relies so heavily on the feature independence, we tested its relevance as a feature selector.
+    Unfortunately, as precised in~\cite{NaiveBayesBackground}, `the strength of feature dependencies (i.e. the class-conditional mutual information between the features) ’ignored’ by naive Bayes is not a good predictor of its classification error`.
     Therefore, the results on this classification do not enable us to measure efficiently the efficiency of our feature selection, like we would have wished.
     A better indicator for the performance of the Naive Bayes, as proposed in\cite{NaiveBayesBackground}, would be to use the information gain, which would be less efficient than the chi square, as explained earlier. % TODO add performances of the models using information gain k best features rather than chi score
 
