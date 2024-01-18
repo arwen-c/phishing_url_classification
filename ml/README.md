@@ -11,21 +11,21 @@ conda install tldextract tqdm pymongo matplotlib
 ### Performance
 
 Logistic Regression:
-100%|██████████| 1000/1000 [02:42<00:00,  6.15trial/s, best loss: -0.8254219889640808]
-Best params:  {'c': 59.643464530019735, 'class_weight': 1, 'fit_intercept': 0, 'l1_ratio': 0.20138101954231868, 'penalty': 1, 'tol': 9.246728713170994e-05}
+0.8423968553543091
+Best params:  {'c': 70.24682387842596, 'class_weight': 1, 'fit_intercept': 0, 'l1_ratio': 0.8765034555778022, 'penalty': 0}
 
 Linear SVC:
-100%|██████████| 1000/1000 [11:51<00:00,  1.41trial/s, best loss: -0.8253193497657776]
-Best params:  {'c': 16.381478122844584, 'change_tol': 0.0006360348597608416, 'class_weight': 1, 'fit_intercept': 0, 'grad_tol': 0.00048694202862422303, 'loss': 1, 'penalized_intercept': 0, 'penalty': 0, 'tol': 11.881796519053097}
+0.841742753982544
+Best params:  {'c': 0.0010484883768061676, 'class_weight': 1, 'fit_intercept': 0, 'loss': 1, 'penalized_intercept': 0, 'penalty': 1}
 
 Naive Bayes:
-100%|██████████| 1000/1000 [00:26<00:00, 37.10trial/s, best loss: -0.7135170698165894]
-Best params:  {'alpha': 0.12695561035635183, 'fit_prior': 0}
+0.7152677774429321
+Best params:  {'alpha': 1.1583084259806466}
 
 Nearest Neigbors:
-100%|██████████| 1000/1000 [4:08:21<0:00:00, 15.33s/trial, best loss: -0.9260850548744202]
-Best params:  {'metric': 3, 'n_neighbors': 2}
+0.9478824734687805
+Best params:  {'metric': 13, 'n_neighbors': 1}
 
 Random Forest:
-100%|██████████| 50/50 [02:55<00:00,  3.51s/trial, best loss: -0.7207251787185669]
-Best params:  {'bootstrap': 1, 'max_depth': 0, 'max_samples': 0.24595877227188392, 'min_impurity_decrease': 0.09423017634336195, 'min_samples_leaf': 3, 'min_samples_split': 3, 'n_bins': 0, 'n_estimators': 1}
+0.736885666847229
+Best params:  {'bootstrap': 1, 'max_depth': 2, 'max_samples': 0.6407690956805958, 'min_samples_leaf': 1, 'min_samples_split': 0, 'n_bins': 0, 'n_estimators': 2}
