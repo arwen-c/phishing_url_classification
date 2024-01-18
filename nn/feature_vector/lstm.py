@@ -35,7 +35,7 @@ def model_builder_lstm(number_of_features=11):
         loss=losses.CategoricalCrossentropy(),
         optimizer=keras.optimizers.Adam(learning_rate=hp_initial_learning_rate),
         metrics=[
-            keras.metrics.CategoricalAccuracy(),
+            keras.metrics.CategoricalAccuracy(name="accuracy"),
             keras.metrics.Precision(),
             keras.metrics.Recall(),
             keras.metrics.F1Score(),
