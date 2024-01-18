@@ -25,26 +25,26 @@ def model_builder_cnn(number_of_features=11):
             layers.MaxPooling1D(pool_size=2),
             layers.Conv1D(filters=256, kernel_size=3, activation="tanh"),
             layers.BatchNormalization(),
-            layers.MaxPooling1D(pool_size=2),
-            layers.Conv1D(filters=512, kernel_size=3, activation="tanh"),
-            layers.BatchNormalization(),
-            layers.MaxPooling1D(pool_size=2),
-            layers.Conv1D(filters=1024, kernel_size=3, activation="tanh"),
-            layers.BatchNormalization(),
-            layers.MaxPooling1D(pool_size=2),
+            # layers.MaxPooling1D(pool_size=2),
+            # layers.Conv1D(filters=512, kernel_size=3, activation="tanh"),
+            # layers.BatchNormalization(),
+            # layers.MaxPooling1D(pool_size=2),
+            # layers.Conv1D(filters=1024, kernel_size=3, activation="tanh"),
+            # layers.BatchNormalization(),
+            # layers.MaxPooling1D(pool_size=2),
             layers.Flatten(),
             layers.Dense(units=500, activation="tanh"),
-            layers.Dense(units=1, activation="sigmoid"),
+            layers.Dense(units=2, activation="sigmoid"),
         ]
     )
 
     hp_initial_learning_rate = 0.001
 
     model.compile(
-        loss=losses.BinaryCrossentropy(),
+        loss=losses.CategoricalCrossentropy(),
         optimizer=keras.optimizers.Adam(learning_rate=hp_initial_learning_rate),
         metrics=[
-            keras.metrics.Accuracy(),
+            keras.metrics.CategoricalAccuracy(),
             keras.metrics.Precision(),
             keras.metrics.Recall(),
             keras.metrics.F1Score(),

@@ -1,3 +1,4 @@
+import os
 import sys
 from models import feature_vector_models, string_embedding_models
 from keras import Model
@@ -44,6 +45,7 @@ def main():
     val_y = transform_y(val_y)
 
     prefix = f"{model_type}_{model_name}_{top_k}/"
+    os.makedirs(prefix, exist_ok=True)
 
     checkpoint_path = prefix + "cp.model.keras"
     checkpoint_path_loss = prefix + "cp.loss.model.keras"
@@ -72,6 +74,10 @@ def main():
         # create empty df
         history_df = pd.DataFrame()
 
+    batch_size = 1024
+    if model_type == "string_embedding":
+        batch_size = 32
+
     model.fit(
         train_x,
         train_y,
@@ -94,6 +100,7 @@ def main():
         ],
         initial_epoch=history_df.shape[0],
         epochs=30,
+        batch_size=batch_size,
     )
 
     # reload history after training

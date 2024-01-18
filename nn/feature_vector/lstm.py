@@ -25,21 +25,21 @@ def model_builder_lstm(number_of_features=11):
             layers.LSTM(units=number_of_features, return_sequences=True),
             layers.LSTM(units=number_of_features, return_sequences=True),
             layers.LSTM(units=number_of_features, return_sequences=False),
-            layers.Dense(units=1, activation="sigmoid"),
+            layers.Dense(units=2, activation="sigmoid"),
         ]
     )
 
     hp_initial_learning_rate = 0.01
 
     model.compile(
-        loss=losses.BinaryCrossentropy(),
+        loss=losses.CategoricalCrossentropy(),
         optimizer=keras.optimizers.Adam(learning_rate=hp_initial_learning_rate),
         metrics=[
-            keras.metrics.Accuracy(),
+            keras.metrics.CategoricalAccuracy(),
             keras.metrics.Precision(),
             keras.metrics.Recall(),
             keras.metrics.F1Score(),
-        ],
+        ]
     )
 
     return model

@@ -25,18 +25,18 @@ feature_vector_models = {
         model_builder_cnn,
         load_feature_vector,
         lambda x: x,
-        lambda x: x
+        lambda x: to_categorical(x, num_classes=2)
     ),
     "dnn": (
         model_builder_dnn,
         load_feature_vector,
         lambda x: x,
-        lambda x: x
+        lambda x: to_categorical(x, num_classes=2)
     ),
     "lstm": (
         model_builder_lstm,
         load_feature_vector,
         lambda x: x,
-        lambda x: x
+        lambda x: to_categorical(x, num_classes=2)
     ),
 }
