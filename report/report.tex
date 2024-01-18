@@ -123,14 +123,14 @@
     The final quarter of that year alone witnessed 1,350,037 attacks, slightly up from the previous quarter's record of 1,270,883 incidents, indicating a persistent and escalating threat.
     APWG records a constant augmentation of the threat, as shown below:
 
-    \begin{figure}
+    \begin{figure}[H]
         \centering
         \includegraphics[width=0.8\textwidth]{report_img/shartincreasingphishing}
         \caption{Evolution of phishing from 2019 to 2022 according to APWG\cite{PhishingActivityTrendsReport}}
         \label{fig:figure}
     \end{figure}
 
-    The financial sector bore the brunt of these attacks, accounting for 27.7\% of all phishing incidents.
+    The financial sector had the biggest number of attacks, accounting for 27.7\% of all phishing incidents.
     Phishing attempts against webmail and software-as-a-service (SAAS) providers were also notable, comprising 17.7\% of the attacks.
     These attacks, which involve impersonating trusted parties to manipulate victims into transferring funds or revealing sensitive data, have led to losses in the billions.
     In the fourth quarter of 2022 alone, the average amount requested in wire transfer BEC attacks soared to \$132,559, marking a 41\% increase from the previous quarter.
@@ -147,12 +147,12 @@
     This shift calls for a detection system that is both intelligent and adaptive, capable of keeping pace with these evolving threats.
 
     Today's method of detecting phishing URLs mainly rely on blacklists, which are lists of known phishing URLs.
-    These are largely implemented in navigators.
+    These are largely implemented in web browsers, use Google Safe Browsing~\cite{GoogleSafeBrowsing}, or are provided by security vendors.
     However, these methods lack in speed detection for being more efficient.
-    \cite{PhishingExperimentalBlackLists2009} reports after empirical analysis than less than 20\% of their phishing campaigns have been caught.
+    \cite{PhishingExperimentalBlackLists2009} reports after empirical analysis that less than 20\% of their phishing campaigns have been caught.
     \cite{PhishingBlackLists} reports only 12\% overlap between two of the main phishing blacklists.
 
-    This landscape of escalating and evolving phishing attacks underscores the critical need for advanced detection methods, including the application of machine learning for phishing URL classification.
+    This landscape of evolving phishing attacks underscores the critical need for advanced detection methods, including the application of machine learning for phishing URL classification.
 
 
     \section{Related works}\label{sec:related-works}
@@ -166,16 +166,15 @@
     \begin{itemize}
 
         \item An phishing URL detection method (\cite{PhishingURLDetection}) compares different Machine Learning classification algorithm.
-        Their data processing involves first the detection of words through 17 NLP handcrafted features.
-        It then relies on a Markov Chain Model to identify random word.
+        Their data processing involves first the detection of word statistics through 17 NLP handcrafted features, such as the brand name count, random words, or typosquatting.
         The classification is based on detecting Typosquatting and employs various algorithms like Naive Bayes, Random Forest, kNN, Adaboost, K-star, SMO, and Decision Tree.
-        The study reached 97.20\% of accuracy with Weka's RFC (Random Forest Classifier) on a 10\% sub-sample from the Ebbu2017 dataset.
+        The study reached 97.98\% of accuracy with Weka's RFC (Random Forest Classifier).
 
         \item In their paper\cite{PhishSafe}, Jain and Gupta developed an anti-phishing system employing 14 handcrafted URL descriptors.
         They conducted tests using two classifiers: Naive Bayes, which achieved an accuracy of 76.87\%, and Support Vector Machine, demonstrating a higher accuracy of 91.28\%.
 
         \item The study presented in\cite{LexicalFeatureSelection} implemented a classification system based on lexical features extracted from URLs. Their methodology involved a feature extraction from URLs, the selection of the most relevant features through chi-square feature selection, and the utilization of various machine learning algorithms for classification.
-        With nine selected features and a Random Forest (RF) classifier, they achieved their best accuracy of 98.57%.
+        With nine selected features and a Random Forest (RF) classifier, they achieved their best accuracy of 98.57\%.
 
     \end{itemize}
 
@@ -193,50 +192,29 @@
 
         \item An RCNN model to classify phishing URLs is compared with different machine learning common approaches (Naïves Bayes, Logistic Regression, random forest and XGBoost) on four different types of features (hand crafted, character embedding, character level TF-IDF and character level count vector features)\cite{CharacterLevelCNN}.
         The URL is used as input for a tokenizer and then then transformed into a matrix using one-hot encoding.
-        Their RCNN model obtained 95:02\% accuracy.
+        Their RCNN model obtained 95.02\% accuracy.
 
     \end{itemize}
 
     \subsection{Large Language Models}\label{subsec:large-language-models}
-    PhishBert~\cite{PhishBert} is a Bert based model that is pretrained with the manipulated token detection objective on 3 billion URLs.
-    A classification layer is then added and fine-tuned on a smaller dataset with the objective of detecting phishing URLs.
-    The model achieves an unspecified, but close to 100 percent accuracy depending on the amount of data in their pre-training stage.
+
+    \begin{itemize}
+        \item PhishBert~\cite{PhishBert} is a Bert based model that is pretrained with the manipulated token detection objective on 3 billion URLs. A classification layer is then added and fine-tuned on a smaller dataset with the objective of detecting phishing URLs. The model achieves an unspecified, but close to 100 percent accuracy depending on the amount of data in their pre-training stage.
+    \end{itemize}
 
     \subsection{Datasets}\label{subsec:datasets}
 
-    There exists multiple crowdsource based phasing URL collection applications.
-    The main ones are PhishTank~\cite{PhishTank}, OpenPhish~\cite{OpenPhish}, and PhishRepo~\cite{PhishRepo}.
-    However, due to the relatively short-lived nature of phishing sites after a phishing report, all of these do regular data cleanups.
-    They offer a data feed that you can subscribe too, meaning that if you want to create a dataset, you have to subscribe to the feed for a while, where back-filling is not completely possible.
-    Another popular dataset is Google SafeBrowsing\cite{GoogleSafeBrowsing}, which is integrated into several browsers.
-    Unfortunately, they only expose a query API to check a URL for legitimacy, rather than exposing their entire dataset.
+    \begin{itemize}
+        \item There exists multiple crowdsource based phasing URL collection applications. The main ones are PhishTank~\cite{PhishTank}, OpenPhish~\cite{OpenPhish}, and PhishRepo~\cite{PhishRepo}. However, due to the relatively short-lived nature of phishing sites after a phishing report, all of these do regular data cleanups. They offer a data feed that you can subscribe too, meaning that if you want to create a dataset, you have to subscribe to the feed for a while, where back-filling is not completely possible.
+        \item Another popular dataset is Google SafeBrowsing\cite{GoogleSafeBrowsing}, which is integrated into several browsers. Unfortunately, they only expose a query API to check a URL for legitimacy, rather than exposing their entire dataset.
+        \item JPCERT/CC is a Computer Security Incident Response Team established in Japan. The organization coordinates with network service providers, security vendors, government agencies, as well as the industry associations\cite{JPCertCC}. In 2022, they released a URL dataset of phishing sites confirmed from January 2019 to June 2022\cite{JPCertCCDataset}.
+        \item Another dataset published on GitHub contains about 750k malicious URLs and 750k benign URLs\cite{VisualizingRNNInURLDetection}. The malicious set is collected by following the aforementioned PhishTank for a while. For legitimate URLs, they followed the top Alexa websites (an organization tracking most commonly visited websites).
+        \item In\cite{PhishingLoginURLDetection}, it is mentioned that ``Existing URL datasets use the homepage URL from well-known websites as the legitimate. However, we think that the challenge is to determine if a login form of a website is legitimate or phishing. From our perspective, and to the best of our knowledge, publicly available datasets are not reflecting conditions that represent some real problems for phishing URL detection.'' This raises the question of whether the models built on home page-based legitimate websites are even valid (comparing apples and pears). In their dataset (PILU-90K), they only include URLs of pages which contain password fields (suggesting it's a login page).
+        \item Some datasets also include further data of each URL, such as the HTML title, body, or even a screenshot. For example, the ``Phishing Websites Dataset''\cite{VisualizingRNNInURLDetection} contains the entire HTML of every URL, largely increasing the dataset size and the potential solutions of solving the problem. Such datasets are either constructed using DMOZ, CommonCrawl, or by manual fetching (using headless browsers\cite{PhishingLoginURLDetection} or simple HTTP clients). DMOZ~\cite{DMOZ} is a large human-edited web directory, which has been used in the past to create a dataset of legitimate URLs. However, this project has been discontinued in 2017, and the data is no longer maintained.  CommonCrawl~\cite{CommonCrawl} is similar to DMOZ. It is a non-profit organization that crawls the web and makes the data publicly available.
+    \end{itemize}
 
-    JPCERT/CC is a Computer Security Incident Response Team established in Japan.
-    The organization coordinates with network service providers, security vendors, government agencies, as well as the industry associations\cite{JPCertCC}.
-    In 2022, they released a URL dataset of phishing sites confirmed from January 2019 to June 2022\cite{JPCertCCDataset}.
 
-    Another dataset published on GitHub contains about 750k malicious URLs and 750k benign URLs\cite{VisualizingRNNInURLDetection}.
-    The malicious set is collected by following the aforementioned PhishTank for a while.
-    For legitimate URLs, they followed the top Alexa websites (an organization tracking most commonly visited websites).
 
-    \subsubsection{Login page based dataset}\label{subsubsec:login-page-based-dataset}
-    In\cite{PhishingLoginURLDetection}, it is mentioned that ``Existing URL datasets use the homepage URL from well-known websites as the legitimate.
-    However, we think that the challenge is to determine if a login form of a website is legitimate or phishing.
-    From our perspective, and to the best of our knowledge, publicly available datasets are not reflecting conditions that represent some real problems for phishing URL detection.''
-    This raises the question of whether the models built on home page-based legitimate websites are even valid (comparing apples and pears).
-    In their dataset (PILU-90K), they only include URLs of pages which contain password fields (suggesting it's a login page).
-
-    \subsubsection{Additional data}\label{subsubsec:additional-data}
-    These solutions have so far only looked at the URLs, however some datasets also include further data of each URL, such as the HTML title, body, or even a screenshot.
-    For example, the ``Phishing Websites Dataset''\cite{VisualizingRNNInURLDetection} contains the entire HTML of every URL, largely increasing the dataset size and the potential solutions of solving the problem.
-    You can imagine that the content of a webpage reveals much about a website's intent.
-
-    Such datasets are either constructed using DMOZ, CommonCrawl, or by manual fetching (using headless browsers\cite{PhishingLoginURLDetection} or simple HTTP clients).%add citation for http client
-    DMOZ~\cite{DMOZ} is a large human-edited web directory, which has been used in the past to create a dataset of legitimate URLs. However, this project has been discontinued in 2017, and the data is no longer maintained.
-    CommonCrawl~\cite{CommonCrawl} is similar to DMOZ. It is a non-profit organization that crawls the web and makes the data publicly available.
-
-    There are many more datasets to be found, but most of them are derivatives of the aforementioned datasets.
-    For example Ebbu2017~\cite{EBBU2017} and PWD2016~\cite{PWD2016}.
 
 %    Different deep learning model have been used to classify websites.
 %    Two main approaches occurs when trying to analyze the web: classifying a website by analyzing its content or relying on the URL to classify it
@@ -294,13 +272,14 @@
     We want a fast approach to classify URL instantly, that could be integrated within navigator to complete blacklists.
     To achieve time efficiency, we want to only rely on the URL, not on the content of the page or any content that would need to send a request to the website.
     Therefore, we chose to classify phishing websites relying on their URL only.
-    A first approach of this URL classification problem could try a new machine learning method and try to apply it to this specific problem and comparing it to the different results that the literature.
-    This is very interesting to get in depth with one specific model.
-    However, we were intrigued by the different results that studied could have on same models (for example machine learning models) on similar datasets.
+    Strikingly, many of the existing studies on phishing URL detection are each based on different datasets and methodologies, each displaying a higher accuracy than the previous one.
+    However, we were intrigued by the different results that studies have on same models (for example machine learning models) on similar datasets.
     From all these studies, it seemed difficult to establish any ranking or argument comparison of the different models, since each one had the best results on its new introduced approach.
-    This is the reason why we chose to establish a benchmark of the different solutions.
-    By implementing them on the same dataset, relying on the different studies from the literature, we could establish a more objective classification.
-    Another advantage for us as student of this approach is to develop our critical sens of studies (learn to detect what can be improved from a study, from what is strong argumentation) and to get familiar with these different approaches.
+    For this reason, we chose to establish a benchmark of the different solutions.
+    By implementing them on the same dataset, relying on the different studies from the literature, we aim to establish a more objective classification.
+    In addition, this process allows us as a students to develop our critical sense of studies (learn to detect what can be improved from a study, from what is strong argumentation) and to get familiar with these different approaches.
+
+    Similar to the existing studies, we will create hand-crafted features from the URL and perform feature selection to reduce the dimensionality of the data.
 
     We explored these different models:
     \begin{figure}[H]
@@ -309,6 +288,7 @@
         \caption{}
         \label{fig:model_presentation}
     \end{figure}
+    %TODO: update image with random forests
 
     \subsection{Dataset}\label{subsec:dataset}
     In our initial project proposal, we intended to utilize the PILU-90K~\cite{PhishingURLDetection}.
@@ -329,14 +309,13 @@
     We also expected issues with running into Web Application Firewalls when visiting so many websites, further decreasing the quality of our dataset.
 
     \subsubsection{Preprocessing}\label{subsubsec:preprocessing}
-    Since we are building models based on both handcrafted features and on the string embedding, we need to preprocess the data differently.
+    Since the original dataset is already encoded in a character embedding integer array format, and we want to create our own feature vector, we need to convert the dataset back to a textual URL format.
     In the directory \texttt{data\textbackslash convert}, we provide a script \texttt{dill\_to\_csv.py} to convert the dill dataset from the integer array format to a textual URL format.
-    The result is stored in \texttt{data\textbackslash csv\textbackslash (test/train/val).csv}.
-    The other script \texttt{csv\_to\_feature\_vector.py} converts this csv from textual URL format to a feature vector using the feature selection described in \Cref{subsec:establishement-of-the-feature-vector}.
-    The results are stored in \texttt{data\textbackslash feature\_vector\textbackslash (k)\textbackslash (test\_x/train\_x/val\_x).csv} where is k refers to the k in top k selected features.
+
+    We provide another script \texttt{csv\_to\_feature\_vector.py} which converts this csv from textual URL format to a feature vector using the feature selection described in \Cref{subsec:establishement-of-the-feature-vector}.
 
     \subsection{Machine Learning Frameworks}
-    For the machine learning framework, we decided to use RAPIDS AI’s cuML over sklearn due to its significant performance advantages when dealing with large datasets.
+    For the machine learning framework, we decided to use RAPIDS AI’s cuML as opposed to sklearn due to its significant performance advantages when dealing with large datasets.
     Leveraging the GPU, cuML achieves a 10 to 50 times speedup compared to CPU-bound libraries like sklearn.
     Unlike sklearn, which operates primarily on CPUs and can struggle with scalability, cuML is designed to handle vast amounts of data more efficiently.
     Additionally, its API mirrors that of sklearn, offering ease of use and a familiar environment for those accustomed to sklearn, but with the added benefit of GPU acceleration.
@@ -350,7 +329,7 @@
     Hyperopt was a more appropriate choice for this project due to our experience with it and its ability to serve all our hyperparameter needs.
 
     Considering that most of the tested Machine Learning algorithms require little memory, we tried to use hyperopt's \texttt{MongoTrials} to parallelize the parameter search.
-    We saw however that it led to no speedup, as the process was mainly GPU processing bound.
+    We saw however that it led to no speedup, as the process was mainly GPU processing bound rather than memory bound.
 
     \subsection{Deep Learning Frameworks}
     For the deep learning framework, we decided to use Keras due to its simplicity and ease of use.
@@ -363,6 +342,14 @@
 
 
     \section{ML models based on handcrafted features}\label{sec:models-based-on-handcrafted-features}
+
+    Considering approaches that rely on handcrafted features is crucial, especially when we want to use ML techniques, not only neural networks.
+    Creating handcrafted features enables us to reduce the dimension of the data, so to have a faster treatment and analysis afterwards.
+    Intuitively, the information contained by an URL could be encoded into a far smaller dimension compared to simply having a dimension for each character or word.
+    Humans are able to understand the meaning of an URL by recognizing certain features, such as the presence of a brand name or the words in the path.
+    For this project, we will try to find such meaningful features.
+    In addition, we will attempt to select the best number of features, so that we can reduce the dimensionality of the data as much as possible, while still achieving good results.
+    There may be some information loss, but we can efficiently reduce the number of dimensions.
 
     Why considering approaches that relies on handcrafted features?
     because we want to use ML techniques, not only neural networks.
