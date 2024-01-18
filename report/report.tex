@@ -201,10 +201,8 @@
         \item JPCERT/CC is a Computer Security Incident Response Team established in Japan. The organization coordinates with network service providers, security vendors, government agencies, as well as the industry associations\cite{JPCertCC}. In 2022, they released a URL dataset of phishing sites confirmed from January 2019 to June 2022\cite{JPCertCCDataset}.
         \item Another dataset published on GitHub contains about 750k malicious URLs and 750k benign URLs\cite{VisualizingRNNInURLDetection}. The malicious set is collected by following the aforementioned PhishTank for a while. For legitimate URLs, they followed the top Alexa websites (an organization tracking most commonly visited websites).
         \item In\cite{PhishingLoginURLDetection}, it is mentioned that ``Existing URL datasets use the homepage URL from well-known websites as the legitimate. However, we think that the challenge is to determine if a login form of a website is legitimate or phishing. From our perspective, and to the best of our knowledge, publicly available datasets are not reflecting conditions that represent some real problems for phishing URL detection.'' This raises the question of whether the models built on home page-based legitimate websites are even valid (comparing apples and pears). In their dataset (PILU-90K), they only include URLs of pages which contain password fields (suggesting it's a login page).
-        \item Some datasets also include further data of each URL, such as the HTML title, body, or even a screenshot. For example, the ``Phishing Websites Dataset''\cite{VisualizingRNNInURLDetection} contains the entire HTML of every URL, largely increasing the dataset size and the potential solutions of solving the problem. Such datasets are either constructed using DMOZ, CommonCrawl, or by manual fetching (using headless browsers\cite{PhishingLoginURLDetection} or simple HTTP clients). DMOZ~\cite{DMOZ} is a large human-edited web directory, which has been used in the past to create a dataset of legitimate URLs. However, this project has been discontinued in 2017, and the data is no longer maintained.  CommonCrawl~\cite{CommonCrawl} is similar to DMOZ. It is a non-profit organization that crawls the web and makes the data publicly available.
+        \item Some datasets also include further data of each URL, such as the HTML title, body, or even a screenshot. For example, the ``Phishing Websites Dataset''\cite{VisualizingRNNInURLDetection} contains the entire HTML of every URL, largely increasing the dataset size and the potential solutions of solving the problem. Such datasets are either constructed using DMOZ, CommonCrawl, or by manual fetching (using headless browsers\cite{PhishingLoginURLDetection} or simple HTTP clients). DMOZ~\cite{DMOZ} is a large human-edited web directory, which has been used in the past to create a dataset of legitimate URLs. However, this project has been discontinued in 2017, and the data is no longer maintained. CommonCrawl~\cite{CommonCrawl} is similar to DMOZ. It is a non-profit organization that crawls the web and makes the data publicly available.
     \end{itemize}
-
-
 
 
 %    Different deep learning model have been used to classify websites.
@@ -357,36 +355,36 @@
             \begin{tabular}{|c|p{4cm}|p{5cm}|c|c|c|c|}
                 \hline
                 \textbf{No.} & \textbf{Feature Name}           & \textbf{Feature Description}                   & \textbf{Chi Score} & \textbf{Chi Ranking} & \textbf{Info Gain Score} & \textbf{Source} \\ \hline
-                1            & Number of Dots                  & Number of '.' in the URL                       & 64216.34           & 7                    & 0.0944                   & \cite{LexicalFeatureSelection}                  \\ \hline
-                2            & Number of Hyphens               & Number of '-' in the URL                       & 517655.65          & 1                    & 0.0747                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-                3            & Number of @                     & Number of '@' in the URL                       & 4465.27            & 14                   & 0.0022                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-                4            & Number of ?                     & Number of '?' in the URL                       & 9006.72            & 11                   & 0.0129                   & \cite{LexicalFeatureSelection}                  \\ \hline
-                5            & URL Length                      & Length of the URL                              & 291038.97          & 6                    & 0.0283                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-                6            & Number of Digits                & Number of digits in the URL                    & 312225.09          & 5                    & 0.1280                   & \cite{PhishingLoginURLDetection}                \\ \hline
-                7            & Number of /                     & Number of '/' in the URL                       & 25682.89           & 8                    & 0.0621                   & \cite{LexicalFeatureSelection}                  \\ \hline
-                8            & Number of //                    & Number of '//' in the URL                      & 194.38             & 16                   & 0.1334                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-                9            & Use of HTTPS                    & Counts occurrences of 'https'                  & 164109.06          & 4                    & 0.1229                   & \cite{PhishSafe}                                \\ \hline
-                10           & Use of HTTP                     & Counts occurrences of 'http'                   & 215.22             & 15                   & 0.1470                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-                11           & Use of WWW                      & Counts occurrences of 'www'                    & 1150.42            & 13                   & 0.0482                   & \cite{PhishingURLDetection}                     \\ \hline
-                12           & IP Address Usage                & 1 if IP address is used, 0 otherwise           & 19994.97           & 9                    & 0.0113                   & \cite{LexicalFeatureSelection}                  \\ \hline
-                13           & Suspicious Word Count           & Counts suspicious words in the URL             & 517281.65          & 2                    & 0.1526                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
+                1            & Number of Dots                  & Number of `.' in the URL                       & 64216.34           & 7                    & 0.0944                   & ~\cite{LexicalFeatureSelection}             \\ \hline
+                2            & Number of Hyphens               & Number of `-' in the URL                       & 517655.65          & 1                    & 0.0747                   & ~ ~\cite{PhishSafe,LexicalFeatureSelection} \\ \hline
+                3            & Number of @                     & Number of `@' in the URL                       & 4465.27            & 14                   & 0.0022                   & ~\cite{PhishSafe,LexicalFeatureSelection} ~ \\ \hline
+                4            & Number of ?                     & Number of `?' in the URL                       & 9006.72            & 11                   & 0.0129                   & ~\cite{LexicalFeatureSelection}             \\ \hline
+                5            & URL Length                      & Length of the URL                              & 291038.97          & 6                    & 0.0283                   & ~\cite{PhishSafe,LexicalFeatureSelection}   \\ \hline
+                6            & Number of Digits                & Number of digits in the URL                    & 312225.09          & 5                    & 0.1280                   & ~\cite{PhishingLoginURLDetection}           \\ \hline
+                7            & Number of /                     & Number of `/' in the URL                       & 25682.89           & 8                    & 0.0621                   & ~\cite{LexicalFeatureSelection}             \\ \hline
+                8            & Number of //                    & Number of `//' in the URL                      & 194.38             & 16                   & 0.1334                   & ~\cite{PhishSafe,LexicalFeatureSelection}   \\ \hline
+                9            & Use of HTTPS                    & Counts occurrences of `https'                  & 164109.06          & 4                    & 0.1229                   & ~\cite{PhishSafe}                           \\ \hline
+                10           & Use of HTTP                     & Counts occurrences of `http'                   & 215.22             & 15                   & 0.1470                   & ~\cite{PhishSafe,LexicalFeatureSelection}   \\ \hline
+                11           & Use of WWW                      & Counts occurrences of `www'                    & 1150.42            & 13                   & 0.0482                   & ~\cite{PhishingURLDetection}                \\ \hline
+                12           & IP Address Usage                & 1 if IP address is used, 0 otherwise           & 19994.97           & 9                    & 0.0113                   & ~\cite{LexicalFeatureSelection}             \\ \hline
+                13           & Suspicious Word Count           & Counts suspicious words in the URL             & 517281.65          & 2                    & 0.1526                   & ~\cite{PhishSafe,LexicalFeatureSelection}   \\ \hline
                 14           & Gift Card Suspicious Word Count & Counts gift card suspicious words in the URL   & 20.61              & 26                   & 0.0                      & new feature \\ \hline
-                15           & TLD Position                    & Position of Top-Level Domain in URL            & 19567.30           & 10                   & 0.0410                   & \cite{PhishSafe}                                \\ \hline
-                16           & Path Length Ratio               & Ratio of path length to URL length             & 65.01              & 20                   & 0.0246                   & \cite{LexicalFeatureSelection}                  \\ \hline
-                17           & Suspicious Char Count           & Counts suspicious characters in URL            & 96221.30           & 7                    & 0.0510                   & \cite{LexicalFeatureSelection}                  \\ \hline
-                18           & Symbol as Last Char             & 1 if last character is a symbol, 0 otherwise   & 0.00               & 21                   & 8.97e-05                 & \cite{LexicalFeatureSelection} \\ \hline
-                19           & Redirection Count               & Counts number of '.' in subdomain              & 263490.59          & 12                   & 0.0400                   &                                                 \\ \hline
-                20           & IP Address Presence             & 1 if IP address present, 0 otherwise           & 19861.37           & 17                   & 0.0102                   & \cite{PhishSafe} \cite{LexicalFeatureSelection} \\ \hline
-                21           & Subdomain Count                 & Number of subdomains                           & 67213.42           & 14                   & 0.1247                   & \cite{PhishSafe}                                \\ \hline
-                22           & Port Presence                   & 1 if port number present, 0 otherwise          & 387.36             & 18                   & 0.0                      & \cite{LexicalFeatureSelection}                  \\ \hline
-                23           & Unicode Char Count              & Number of unicode characters                   & 290705.11          & 6                    & 0.0279                   & \cite{LexicalFeatureSelection}                  \\ \hline
-                24           & Query Presence                  & 1 if query present in the URL, 0 otherwise     & 0.00               & 22                   & 0.0                      & \cite{LexicalFeatureSelection}                  \\ \hline
-                25           & Special Char Ratio              & Ratio of special characters to URL length      & 559.19             & 25                   & 0.0867                   &\cite{PhishingLoginURLDetection} \\ \hline
-                26           & Misspelled Word Presence        & 1 if misspelled words are present, 0 otherwise & 9199.83 & 24 & 0.1170 &  new feature \\ \hline
+                15           & TLD Position                    & Position of Top-Level Domain in URL            & 19567.30           & 10                   & 0.0410                   & ~\cite{PhishSafe}                           \\ \hline
+                16           & Path Length Ratio               & Ratio of path length to URL length             & 65.01              & 20                   & 0.0246                   & ~\cite{LexicalFeatureSelection}             \\ \hline
+                17           & Suspicious Char Count           & Counts suspicious characters in URL            & 96221.30           & 7                    & 0.0510                   & ~\cite{LexicalFeatureSelection}             \\ \hline
+                18           & Symbol as Last Char             & 1 if last character is a symbol, 0 otherwise   & 0.00               & 21                   & 8.97e-05                 & ~\cite{LexicalFeatureSelection} \\ \hline
+                19           & Redirection Count               & Counts number of `.' in subdomain              & 263490.59          & 12                   & 0.0400                   &                                             \\ \hline
+                20           & IP Address Presence             & 1 if IP address present, 0 otherwise           & 19861.37           & 17                   & 0.0102                   & ~\cite{PhishSafe,LexicalFeatureSelection}   \\ \hline
+                21           & Subdomain Count                 & Number of subdomains                           & 67213.42           & 14                   & 0.1247                   & ~\cite{PhishSafe}                           \\ \hline
+                22           & Port Presence                   & 1 if port number present, 0 otherwise          & 387.36             & 18                   & 0.0                      & ~\cite{LexicalFeatureSelection}             \\ \hline
+                23           & Unicode Char Count              & Number of unicode characters                   & 290705.11          & 6                    & 0.0279                   & ~\cite{LexicalFeatureSelection}             \\ \hline
+                24           & Query Presence                  & 1 if query present in the URL, 0 otherwise     & 0.00               & 22                   & 0.0                      & ~\cite{LexicalFeatureSelection}             \\ \hline
+                25           & Special Char Ratio              & Ratio of special characters to URL length      & 559.19             & 25                   & 0.0867                   & \cite{PhishingLoginURLDetection} \\ \hline
+                26           & Misspelled Word Presence        & 1 if misspelled words are present, 0 otherwise & 9199.83 & 24 & 0.1170 & new feature \\ \hline
             \end{tabular}
             \caption{Summary of Features Implemented for Phishing URL Detection}
             \label{tab:features}
-         \end{adjustwidth}
+        \end{adjustwidth}
     \end{table}
 
     As mentioned before, some features have been designed by ourselves after reading on phishing.
@@ -460,10 +458,7 @@
     Moreover, the computing time associated to using the full feature vector for computing results or fitting the model compared to a reduced version of it is not significant.
     Therefore, we chose to work with the full feature vector of 26 features.
 
-
     \subsubsection{Implementation}\label{subsubsec:implementation}
-
-    % table with the recap of all hyper parameters, the ranges that have been tried and the best values obtained?
 
     \subsection{Motivation between the choices of the different machine learning models}\label{subsec:motivation-between-the-choices-of-the-different-machine-learning-models2}
 
@@ -502,95 +497,74 @@
     However, we can ask Python in built library to work on trying to find this best initialization.
     Interesting with this model is also the interpretability that it could provide for further studies.
 
-    \subsubsection{Kernel Ridge Regression}
-    % TODO to remove?
-    Because non linear Support Vector Machine algorithm (using the kernel trick) was not available on cuml, we decided to try kernel ridge regression function, with adapting it to binary classification thanks to a threshold.
-    The different kernel functions that are available, and that we tested are:
-    \begin{enumerate}
-        \item linear
-        \item additive\_chi2
-        \item chi2
-        \item cosine
-        \item laplacian
-        \item polynomial
-        \item poly
-        \item rbf
-        \item sigmoid
-    \end{enumerate}
-
     \subsubsection{Random Forest}
-    Random Forest is a non linear classifier for comparison of performances of at least two non linear usual classifiers.
-    From\cite{MLmodelsComparison}, it is a model that in general has good performances.
-    They are not likely to overfit on our big set of data.
-    Provide a measure of feature importance, which is interesting for us to compare with our feature selection is relevant.
-    Easy to train in parallel, which is interesting for our set up, and handle large datasets easily.
-    % TODO: remove the last sentence or give a ranking of the most important features according to this model, or conslude that it could be used in further studies to improve the feature selection
+    Random Forest is a classifier that operates effectively with non-linear data.
+    It stands out when compared to similar non-linear classifiers in terms of performance.
+    According to MLmodelsComparison, it generally delivers robust results.
+    This model is particularly resistant to overfitting, even when dealing with extensive datasets.
+    It also offers a clear understanding of which features are important, enhancing interpretability.
+    Additionally, it can efficiently be trained in parallel, making it well-suited for handling large datasets and particularly interesting for our configuration.
 
     \subsection{Results}\label{subsec:results}
-
-    % TODO complete with the results of the different models
 
     \begin{table}[H]
         \centering
         \begin{tabular}{|l|p{8cm}|l|}
             \hline
-            \textbf{Model}          & \textbf{Best Hyperparameters}                                                                                                                          & \textbf{Accuracy} \\ \hline
-            Logistic Regression     & c: 59.6435, class\_weight: 1, fit\_intercept: 0, l1\_ratio: 0.2014, penalty: 1, tol: 9.25e-05 & 82.54\% \\ \hline
-            Linear SVC              & c: 16.3815, change\_tol: 0.000636, class\_weight: 1, fit\_intercept: 0, grad\_tol: 0.000487, loss: 1, penalized\_intercept: 0, penalty: 0, tol: 11.882 & 82.53\% \\ \hline
-            Naive Bayes             & alpha: 0.1270, fit\_prior: 0                                                                                                                           & 71.35\%           \\ \hline
-            Nearest Neighbors       & (No hyperparameters optimized)                                                                                                                         & 92.61\%           \\ \hline % TODO add hyperparameters
-            Kernel Ridge Regression & alpha: 2.7303, coef0: 6.7390, degree: 6, gamma: 8.3768, kernel: 1 & 44.08\% \\ \hline
+            \textbf{Model}      & \textbf{Best Hyperparameters}                                                                                                                     & \textbf{Accuracy} \\ \hline
+            Logistic Regression & c: 70.2468, class\_weight: 1, fit\_intercept: 0, l1\_ratio: 0.8765, penalty: 0 & 84.24\% \\ \hline
+            Linear SVC          & c: 0.0010, change\_tol: 0.0006, class\_weight: 1, fit\_intercept: 0, grad\_tol: 0.0005, loss: 1, penalized\_intercept: 0, penalty: 1, tol: 11.882 & 84.17\% \\ \hline
+            Naive Bayes         & alpha: 1.1583, fit\_prior: 0                                                                                                                      & 71.53\%           \\ \hline
+            Nearest Neighbors   & metric: 13, n\_neighbors: 1                                                                                                                       & 94.79\%           \\ \hline
         \end{tabular}
         \caption{Comparison of Machine Learning Models for Phishing URL Detection}
         \label{tab:model_comparison}
     \end{table}
-    % TODO use of different metrics than accuracy? Like Positive Rate (TPR), True Negative Rate (TNR), Accuracy (ACC), Precision (PRE) and F-Score (FSC), recall, \ldots + comment on which one is the most interesting in our case (we don't want to miss any fishing website, so we prefer to have a high recall, even if it means having a lower precision).
-    % TODO comments and explain the results, for example on the risk of overfit
 
-    %    \textbf{True Positive Rate (TPR) or Sensitivity or Recall:}
-    %    \[
-    %    TPR = \frac{TP}{TP + FN}
-    %    \]
-    %
-    %    \textbf{True Negative Rate (TNR) or Specificity:}
-    %    \[
-    %    TNR = \frac{TN}{TN + FP}
-    %    \]
-    %
-    %    \textbf{Accuracy (ACC):}
-    %    \[
-    %    ACC = \frac{TP + TN}{TP + TN + FP + FN}
-    %    \]
-    %
-    %    \textbf{Precision (PRE) or Positive Predictive Value (PPV):}
-    %    \[
-    %    PRE = \frac{TP}{TP + FP}
-    %    \]
-    %
-    %    \textbf{F-Score (FSC) or F1-Score:}
-    %    \[
-    %    FSC = \frac{2 \times PRE \times TPR}{PRE + TPR}
-    %    \]
+    Choice have been made to rely on accuracy for measuring the performance of our different models because the most important for us is to
 
-    Comparison of our results with the literature:
+    Comparison of our results with the literature
+    \begin{table}[ht]
+        \centering
+        \resizebox{\textwidth}{!}{
+            \begin{tabular}{|l|l|l|l|l|l|l|}
+                \hline
+                \textbf{Study}                   & \textbf{Dataset size}          & \textbf{Random Forest} & \textbf{Naive Bayes} & \textbf{SVM} & \textbf{kNN} & \textbf{Logistic Regression} \\ \hline
+                \cite{LexicalFeatureSelection}   & 276640 URL                     & 98.57                  & 82.46                & 93.21        & -            & -                            \\ \hline
+                \cite{PhishSafe}                 & 10,000 URLs                    & -                      & 64.74                & 76.04        & -            & -                            \\ \hline
+                \cite{PhishSafe}                 & 25,000 URLs                    & -                      & 76.87                & 91.28        & -            & -                            \\ \hline
+                \cite{PhishingURLDetection}      & 36,400 legit / 37,175 phishing & 97.98                  & 95.98                & -            & 95.86        & -                            \\ \hline
+                \cite{PhishingLoginURLDetection} & 60k legit URL, 30k phishing    & 94.42                  & 87.72                & 93.59        & 93.18 & 92.33 \\ \hline
+                \textbf{Our Study}               & 150k URL                       & 73.69                  & 71.53                & 84.17        & 94.79        & 73.69                        \\ \hline
+            \end{tabular}
+        }
+        \caption{Comparison of Phishing URL Detection Models}
+        \label{tab:model_comparison}
+    \end{table}
 
-    \cite{LexicalFeatureSelection} Using Random Forest on Lexical features of URL 276640 98.57, Precision 97.63%
-    \cite{LexicalFeatureSelection} Using Naive Bayes on Lexical features of URL 276640 82.46
-    \cite{LexicalFeatureSelection} Using SVM on Lexical features of URL 276640 93.21
-    \cite[]{PhishSafe} on 10 000 URL Naive Bayes 64.74
-    \cite[]{PhishSafe} on 10 000 URL SVM 76.04
-    \cite[]{PhishSafe} on 25 000 URL Naives Bayes 76.87
-    \cite[]{PhishSafe} on 25 000 URL SVM 91.28
-    \cite{NLPPhishingURLDetection} Random Forest 97.2 using additional NLP and wordtovec techniques to reach 278 features vector, dataset:73,575 URLs including 37,175 malicious URLs and 36,400 legal URLs.
-    \cite{NLPPhishingURLDetection} Naïve Bayes 75.5 using additional NLP and wordtovec techniques to reach 278 features vector, dataset: 73,575 URLs including 37,175 malicious URLs and 36,400 legal URLs.
-    \cite{PhishingURLDetection} datasets:36,400 legitimate URLs and 37,175 phishing URLs kNN 95.86\% on ML features
-    \cite{PhishingURLDetection} datasets:36,400 legitimate URLs and 37,175 phishing URLs Random forest 97.98\%
-    \cite{PhishingURLDetection} datasets:36,400 legitimate URLs and 37,175 phishing URLs Naive Bayes 95.98 \%
-    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing random forest 94.42
-    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing kNN 93.18
-    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing Naive Bayes 87.72
-    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing Logistic Regression 92.33
-    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing SVM 93.59
+    Our results are in the range of the studies, except for Random Forest.
+    This could be related to a suboptimal parameter tuning, that is time consuming due to the high number of parameters.
+    Due to our computing limitations, we decided to stop with this results.
+    This could also be related to several other reasons, like our higher number of features or our different choice of library.
+    We achieve our best results with kNearest Neighbours and a score of 94.79\%.
+
+%    \cite{LexicalFeatureSelection} Using Random Forest on Lexical features of URL 276640 98.57, Precision 97.63%
+%    \cite{LexicalFeatureSelection} Using Naive Bayes on Lexical features of URL 276640 82.46
+%    \cite{LexicalFeatureSelection} Using SVM on Lexical features of URL 276640 93.21
+%    \cite[]{PhishSafe} on 10 000 URL Naive Bayes 64.74
+%    \cite[]{PhishSafe} on 10 000 URL SVM 76.04
+%    \cite[]{PhishSafe} on 25 000 URL Naives Bayes 76.87
+%    \cite[]{PhishSafe} on 25 000 URL SVM 91.28
+%    \cite{NLPPhishingURLDetection} Random Forest 97.2 using additional NLP and wordtovec techniques to reach 278 features vector, dataset:73,575 URLs including 37,175 malicious URLs and 36,400 legal URLs.
+%    \cite{NLPPhishingURLDetection} Naïve Bayes 75.5 using additional NLP and wordtovec techniques to reach 278 features vector, dataset: 73,575 URLs including 37,175 malicious URLs and 36,400 legal URLs.
+%    \cite{PhishingURLDetection} datasets:36,400 legitimate URLs and 37,175 phishing URLs kNN 95.86\% on ML features
+%    \cite{PhishingURLDetection} datasets:36,400 legitimate URLs and 37,175 phishing URLs Random forest 97.98\%
+%    \cite{PhishingURLDetection} datasets:36,400 legitimate URLs and 37,175 phishing URLs Naive Bayes 95.98 \%
+%    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing random forest 94.42
+%    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing kNN 93.18
+%    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing Naive Bayes 87.72
+%    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing Logistic Regression 92.33
+%    \cite{PhishingLoginURLDetection} dataset 60k legit, 30k phishing SVM 93.59
 
 
     \section{Deep Learning Models based on handcrafted features}\label{sec:deep-learning-models}
@@ -676,12 +650,37 @@ model = keras.Sequential(
     \subsection{Results}\label{subsec:results2}
     @Jop for running the algorithm and providing the results + comment above on improvements on the implementation if needed
 
-    \cite{EfficientDeepLearningPhishingDetection} DNN 99.52
-    \cite{EfficientDeepLearningPhishingDetection} CNN 99.57
-    \cite{EfficientDeepLearningPhishingDetection} LSTM 99.43
+    \textbf{True Positive Rate (TPR) or Sensitivity or Recall:}
+    \[
+        TPR = \frac{TP}{TP + FN}
+    \]
+
+    \textbf{True Negative Rate (TNR) or Specificity:}
+    \[
+        TNR = \frac{TN}{TN + FP}
+    \]
+
+    \textbf{Accuracy (ACC):}
+    \[
+        ACC = \frac{TP + TN}{TP + TN + FP + FN}
+    \]
+
+    \textbf{Precision (PRE) or Positive Predictive Value (PPV):}
+    \[
+        PRE = \frac{TP}{TP + FP}
+    \]
+
+    \textbf{F-Score (FSC) or F1-Score:}
+    \[
+        FSC = \frac{2 \times PRE \times TPR}{PRE + TPR}
+    \]
+
+    ~\cite{EfficientDeepLearningPhishingDetection} DNN 99.52
+    ~\cite{EfficientDeepLearningPhishingDetection} CNN 99.57
+    ~\cite{EfficientDeepLearningPhishingDetection} LSTM 99.43
     Results using hyperlinks in the source code of a website and one third party (Alexa ranking, that tries to predict phishing by providing a trust ranking of websites)
     Comment: we know nothing about their running time our computation resources
-    Not much information on their dataset...
+    Not much information on their dataset\ldots
 
 
     \section{Models based on the string embedding}\label{sec:models-based-on-the-string-embedding}
@@ -731,6 +730,9 @@ model = keras.Sequential(
     \end{figure}
 
     \subsubsection{Results}
+
+
+
 
     \cite{CharacterLevelCNN} ACCURACY 95.46
     \cite{PhishingLoginURLDetection} Accuracy 96.43 on PIU 60k dataset
@@ -838,79 +840,82 @@ model.fit(
     \bibliography{refs}
 
     \appendix
+
+
     \section{Appendix A: k search graphs}\label{sec:appendixA}
 
     \begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/k_search/linear_svc}
-    \caption{Linear SVC accuracy depending on the k number of chosen features}
-    \label{fig:}
-\end{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/k_search/linear_svc}
+        \caption{Linear SVC accuracy depending on the k number of chosen features}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/k_search/logistic_regression}
-    \caption{Logistic regression accuracy depending on the k number of chosen features}
-    \label{fig:}
-\end{figure}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/k_search/logistic_regression}
+        \caption{Logistic regression accuracy depending on the k number of chosen features}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/k_search/naive_bayes}
-    \caption{Naive Bayes accuracy depending on the k number of chosen features}
-    \label{fig:}
-\end{figure}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/k_search/naive_bayes}
+        \caption{Naive Bayes accuracy depending on the k number of chosen features}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/k_search/nearest_neighbors}
-    \caption{Nearest Neighbours accuracy depending on the k number of chosen features}
-    \label{fig:}
-\end{figure}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/k_search/nearest_neighbors}
+        \caption{Nearest Neighbours accuracy depending on the k number of chosen features}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/k_search/random_forest}
-    \caption{Random Forest accuracy depending on the k number of chosen features}
-    \label{fig:}
-\end{figure}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/k_search/random_forest}
+        \caption{Random Forest accuracy depending on the k number of chosen features}
+        \label{fig:}
+    \end{figure}
+
 
     \section{Appendix B: param search}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/param_search/linear_svc}
-    \caption{Parameter search for linear SVC}
-    \label{fig:}
-\end{figure}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/param_search/linear_svc}
+        \caption{Parameter search for linear SVC}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/param_search/logistic_regression}
-    \caption{Parameter search for logistic regression}
-    \label{fig:}
-\end{figure}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/param_search/logistic_regression}
+        \caption{Parameter search for logistic regression}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/param_search/naive_bayes}
-    \caption{Parameter search for Naive Bayes}
-    \label{fig:}
-\end{figure}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/param_search/naive_bayes}
+        \caption{Parameter search for Naive Bayes}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/param_search/nearest_neighbors}
-    \caption{Parameter search for Nearest Neighbours}
-    \label{fig:}
-\end{figure}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/param_search/nearest_neighbors}
+        \caption{Parameter search for Nearest Neighbours}
+        \label{fig:}
+    \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{report_img/param_search/random_forest}
-    \caption{Parameter search for random forest}
-    \label{fig:}
-\end{figure}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/param_search/random_forest}
+        \caption{Parameter search for random forest}
+        \label{fig:}
+    \end{figure}
 
 
 \end{document}
