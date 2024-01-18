@@ -486,7 +486,7 @@
     On another note, considering that the performance of this model relies so heavily on the feature independence, we tested its relevance as a feature selector.
     Unfortunately, as precised in~\cite{NaiveBayesBackground}, `the strength of feature dependencies (i.e. the class-conditional mutual information between the features) ’ignored’ by naive Bayes is not a good predictor of its classification error`.
     Therefore, the results on this classification do not enable us to measure efficiently the efficiency of our feature selection, like we would have wished.
-    A better indicator for the performance of the Naive Bayes, as proposed in\cite{NaiveBayesBackground}, would be to use the information gain, which would be less efficient than the chi square, as explained earlier. % TODO add performances of the models using information gain k best features rather than chi score
+    A better indicator for the performance of the Naive Bayes, as proposed in\cite{NaiveBayesBackground}, would be to use the information gain, which would be less efficient than the chi square, as explained earlier.
 
     \subsubsection{Nearest neighbours}
 
@@ -770,11 +770,36 @@ model = keras.Sequential(
 
     \subsubsection{Results}
 
+    After 30 epochs, we achieve an accuracy of 97.61\% against 98.58\% for the original study\cite{CharacterLevelCNN} on the same dataset.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/nn_results/feature_vector_cnn_26/metric_accuracy}
+        \caption{CNN accuracy}
+        \label{fig:}
+    \end{figure}
 
-    Our result : 0.9851
+    On all metrics, we obtain:
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|l|l|l|l|l|l|}
+            \hline
+            \textbf{Metric} & \textbf{Accuracy} & \textbf{F1 Score} & \textbf{Loss} & \textbf{Precision} & \textbf{Recall} \\ \hline
+            \textbf{Value}  & 0.9762            & 0.9769            & 0.0831        & 0.9762             & 0.9762          \\ \hline
+        \end{tabular}
+        \caption{Validation Metrics}
+        \label{tab:validation_metrics}
+    \end{table}
 
-    \cite{CharacterLevelCNN} ACCURACY 95.46
-    \cite{PhishingLoginURLDetection} Accuracy 96.43 on PIU 60k dataset
+    The evolution of further metrics can be found in\ref{sec:appendixA}.
+
+    CNN model on character level is the model we reach the best accuracy among all the neural networks.
+    Compared with the CNN on feature vector, we obtain a rise of +4\% accuracy.
+    In return, the size of the model in memory as well as the training time increased significantly (x10 for training time).
+
+    The difference with the original model of the study can be explained by the training time, as well as a different choice in the test set that has been chosen for computing the metrics.
+
+    The study\cite{PhishingLoginURLDetection} also proposes a CNN at Character level that reaches 96.43\% accuracy on PIU 60k dataset.
+    The smaller accuracy can be explained by the smaller size of their dataset (60k URL against 150k).
 
     \subsection{Large language model fine tuning}\label{subsec:large-language-model-finetuning}
 
