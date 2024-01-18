@@ -427,17 +427,7 @@
         \label{fig:}
     \end{figure}
 
-    We commonly encountered the following methods to reduce the dimensionality of the data:
-    \begin{itemize}
-        \item Principal Component Analysis (PCA)
-        \item Singular Value Decomposition (SVD)
-        \item Variance Thresholding
-        \item Information Gain
-        \item Chi-Square
-    \end{itemize}
-
-    In the context of feature selection for binary classification of phishing URLs, we examined the advantages and disadvantages of these methods.
-
+    We commonly encountered the following methods to reduce the dimensionality of the data and in the context of feature selection for binary classification of phishing URLs, we examined the advantages and disadvantages of these methods:
     \begin{itemize}
         \item \textbf{Principal Component Analysis (PCA)}: can reduce the dimensionality of the data, but instead of selecting relevant features, it transforms the data into a new space. We loose the interpretability of the features, which is the main motive behind handcrafted features. In addition, the encoding of a new URL for testing it is more complex, compared to feature selection. Therefore, we loose the practicality of the approach. This solution is more interesting for high dimensional data, and data where the different meanings of the features do not matter.
         \item \textbf{Singular Value Decomposition (SVD)}: same as PCA, it transforms the data into a new space, and we loose the interpretability of the features.
