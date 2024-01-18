@@ -354,12 +354,10 @@
 
     \subsection{Establishment of the feature vector}\label{subsec:establishement-of-the-feature-vector}
 
-    TTo start, we're creating a feature vector from URLs - this is our first step in using stats to identify phishing sites.
-    We've picked various features based on existing research, but we've left out those that need complex language processing.
-    Also, we've added some new features we thought would be useful.
-
-    We know some of these features might overlap or be more useful than others.
-    Our plan is to figure out which features are really important and then narrow them down to keep only the best ones for spotting phishing URLs.
+    For this project, we have picked several features based on existing research, and added several new features that we thought would be useful.
+    We have left out features that require complex language processing.
+    Some features may overlap others, so may contribute less to the information gain, so we will try to discover which of the selected features are the most important.
+    This way we can narrow down the feature vector to the most important features for detecting phishing URLs, which will reduce the dimensionality of the data and speed up the training process.
 
     \subsubsection{Computations of different features}
 
@@ -399,28 +397,25 @@
         \label{tab:features}
     \end{table}
 
+    As mentioned before, some features have been designed by ourselves after reading on phishing.
+    For example, we have added a feature that counts the number of times gift card related words appear in the URL.
+    We believe this feature is important because gift cards are a common target of phishing attacks~\cite{PhishingActivityTrendsReport}.
+    In our dataset, 200 URLs contained such words.
+    We also added a feature that checks whether the URL contains misspelling by using the Python package fuzzywuzzy, which uses Levenshtein distance to measure the similarity between two strings.
+    We compare words in the URL to a list of words that are commonly misspelled in phishing URLs (such as \texttt{Google} or \texttt{mastercard}).
 
-
-
-
-    Some features have been designed by ourselves after reading on phishing.
-    For example, because gift cards are a lot target by phishing attacks, we decided add a criteria to check whether the URL contains words like gift cards with different spelling.
-    In our training dataset, it represents 200 URL.
-    We also added a custom parameters that checks whether the URL contains misspelling using fuzzywuzzy import process and the similarity to a list of common misspelled names in URL
-
-    Not use of some features proposed by the articles like:
+    Some of the features proposed in~\cite{PhishSafe} require additional lookups to external sources.
+    Due to limited resources, we decided to not include these features in our feature vector.
+    In addition, such the need to querie such external sources may make it more unlikely to be implemented in a browser extension.
     \begin{itemize}
-        \item DNS lookup from\cite{PhishSafe} because we want to avoid the DNS call
-        \item Inconsistent URL: If the domain name of suspicious web page is not matched
-        with the WHOIS database record, then the web page is considered as phishing from\cite{PhishSafe}
-        \item Age of Domain: If the age of website is less than 6 month, then chances of fake
-        web page are more from\cite{PhishSafe}
+        \item DNS lookup: there may be a pattern in the A/CNAME/NS/MX records of phishing URLs.
+        \item URL not matching WHOIS records: If the domain name of suspicious web page is not matched with the WHOIS database record, then the web page may be considered as phishing.
+        \item Age of Domain: If the age of website is less than 6 month, then chances of fake web page are more from.
     \end{itemize}
-    The three firsts features have not been chosen because they require additional information than the URL itself
 
-    \subsubsection{Filtering for working with the most relevant features}
+    \subsubsection{Most important features}
 
-    We expect some of them to be correlated, and some of them to be irrelevant.
+    We expect that some features will be more important than others, and that some features overlap others.
     To improve our method in terms of computation speed as well as interpretability, we want to keep only the most relevant features.
     As provided in\cite{LexicalFeatureSelection}, we expect only a small number of features to be improve the accuracy.
     As showed on their graph below, above a threshold, the accuracy of their model do not increase anymore with the number of features used.
@@ -432,51 +427,45 @@
         \label{fig:}
     \end{figure}
 
-    Lots of different methods exist to select the most relevant features, among them:
+    We commonly encountered the following methods to reduce the dimensionality of the data:
     \begin{itemize}
         \item Principal Component Analysis (PCA)
         \item Singular Value Decomposition (SVD)
         \item Variance Thresholding
-        \item Chi-Square
         \item Information Gain
+        \item Chi-Square
     \end{itemize}
 
-    In the context of feature selection for binary classification of phishing URLs, we examined the advantages and disadvantages of Principal Component Analysis (PCA), Singular Value Decomposition (SVD), Variance Thresholding, Chi-Square, and Information Gain.
-    Choice has been made to consider these methods as they are the most frequently encountered.
+    In the context of feature selection for binary classification of phishing URLs, we examined the advantages and disadvantages of these methods.
 
-    PCA is a dimensionality reduction method.
-    It is interesting in our context were numerous features may be related.
-    However, we decided to discard it because:
-    \begin{enumerate}
-        \item we loose the interpretability of the features, which is the main motive behind handcrafted features.
-        \item the encoding of a new URL for testing it is more complex, compared to feature selection.
-        Therefore, we loose the practicality of the approach.
-    \end{enumerate}
-    This solution is more interesting for high dimensional data, and data where the different meanings of the features do not matter.
+    \begin{itemize}
+        \item \textbf{Principal Component Analysis (PCA)}: can reduce the dimensionality of the data, but instead of selecting relevant features, it transforms the data into a new space. We loose the interpretability of the features, which is the main motive behind handcrafted features. In addition, the encoding of a new URL for testing it is more complex, compared to feature selection. Therefore, we loose the practicality of the approach. This solution is more interesting for high dimensional data, and data where the different meanings of the features do not matter.
+        \item \textbf{Singular Value Decomposition (SVD)}: same as PCA, it transforms the data into a new space, and we loose the interpretability of the features.
+        \item \textbf{Variance Thresholding}: this method is interesting when we have a lot of features, and we want to keep only the features that have a variance above a certain threshold. However, we have two types of features: binary, and counts. Even if we normalize all features between zero and one, the variance is influenced by the nature of the feature. Therefore, we cannot compare the variance of the different features, and we cannot use this method.
+        \item \textbf{Information Gain}: as demonstrated in\cite{EfficientDeepLearningPhishingDetection} for feeding into neural networks, this method excels in measuring entropy reduction, and is effective with both categorical and continuous variables. However, it falls short in capturing the correlation between features since it assesses them in isolation.
+        \item \textbf{Chi-Square}: used in\cite{LexicalFeatureSelection}, this method quantifies the independence, or lack thereof, between categorical variables and the target variable, offering a straightforward and computationally efficient approach for binary classification. It is also known for its effectiveness in assessing the relevance of categorical features in classification tasks.
+    \end{itemize}
 
-    The same reasons also applies to singular value decomposition, that transforms the encoding of the features as well.
-
-    We then examined Variance Thresholding, however we have two types of features: binary, and counts.
-    Even if we normalize all features between zero and one, the variance is influenced by the nature of the feature.
-
-    Our attention then shifted to Information Gain, as demonstrated in\cite{EfficientDeepLearningPhishingDetection} for feeding into neural networks.
-    While Information Gain excels in measuring entropy reduction and is effective with both categorical and continuous variables, it falls short in capturing the correlation between features since it assesses them in isolation.
-
-    This led us to Chi-Square, used in\cite{LexicalFeatureSelection}, a method renowned for its effectiveness in assessing the relevance of categorical features in classification tasks.
     Chi-square score is computed using the observed and expected frequencies of the features following the formula:
     \begin{equation}
         \chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}\label{eq:equation}
     \end{equation}
     where \( \chi^2 \) is the Chi-Square statistic, \( O_i \) is the observed frequency, and \( E_i \) is the expected frequency under the null hypothesis that the feature and the target are independent.
 
-    Chi-Square quantifies the independence, or lack thereof, between categorical variables and the target variable, offering a straightforward and computationally efficient approach for binary classification.
-
     Considering these factors, Chi-Square emerged as the most appropriate technique for our study.
     Its simplicity, efficiency, and focus on categorical feature relevance align well with the nature of our dataset and the objectives of our phishing URL classification project.
+    For experimental reasons, we also tried to use Information Gain.
 
+    \Cref{fig:k_search_logistic_regression} shows the influence of the number of features k on the accuracy of the logistic regression. We use the default hyperparameters of the logistic regression, as we're not specifically concerned with the performance of this model, but rather with the effect of the number of features on the performance of the model.
 
-%    @Jop TODO add a graph on the influence of the number of parameters that we keep on the performance of the different models for one or several easy ML models + conclusion on the number k used afterwards, with comments on the shape and what it says on using chi square as a feature selection
-    % @Jop TODO add graph for IG and conclude on our choice
+    %TODO: conclusion on the number k used afterwards, with comments on the shape and what it says on using chi square & information gain as a feature selection
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/k_search/logistic_regression}
+        \caption{Influence of number of features k on logisitic regression accuracy. Selected using chi square.}
+        \label{fig:k_search_logistic_regression}
+    \end{figure}
 
     \subsubsection{Implementation}\label{subsubsec:implementation}
 
