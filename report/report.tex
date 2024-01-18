@@ -416,7 +416,7 @@
         \centering
         \includegraphics[width=\textwidth]{report_img/lexicalfeatureselectionaccuracygraph}
         \caption{Feature wise accuracy of classifiers from\cite{LexicalFeatureSelection}}
-        \label{fig:}
+        \label{fig:kEvolution}
     \end{figure}
 
     We commonly encountered the following methods to reduce the dimensionality of the data and in the context of feature selection for binary classification of phishing URLs, we examined the advantages and disadvantages of these methods:
@@ -436,9 +436,10 @@
 
     Considering these factors, Chi-Square emerged as the most appropriate technique for our study.
     Its simplicity, efficiency, and focus on categorical feature relevance align well with the nature of our dataset and the objectives of our phishing URL classification project.
-    For experimental reasons, we also tried to use Information Gain.
+    For experimental reasons and comparison purposes, we also tried to use Information Gain.
 
-    \Cref{fig:k_search_logistic_regression} shows the influence of the number of features k on the accuracy of the logistic regression. We use the default hyperparameters of the logistic regression, as we're not specifically concerned with the performance of this model, but rather with the effect of the number of features on the performance of the model.
+    \Cref{fig:k_search_logistic_regression} shows the influence of the number of features k on the accuracy of the logistic regression.
+    We use the default hyperparameters of the logistic regression, as we're not specifically concerned with the performance of this model, but rather with the effect of the number of features on the performance of the model.
 
     %TODO: conclusion on the number k used afterwards, with comments on the shape and what it says on using chi square & information gain as a feature selection
     %TODO: compare with grahph from the earlier study
@@ -446,9 +447,17 @@
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.8\textwidth]{report_img/k_search/logistic_regression}
-        \caption{Influence of number of features k on logisitic regression accuracy. Selected using chi square.}
+        \caption{Influence of number of features k on logisitic regression accuracy and computing time. Selected using chi square or information gain.}
         \label{fig:k_search_logistic_regression}
     \end{figure}
+
+    Compared to\caption{kEvolution}, our graph do not show a very flat line with parameters nearly not influencing the model after a certain number.
+    The evolution may be done by the fact that combination of parameters bears meaning and helps the model improving even though the feature alone do not bear much sens.
+    By looking at the graphs plotted in\caption{appendix-a-k-search-graphs}, we observed that each model has a different behavior towards the features. % TODO explanation?
+    Moreover, the computing time associated to using the full feature vector for computing results or fitting the model compared to a reduced version of it is not significant.
+    Therefore, we chose to work with the full feature vector of 26 features.
+    By plotting Information Gain as well, we wanted to confirm experimen
+
 
     \subsubsection{Implementation}\label{subsubsec:implementation}
 
@@ -827,39 +836,39 @@ model.fit(
     \bibliography{refs}
 
     \appendix
-    \section{Appendix A: k search graphs}
+    \section{Appendix A: k search graphs}\label{sec:appendix-a-k-search-graphs}
 
-\begin{figure}
+    \begin{figure}
     \centering
-    \includegraphics{report_img/k_search/linear_svc}
+    \includegraphics[width=0.8\textwidth]{report_img/k_search/linear_svc}
     \caption{Linear SVC accuracy depending on the k number of chosen features}
     \label{fig:}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics{report_img/k_search/logistic_regression}
+    \includegraphics[width=0.8\textwidth]{report_img/k_search/logistic_regression}
     \caption{Logistic regression accuracy depending on the k number of chosen features}
     \label{fig:}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics{report_img/k_search/naive_bayes}
+    \includegraphics[width=0.8\textwidth]{report_img/k_search/naive_bayes}
     \caption{Naive Bayes accuracy depending on the k number of chosen features}
     \label{fig:}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics{report_img/k_search/nearest_neighbors}
+    \includegraphics[width=0.8\textwidth]{report_img/k_search/nearest_neighbors}
     \caption{Nearest Neighbours accuracy depending on the k number of chosen features}
     \label{fig:}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics{report_img/k_search/random_forest}
+    \includegraphics[width=0.8\textwidth]{report_img/k_search/random_forest}
     \caption{Random Forest accuracy depending on the k number of chosen features}
     \label{fig:}
 \end{figure}
@@ -868,35 +877,35 @@ model.fit(
 
 \begin{figure}
     \centering
-    \includegraphics{report_img/param_search/linear_svc}
+    \includegraphics[width=0.8\textwidth]{report_img/param_search/linear_svc}
     \caption{Parameter search for linear SVC}
     \label{fig:}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics{report_img/param_search/logistic_regression}
+    \includegraphics[width=0.8\textwidth]{report_img/param_search/logistic_regression}
     \caption{Parameter search for logistic regression}
     \label{fig:}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics{report_img/param_search/naive_bayes}
+    \includegraphics[width=0.8\textwidth]{report_img/param_search/naive_bayes}
     \caption{Parameter search for Naive Bayes}
     \label{fig:}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics{report_img/param_search/nearest_neighbors}
+    \includegraphics[width=0.8\textwidth]{report_img/param_search/nearest_neighbors}
     \caption{Parameter search for Nearest Neighbours}
     \label{fig:}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics{report_img/param_search/random_forest}
+    \includegraphics[width=0.8\textwidth]{report_img/param_search/random_forest}
     \caption{Parameter search for random forest}
     \label{fig:}
 \end{figure}
