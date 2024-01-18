@@ -441,9 +441,6 @@
     \Cref{fig:k_search_logistic_regression} shows the influence of the number of features k on the accuracy of the logistic regression.
     We use the default hyperparameters of the logistic regression, as we're not specifically concerned with the performance of this model, but rather with the effect of the number of features on the performance of the model.
 
-    %TODO: conclusion on the number k used afterwards, with comments on the shape and what it says on using chi square & information gain as a feature selection
-    %TODO: compare with grahph from the earlier study
-
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.8\textwidth]{report_img/k_search/logistic_regression}
@@ -451,12 +448,17 @@
         \label{fig:k_search_logistic_regression}
     \end{figure}
 
-    Compared to\caption{kEvolution}, our graph do not show a very flat line with parameters nearly not influencing the model after a certain number.
-    The evolution may be done by the fact that combination of parameters bears meaning and helps the model improving even though the feature alone do not bear much sens.
-    By looking at the graphs plotted in\caption{appendix-a-k-search-graphs}, we observed that each model has a different behavior towards the features. % TODO explanation?
+    Compared to \Cref{fig:kEvolution}, our graph do not show a very flat line with parameters nearly not influencing the model after a certain number.
+    The evolution shows a plateau, indicating that the firsts selected features may be redundant.
+    A method taking into account interactions between features would be even more suited for an efficient feature selection.
+
+    By plotting Information Gain as well, we wanted to confirm experimentally the choice of chi square as a selection method.
+    We observed that both methods have similar performances except for Naive Bayes were Information Gain outperforms Chi square, and for Random Forest where Chi square significantly outperforms (\Cref{sec:appendixA}).
+
+    The accuracy constantly increases showing that combination of parameters bears meaning and helps the model improving even with the last features.
+    By looking at the graphs plotted in \Cref{sec:appendixA}, we observed that each model has a different behavior towards the features.
     Moreover, the computing time associated to using the full feature vector for computing results or fitting the model compared to a reduced version of it is not significant.
     Therefore, we chose to work with the full feature vector of 26 features.
-    By plotting Information Gain as well, we wanted to confirm experimen
 
 
     \subsubsection{Implementation}\label{subsubsec:implementation}
@@ -836,7 +838,7 @@ model.fit(
     \bibliography{refs}
 
     \appendix
-    \section{Appendix A: k search graphs}\label{sec:appendix-a-k-search-graphs}
+    \section{Appendix A: k search graphs}\label{sec:appendixA}
 
     \begin{figure}
     \centering
