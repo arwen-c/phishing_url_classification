@@ -31,7 +31,7 @@ def main():
         print("Please provide a valid model type.")
         exit(1)
 
-    top_k = 23
+    top_k = 26
     if len(sys.argv) == 4:
         top_k = int(sys.argv[3])
 
@@ -42,8 +42,6 @@ def main():
     train_y = transform_y(train_y)
     val_x = transform_x(val_x)
     val_y = transform_y(val_y)
-    test_x = transform_x(test_x)
-    test_y = transform_y(test_y)
 
     prefix = f"{model_type}_{model_name}_{top_k}/"
 
@@ -61,7 +59,7 @@ def main():
 
     model.summary()
 
-    log_path = "logs.csv"
+    log_path = prefix + "logs.csv"
 
     import pandas as pd
 

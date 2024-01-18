@@ -7,10 +7,15 @@ from feature_vector.lstm import model_builder_lstm
 
 from data.load.load import load_dill as load_dill, load_feature_vector as load_feature_vector
 
+
+def cnn_load(**kwargs):
+    return load_dill(**kwargs)[:-1]
+
+
 string_embedding_models = {
     "cnn": (
         model_builder_cnn_character_level,
-        lambda: load_dill()[:-1],
+        cnn_load,
         lambda x: x,
         lambda x: to_categorical(x, num_classes=2)
     ),

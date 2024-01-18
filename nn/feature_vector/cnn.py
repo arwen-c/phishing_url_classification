@@ -1,5 +1,5 @@
 import keras
-from keras import layers
+from keras import layers, losses
 
 
 def model_builder_cnn(number_of_features=11):
@@ -38,10 +38,17 @@ def model_builder_cnn(number_of_features=11):
         ]
     )
 
+    hp_initial_learning_rate = 0.001
+
     model.compile(
-        optimizer=keras.optimizers.Adam(learning_rate=0.001),
-        loss="binary_crossentropy",
-        metrics=["accuracy"],
+        loss=losses.BinaryCrossentropy(),
+        optimizer=keras.optimizers.Adam(learning_rate=hp_initial_learning_rate),
+        metrics=[
+            keras.metrics.Accuracy(),
+            keras.metrics.Precision(),
+            keras.metrics.Recall(),
+            keras.metrics.F1Score(),
+        ]
     )
 
     return model
