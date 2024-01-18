@@ -8,7 +8,6 @@ def scale_data(x):
 
 LOGISTIC_REGRESSION_PARAMS = {
     "penalty": hp.choice("penalty", ["l1", "l2", "elasticnet"]),
-    "tol": hp.loguniform("tol", -10, 10),
     "C": hp.loguniform("c", -10, 10),
     "fit_intercept": hp.choice("fit_intercept", [True, False]),
     "class_weight": hp.choice("class_weight", ["balanced", None]),
@@ -58,7 +57,6 @@ SGD_PARAMS = {
     "penalty": hp.choice("penalty", ["l1", "l2", "elasticnet"]),
     "alpha": hp.loguniform("alpha", -10, 10),
     "fit_intercept": hp.choice("fit_intercept", [True, False]),
-    "tol": hp.loguniform("tol", -10, 10),
     "eta0": hp.choice("eta0", [0.0001, 0.001, 0.01, 0.1]),
     "power_t": hp.uniform("power_t", 0, 1),
     "learning_rate": hp.choice(
@@ -86,9 +84,6 @@ LINEAR_SVC_PARAMS = {
     "penalized_intercept": hp.choice("penalized_intercept", [True, False]),
     "class_weight": hp.choice("class_weight", ["balanced", None]),
     "C": hp.loguniform("c", -10, 10),
-    "grad_tol": hp.loguniform("grad_tol", -10, 10),
-    "change_tol": hp.loguniform("change_tol", -10, 10),
-    "tol": hp.loguniform("tol", -10, 10),
 }
 
 
@@ -118,7 +113,6 @@ RANDOM_FOREST_PARAMS = {
     "min_samples_split": hp.choice(
         "min_samples_split", [2, 4, 8, 16, 32, 64, 128, 256, 512]
     ),
-    "min_impurity_decrease": hp.uniform("min_impurity_decrease", 0, 1),
 }
 
 
@@ -136,7 +130,6 @@ def train_random_forest(train_x, train_y, val_x, val_y, params):
 
 NAIVE_BAYES_PARAMS = {
     "alpha": hp.uniform("alpha", 0.1, 10),
-    "fit_prior": hp.choice("fit_prior", [True, False]),
 }
 
 

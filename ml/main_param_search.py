@@ -12,9 +12,6 @@ from models import *
 def main():
     train_x, train_y, val_x, val_y, _, _ = load_feature_vector(k=26)
 
-    train_x = train_x[:10000]
-    train_y = train_y[:10000]
-
     # NOTE: convert to float when using kernel ridge
     train_x = scale_data(cp.asarray(train_x).astype(cp.float32))
     train_y = cp.asarray(train_y).astype(cp.float32)
@@ -25,19 +22,20 @@ def main():
     trials = Trials()
 
     print("Starting Hyperparameter Tuning...")
-    space = NEAREST_NEIGHBORS_CLASSIFICATION_PARAMS
+    space = LINEAR_SVC_PARAMS
     original_space = space.copy()
 
-    def objective(new_params):
+    def objective(new_params: dict):
         _, params = trials.idxs_vals
         num_param_sets = len(next(iter(params.values())))
         params = [{key: params[key][i] for key in params} for i in range(num_param_sets)]
 
-        for param in params:
+        for param in params[:-1]:
             if new_params == param:
+                print("duplicate params")
                 return {'status': STATUS_FAIL}
 
-        return train_nearest_neighbors_classification(
+        return train_linear_svc(
             train_x, train_y,
             val_x, val_y,
             new_params
@@ -68,6 +66,8 @@ def main():
     # Number of subplots
     num_params = len(params[0])
     fig, axs = plt.subplots(num_params, 1, figsize=(10, 5 * num_params))
+    if num_params == 1:
+        axs = [axs]
 
     for idx, (param_name, ax) in enumerate(zip(params[0], axs)):
         # Extract the values for the current parameter
