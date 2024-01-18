@@ -499,10 +499,8 @@
 
     \subsubsection{Random Forest}
     Random Forest is a classifier that operates effectively with non-linear data.
-    It stands out when compared to similar non-linear classifiers in terms of performance.
-    According to MLmodelsComparison, it generally delivers robust results.
-    This model is particularly resistant to overfitting, even when dealing with extensive datasets.
-    It also offers a clear understanding of which features are important, enhancing interpretability.
+    According to\cite{MLmodelsComparison}, it generally stands out when compared to similar non-linear classifiers in terms of performance and delivers robust results.
+    Motivation for choosing this method is its performance, together with the understanding of the importance of features that it can provide for further interpretability.
     Additionally, it can efficiently be trained in parallel, making it well-suited for handling large datasets and particularly interesting for our configuration.
 
     \subsection{Results}\label{subsec:results}
@@ -654,6 +652,28 @@ model = keras.Sequential(
 
     \subsection{Results}\label{subsec:results2}
 
+    For comparing the different neural network models, that have closer accuracies than the machine learning ones, we introduce some more metrics.
+
+    \textbf{Accuracy (ACC):}
+    \[
+        ACC = \frac{TP + TN}{TP + TN + FP + FN}
+    \]
+
+    \textbf{Precision (PRE) :}
+    \[
+        PRE = \frac{TP}{TP + FP}
+    \]
+
+    \textbf{ F1-Score:}
+    \[
+        F1_score = \frac{2 \times PRE \times TPR}{PRE + TPR}
+    \]
+
+    \textbf{Recall or True Positive Rate (TPR)  :}
+    \[
+        Recall = \frac{TP}{TP + FN}
+    \]
+
     \begin{table}[H]
         \centering
         \begin{tabular}{|l|l|l|l|l|l|}
@@ -667,40 +687,25 @@ model = keras.Sequential(
         \label{tab:feature_vector_nn_model_comparison}
     \end{table}
 
-    %TODO: comment above on improvements on the implementation if needed
+    Our study achieves a maximum of 94.58\% accuracy for the DNN model, a comparable result to the bests of our machine learning models.
+    For further improving the model, we are throttled by the features that we can design.
+    For further improvement, it is interesting to consider a model that contains the most possible information from the URL like neural network on character level embedding.
+    This further model will enable more comparison with these results and the ability of the models to reflect out data independently from the features limitations.
 
-    \textbf{True Positive Rate (TPR) or Sensitivity or Recall:}
-    \[
-        TPR = \frac{TP}{TP + FN}
-    \]
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|l|l|l|}
+            \hline
+            \textbf{Study}                                 & \textbf{DNN Accuracy} & \textbf{CNN Accuracy} & \textbf{LSTM Accuracy} \\ \hline
+            ~\cite{EfficientDeepLearningPhishingDetection} & 99.52\%               & 99.57\%               & 99.43\%                \\ \hline
+            Our Study                                      & 94.58\%               & 93.64\%               & 93.78\%                \\ \hline
+        \end{tabular}
+        \caption{Comparison of Accuracy Results between Studies}
+        \label{tab:accuracy_comparison}
+    \end{table}
 
-    \textbf{True Negative Rate (TNR) or Specificity:}
-    \[
-        TNR = \frac{TN}{TN + FP}
-    \]
-
-    \textbf{Accuracy (ACC):}
-    \[
-        ACC = \frac{TP + TN}{TP + TN + FP + FN}
-    \]
-
-    \textbf{Precision (PRE) or Positive Predictive Value (PPV):}
-    \[
-        PRE = \frac{TP}{TP + FP}
-    \]
-
-    \textbf{F-Score (FSC) or F1-Score:}
-    \[
-        FSC = \frac{2 \times PRE \times TPR}{PRE + TPR}
-    \]
-
-    ~\cite{EfficientDeepLearningPhishingDetection} DNN 99.52
-    ~\cite{EfficientDeepLearningPhishingDetection} CNN 99.57
-    ~\cite{EfficientDeepLearningPhishingDetection} LSTM 99.43
-    Results using hyperlinks in the source code of a website and one third party (Alexa ranking, that tries to predict phishing by providing a trust ranking of websites)
-    Comment: we know nothing about their running time our computation resources
-    Not much information on their dataset\ldots
-
+A key factor contributing to this gap is the concurrent study's use of additional data sources, including hyperlinks and website requests.
+Furthermore, they incorporate a third-party score, the Alexa ranking, which assesses website trustworthiness to predict phishing.
 
     \section{Models based on the string embedding}\label{sec:models-based-on-the-string-embedding}
 
@@ -737,7 +742,6 @@ model = keras.Sequential(
 
     \subsubsection{Implementation}
     % @Jop TODO speak about the implementation/optimization for running
-
 
     \subsubsection{Results}
 
@@ -926,6 +930,7 @@ model.fit(
         \caption{Parameter search for random forest}
         \label{fig:}
     \end{figure}
+
 
     \section{Appendix C: neural network results}\label{sec:appendix-b-neural-network-results}
 
