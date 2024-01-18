@@ -567,11 +567,11 @@
 
     \subsection{Motivation between the choices of the different machine learning models}\label{subsec:motivation-between-the-choices-of-the-different-machine-learning-models}
     For comparing with the first statistical models, we chose to implement different neural network architecture.
-    Moreover, we wanted to compare the performance of our model with\cite{EfficientDeepLearningPhishingDetection}, using feature vectors on the URL and additional information, that achieves impressive accuracy results of over 99\% accuracy, more than the CNN model on character level embedding proposed by\cite{CharacterLevelCNN} the same year.
+    Moreover, we wanted to compare the performance of our model with~\cite{EfficientDeepLearningPhishingDetection}, using feature vectors on the URL and additional information, that achieves impressive accuracy results of over 99\% accuracy, more than the CNN model on character level embedding proposed by~\cite{CharacterLevelCNN} the same year.
 
     \subsubsection{Dense neural network}
-    Reasons for choosing this model:
-    Simple neural network for serving as a baseline for the other models.
+    To create a foundation for comparing our other models' performance, we opted to construct a basic dense neural network.
+    Its simplicity allows for practical experimentation and guarantees easily interpretable results.
 
     \begin{lstlisting}[language=Python, caption=DNN on feature vector architecture]
 model = keras.Sequential(
@@ -586,12 +586,12 @@ model = keras.Sequential(
 )
     \end{lstlisting}
 
-    \subsubsection{Convolutional neural network}
-    Reasons for choosing this model:
-    - Comparison with CNN on character level
-    - Another simple architecture to compare with the other models
-    However, we do not expect this model to perform as good as the other models because of the reduced sized of our feature vector.
+    \subsubsection{Convolutional neural network}\label{subsubsec:feature-vector-cnn}
+    This model mainly serves as a comparison to the model described in \Cref{subsubsec:character-level-cnn}.
+    Comparatively, this is a simple architecture, with some adjusted layers to account for the feature vector rather than the used character level embeddings in \Cref{subsubsec:character-level-cnn}.
+    We do not expect this model to perform as good as the other models because of the reduced sized of our feature vector.
     CNN models are usually used for finding patterns in images or other big dimension data that have spatial arrangement or hierarchy.
+    More information about the choice of CNN can be found in \Cref{subsubsec:character-level-cnn}.
 
     \begin{lstlisting}[language=Python, caption=CNN on feature vector architecture]
 model = keras.Sequential(
@@ -617,11 +617,9 @@ model = keras.Sequential(
     \end{lstlisting}
 
     \subsubsection{Long Short Term memory}
-    Reasons for choosing this model:
-    - LSTMs excel at learning long-term dependencies, which is beneficial if the relationship between features in the vector and the classification outcome extends over multiple features or if the context.
-    Despite the relatively small size of the feature vector, complex interactions between features might exist.
-    LSTMs can model these complex interactions more effectively than simpler models like dense neural networks.
-
+    LSTMs excel at learning long-term dependencies, which proves advantageous when the connection between vector features and the classification outcome spans numerous features or context.
+    Despite the relatively small size of the feature vectors, complex interactions among features may persist.
+    LSTMs can model these interactions with greater effectiveness compared to simpler models like dense neural networks.
 
     \begin{lstlisting}[language=Python, caption=LSTM on feature vector architecture]
 model = keras.Sequential(
@@ -715,7 +713,7 @@ model = keras.Sequential(
 
     Because we chose to rely on character embedding and to choose a dataset that already is encoded, we used the character-level embedding provided in\cite{CharacterLevelCNN}.
 
-    \subsubsection{Motivation behind CNN architecture}
+    \subsubsection{Motivation behind CNN architecture}\label{subsubsec:character-level-cnn}
 
     The choice of a CNN architecture for this application is justified by several attributes:
     \begin{enumerate}
@@ -728,16 +726,47 @@ model = keras.Sequential(
         \item \textbf{Efficiency on GPU}: CNNs offer computational efficiency, particularly on GPU setups.
     \end{enumerate}
 
-    Structure of the CNN comes from\cite{CharacterLevelCNN}, the study that provides the dataset that we are using.
-    Interesting for us in replicating the algorithm of a study on their same dataset is to provide a comparison with the previous model and CNN implemented earlier with similar computing resources.
+    \subsubsection{Implementation}
+    Using the same framework as the neural networks on feature vectors, we build the model as described in~\cite{CharacterLevelCNN}, the study that provides the dataset that we are using.
+    Interestingly, replicating their model using their dataset should give us a good indication of our capabilities in training models.
+    In addition, we may also compare this CNN with the CNN based on feature vectors in \Cref{subsubsec:feature-vector-cnn}.
 
-    Here is the structure of our model:
+    Their paper introduces the following network architecture.
     \begin{figure}[H]
         \centering
-        \includegraphics[width=0.5\linewidth]{report_img/cnn_configuration}
-        \caption{CNN on character level embedding architecture}
+        \includegraphics[width=0.8\linewidth]{report_img/cnn_configuration}
+        \caption{CNN on character level embedding architecture~\cite{CharacterLevelCNN}}
         \label{fig:CNN}
     \end{figure}
+
+    We implement the model with Keras, in the exact same setup as the models based on feature vectors.
+
+    \begin{lstlisting}[language=Python, caption=CNN on character level embedding]
+model = keras.Sequential(
+    [
+        layers.Input((150, 1)),
+        layers.Convolution1D(
+            kernel_size=3,
+            filters=256,
+            activation="relu",
+        ),
+        layers.MaxPooling1D(pool_size=3),
+        layers.Convolution1D(kernel_size=3, filters=256, activation="relu"),
+        layers.Convolution1D(kernel_size=3, filters=256, activation="relu"),
+        layers.Convolution1D(kernel_size=3, filters=256, activation="relu"),
+        layers.Convolution1D(kernel_size=3, filters=256, activation="relu"),
+        layers.Convolution1D(kernel_size=7, filters=256, activation="relu"),
+        layers.Convolution1D(kernel_size=7, filters=256, activation="relu"),
+        layers.MaxPooling1D(pool_size=3),
+        layers.Flatten(),
+        layers.Dense(2048, activation="relu"),
+        layers.Dropout(0.5),
+        layers.Dense(2048, activation="relu"),
+        layers.Dropout(0.5),
+        layers.Dense(2, activation='softmax')
+    ]
+)
+    \end{lstlisting}
 
     \subsubsection{Results}
 
