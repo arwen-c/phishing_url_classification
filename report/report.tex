@@ -381,7 +381,7 @@
                 22           & Port Presence                   & 1 if port number present, 0 otherwise          & 387.36             & 18                   & 0.0                      & ~\cite{LexicalFeatureSelection}             \\ \hline
                 23           & Unicode Char Count              & Number of unicode characters                   & 290705.11          & 6                    & 0.0279                   & ~\cite{LexicalFeatureSelection}             \\ \hline
                 24           & Query Presence                  & 1 if query present in the URL, 0 otherwise     & 0.00               & 22                   & 0.0                      & ~\cite{LexicalFeatureSelection}             \\ \hline
-                25           & Special Char Ratio              & Ratio of special characters to URL length      & 559.19             & 25                   & 0.0867                   & \cite{PhishingLoginURLDetection} \\ \hline
+                25           & Special Char Ratio              & Ratio of special characters to URL length      & 559.19             & 25                   & 0.0867                   & ~\cite{PhishingLoginURLDetection} \\ \hline
                 26           & Misspelled Word Presence        & 1 if misspelled words are present, 0 otherwise & 9199.83 & 24 & 0.1170 & new feature \\ \hline
             \end{tabular}
             \caption{Summary of Features Implemented for Phishing URL Detection}
@@ -398,7 +398,7 @@
 
     Some of the features proposed in~\cite{PhishSafe} require additional lookups to external sources.
     Due to limited resources, we decided to not include these features in our feature vector.
-    In addition, such the need to querie such external sources may make it more unlikely to be implemented in a browser extension.
+    In addition, such the need to query such external sources may make it more unlikely to be implemented in a browser extension.
     \begin{itemize}
         \item DNS lookup: there may be a pattern in the A/CNAME/NS/MX records of phishing URLs.
         \item URL not matching WHOIS records: If the domain name of suspicious web page is not matched with the WHOIS database record, then the web page may be considered as phishing.
