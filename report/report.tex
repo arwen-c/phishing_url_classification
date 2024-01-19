@@ -279,10 +279,12 @@
     \end{figure}
 
     \subsection{Dataset}\label{subsec:dataset}
-    In our initial project proposal, we intended to utilize the PILU-90K~\cite{PhishingURLDetection}.
+
+    In our initial project proposal, we intended to utilize the PILU-90K~\cite{PhishingURLDetection}, because being large and recent.
     However, accessing this dataset proved to be challenging due to the requirement of a formal request by a professor supervising the project.
     Consequently, we shifted our focus to the most extensive dataset identified in our research, specifically the one proposed in~\cite{VisualizingRNNInURLDetection}.
     Among the available datasets with sufficient volume for neural network model training, this particular dataset is the most recent and provides open access.
+    The age of the dataset was a crucial criteria:\cite{PhishingLoginURLDetection} report up to 10\% decrease of accuracy by using 5 years old training data.
 
     Originally, this dataset is tailored for training Neural Network models, with its data already encoded in integer array formats.
     To adapt this dataset for broader Machine Learning applications, we undertook a preprocessing step to convert these integer arrays back into textual URL formats.
@@ -791,7 +793,7 @@ model = keras.Sequential(
         \label{tab:validation_metrics}
     \end{table}
 
-    The evolution of further metrics can be found in\ref{sec:appendixA}.
+    The evolution of further metrics can be found in\ref{sec:appendixC}.
 
     CNN model on character level is the model we reach the best accuracy among all the neural networks.
     Compared with the CNN on feature vector, we obtain a rise of +4\% accuracy.
@@ -865,60 +867,26 @@ model.fit(
     Perhaps using the complete dataset would also considerably improve the accuracy, considering that ~\cite{PhishBert} notes that from 10\% to 80\%, their accuracy increased several percentile points.
 
     \section{Conclusion}\label{sec:conclusion}
-    % TODO the conclusion
 
-    Bla bla on the contribution that this work brings and how nice and original it is
-    Further perspectives
+    Our study compares a range of machine learning algorithms, including Large Language Models (LLMs), on a consistent dataset.
+    We critically assessed the practicality of each of our model together with example of the literature, focusing on the ease of feature construction and the need for external data sources like website queries or third-party information.
+    Our findings reveal that statistical models, proficient in handling feature vectors, can achieve performance on par with neural networks.
+    These models are particularly valuable for their explainability, aiding in understanding the nature of URLs in phishing detection.
+    This understanding the decision criteria could further guide the development of security systems.
+    However, in terms of accuracy, methods that rely on string embeddings, typically found in neural networks, have an edge.
+    Crucially, the ability to continually update the model is essential, allowing it to adapt to evolving phishing tactics.
+    Here, pretrained LLMs show promise due to their ease of training and remarkable performance.
+    The integration of AI into web browsers, already underway, pushes LLM as to be the most practical solution for companies.
 
-    Interpretability on the ransom forest to understand how classification is made? and how to improve it?
+    Looking forward, a pivotal question is how to adapt these algorithms to keep pace with evolving phishing trends while maintaining their accuracy.
+    Regular training and updates of these models, however, present a challenge, necessitating continuous web crawling for new URLs.
+    Among new URL evolution, the trend of URL shortening services,which obscure real phishing URLs, rendering many conventional URL features ineffective, has not yet been addressed.
 
-    Possibility to run the experiments on a new dataset.
-    For example, we could try to generate a new dataset by crawling the web, or by using the PhishTank API.
+    This situation calls for a renewed focus on managing blacklists and enhancing machine learning approaches.
+    Additionally, investigating adversarial attacks is critical to bolster the robustness of these models.
 
-    Further improvements and study to improve the detection?
-
-    Extract from another paper for ideas:
-    Machine learning-based methods are generally fast and
-    effective. They cope well with zero-hour attacks and allow
-    on-the-fly detection of phishing web pages. Nevertheless, the
-    performance of these methods varies and mainly depends on
-    the features extracted from web pages and on the composition
-    of the training datasets. In general, features extracted from
-    page URL are obtained quickly, although they are vulnerable
-    to URL manipulations. On the contrary, features extracted
-    from page source codes are robust to the evasion techniques
-    implemented by attackers, even though page downloads are
-    needed to obtain these features, thus causing delays and safety
-    issues. Despite these issues, machine learning models are
-    a valid and promising solution for detecting phishing web
-    pages.
-    An important research gap refers to the increased use by
-    attackers of URL shortening services that mask the real phishing
-    URLs. These short URLs create an additional challenge
-    to list-based approaches and in particular to the management
-    of blacklists. Similarly, these URLs affect machine learningbased
-    approaches since most URL features suggested in the
-    literature become meaningless in this context, thus making
-    the detection mechanisms fail.
-
-    Need to retrain the algorithm regularuly to have the detection up to date, performance decrease with time
-
-    Model explainability is another interesting research direction
-    in the context of machine learning. In fact, understanding
-    the decisions taken by machine learning algorithms, that is,
-    what characteristics make a web page phishing or legitimate,
-    has several important implications for the design of security
-    systems. Adversarial attacks should also be investigated to
-    make the machine learning models more robust.
-    It is also important to outline that, to ensure the advancement
-    of the state of the art, experiments should be made reproducible.
-    This means that all implementation details should
-    be clearly specified and the datasets used should be made
-    publicly available.
-
-    Importance of public datasets to reproduce the issues
-
-    Possibility to build an online website to check phishing through this detection method to help customers in the daily life ahead of their implementation
+    To advance the field, it is imperative that experiments be reproducible, with clear implementation details and publicly available datasets.
+    The availability and continuous update of public datasets are crucial to address these emerging challenges effectively.
 
     \bibliographystyle{plain}
     \bibliography{refs}
@@ -964,7 +932,7 @@ model.fit(
     \end{figure}
 
 
-    \section{Appendix B: param search}
+    \section{Appendix B: param search}\label{sec:appendixB}
 
     \begin{figure}[H]
         \centering
@@ -1002,7 +970,7 @@ model.fit(
     \end{figure}
 
 
-    \section{Appendix C: neural network results}\label{sec:appendix-b-neural-network-results}
+    \section{Appendix C: neural network results}\label{sec:appendixC}
 
     \subsection{Feature Based CNN}
 
