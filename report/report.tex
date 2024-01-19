@@ -703,10 +703,11 @@ model = keras.Sequential(
     URLs often consist of arbitrarily constructed words or deliberately misspelled variations intended to impersonate legitimate websites.
     Traditional word-level embeddings face significant challenges here, particularly in encoding these misspellings distinctly from the original words and managing the \'Out of Vocabulary' (OOV) problem inherent to word embedding models.
     Although existing literature predominantly concentrates on models robust to misspellings, such approaches are not congruent with our objective, which is to detect and differentiate these errors, not to adapt to them.
-    One article focuses on understanding the social meaning of common misspelling\cite{OOVmispelling}.
+    One article focuses on understanding the social meaning of common misspelling~\cite{OOVmispelling}.
     Interesting for us, is that they compare different embeddings with regards to spelling robustness like fastText, which is a word embedding model that does take spelling into account, in opposition to skip gram.
-    A viable approach is proposed in\cite{WordCharacterEmbeddings}with a model that combines word and character level embedding.
+    A viable approach is proposed in~\cite{WordCharacterEmbeddings}with a model that combines word and character level embedding.
     However, for our problem, we expect the model to mostly rely on the character level embedding, since the words are random.
+    Note that a combined embedding for malicious URL detection was also proposed in~\cite{urlnet}, reaching an impressive accuracy close to 100\%.
 
     To circumvent these limitations, character-level embedding emerges as a more suitable solution.
     It preserves the nuanced composition of these randomly assembled words, a critical factor in phishing detection, and obviates the need for a uniform treatment of diverse OOV words.
