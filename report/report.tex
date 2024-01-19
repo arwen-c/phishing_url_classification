@@ -855,7 +855,9 @@ model.fit(
     \subsubsection{Results}
 
     After 4 epochs, we achieve an accuracy of 99.15\%, the best accuracy among all the models we have trained.
-    \cite{PhishBert} does not report the concrete accuracy outside their figures, but we can deduce that we have a similar score to their model, without going through a similar pre-training phase.
+    \cite{PhishBert} also uses LLM: They pre-train a model on 3 billion URL before fine tuning it for phishing classification.
+    If they do not report the concrete accuracy outside their figures, we can deduce from their graphs that we have a similar accuracy to their model, without going through a similar pre-training phase.
+
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.8\textwidth]{report_img/bert_results/metric_accuracy}
