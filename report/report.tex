@@ -871,24 +871,24 @@ model.fit(
     \section{Conclusion}\label{sec:conclusion}
 
     Our study compares a range of machine learning algorithms, including Large Language Models (LLMs), on a consistent dataset.
-    We critically assessed the practicality of each of our model together with example of the literature, focusing on the ease of feature construction and the need for external data sources like website queries or third-party information.
-    Our findings reveal that statistical models, proficient in handling feature vectors, can achieve performance on par with neural networks.
-    These models are particularly valuable for their explainability, aiding in understanding the nature of URLs in phishing detection.
-    This understanding the decision criteria could further guide the development of security systems.
+    We critically assessed the practicality of each of our model together with examples of the literature.
+    For feature extraction, we focused on the ease of feature construction and the need for external data sources like website queries or third-party information.
+    For models relying on feature vectors, our findings reveal that statistical models can achieve performance on par with neural networks.
+    Such models based on feature vectors are particularly valuable for their explain-ability, aiding in understanding the nature of URLs in phishing detection.
+    This understanding of the decision criteria could further guide the development of security systems.
     However, in terms of accuracy, methods that rely on string embeddings, typically found in neural networks, have an edge.
-    Crucially, the ability to continually update the model is essential, allowing it to adapt to evolving phishing tactics.
-    Here, pretrained LLMs show promise due to their ease of training and remarkable performance.
-    The integration of AI into web browsers, already underway, pushes LLM as to be the most practical solution for companies.
+    Crucially, the ability to continually update the model architecture is essential, allowing it to adapt to evolving phishing tactics.
+    Pretrained LLMs show promise due to their ease of training and remarkable performance.
+    Though large neural networks may be impractical for running locally in browsers, they can be used in existing services such as Google SafeBrowsing.
+    In addition, the recent popularity influx of LLMs has led to browser extensions that utilize LLMs for common browsing tasks.
+    This pushes LLM to be the most practical solution for browser developers.
 
-    Looking forward, a pivotal question is how to adapt these algorithms to keep pace with evolving phishing trends while maintaining their accuracy.
-    Regular training and updates of these models, however, present a challenge, necessitating continuous web crawling for new URLs.
-    Among new URL evolution, the trend of URL shortening services,which obscure real phishing URLs, rendering many conventional URL features ineffective, has not yet been addressed.
-
-    This situation calls for a renewed focus on managing blacklists and enhancing machine learning approaches.
+    Considering the remarkably high accuracy of our models and the models provided in the literature, we believe that the next step is to research how to integrate these models into the browsers.
+    A pivotal question is how to adapt these algorithms to keep pace with evolving phishing trends while maintaining their accuracy, presenting a continuous challenge of continuous web crawling for new malicious URLs.
+    Besides the evolution of phishing URLs, the trend of URL shortening services, which obscure real phishing URLs, renders these models ineffective, which has not been addressed yet.
     Additionally, investigating adversarial attacks is critical to bolster the robustness of these models.
 
-    To advance the field, it is imperative that experiments be reproducible, with clear implementation details and publicly available datasets.
-    The availability and continuous update of public datasets are crucial to address these emerging challenges effectively.
+    To advance the field in these directions, it is imperative that studies publish their datasets and clear implementation details, enabling reproducibility for industry integration.
 
     \bibliographystyle{plain}
     \bibliography{refs}
