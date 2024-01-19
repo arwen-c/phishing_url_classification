@@ -805,13 +805,19 @@ model = keras.Sequential(
 
     \subsubsection{Motivation of this implementation}
 
-    Considering the recent success of large language models in Natural Language Processing (NLP) tasks, we decided to explore the potential of this approach for phishing URL detection. The objective is to leverage the pre-trained language model's knowledge of the English language, such as phishing terminology and common misspellings, to achieve a high accuracy. We expect this approach to be more efficient than the character-level embedding because it is able to learn the spelling of words and the context in which they are used. Besides having a personal interest in LLM, only a few studies have been done on this approach, so we found it interesting to propose our new approach and modeling.
+    Considering the recent success of large language models in Natural Language Processing (NLP) tasks, we decided to explore the potential of this approach for phishing URL detection.
+    The objective is to leverage the pre-trained language model's knowledge of the English language, such as phishing terminology and common misspellings, to achieve a high accuracy.
+    We expect this approach to be more efficient than the character-level embedding because it is able to learn the spelling of words and the context in which they are used.
+    Besides having a personal interest in LLM, only a few studies have been done on this approach, so we found it interesting to propose our new approach and modeling.
 
     \subsubsection{Implementation}
 
-    The Python package \texttt{transformers} from HuggingFace provides many pre-trained language models that can be directly applied on a task or fine-tuned on a specific dataset. We chose to use Bert because it is the most popular language model and it has been shown to be effective on many NLP task. HuggingFace provides a multilingual version of Bert since our dataset contains URLs in different languages.
+    The Python package \texttt{transformers} from HuggingFace provides many pre-trained language models that can be directly applied on a task or fine-tuned on a specific dataset.
+    We chose to use Bert because it is the most popular language model and it has been shown to be effective on many NLP task.
+    HuggingFace provides a multilingual version of Bert since our dataset contains URLs in different languages.
 
     First, we tokenize our dataset into Bert embeddings using the \texttt{transformer} library's provided \texttt{BertTokenizer}.
+    Note that for this task, we use a subsample of $100.000$ URLs from our dataset, since we are limited in computing power.
 
     \begin{lstlisting}[language=Python, caption=Tokenizing using Bert]
 tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-uncased')
@@ -824,11 +830,15 @@ input_ids_val, attention_masks_val = encode(val_x)
 input_ids_test, attention_masks_test = encode(test_x)
     \end{lstlisting}
 
-    We then used the \texttt{TFBertForSequenceClassification} class to train the model on our dataset. This model is a Bert model with a classification layer on top of it (i.e. dropout and dense layer). The entire model is fine-tuned on our dataset. We train the model for 3 epochs and a learning rate of 2e-5 such as recommended in the Bert paper\cite{devlin2018bert}.
+    We then used the \texttt{TFBertForSequenceClassification} class to train the model on our dataset.
+    This model is a Bert model with a classification layer on top of it (i.e. dropout and dense layer).
+    The entire model is fine-tuned on our dataset.
+    The authors of~\cite{devlin2018bert} suggest 2,3, or 4 epochs with a batch size of around 16 and learning rates in the order of e-5.
+    For this task, we use a batch size of 6 and a learning rate of 1e-5 to reduce the GPU memory usage.
 
     \begin{lstlisting}[language=Python, caption=Fine tuning Bert]
 model = TFBertForSequenceClassification.from_pretrained('bert-base-multilingual-uncased')
-model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=2e-5), loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics="accuracy")
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5), loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics="accuracy")
 
 model.fit(
     [input_ids_train, attention_masks_train],
@@ -841,8 +851,17 @@ model.fit(
 
     \subsubsection{Results}
 
-    Since we're using the \texttt{transformers} library, we cannot easily create a graph of the accuracy and loss over the epochs. However, we can see that the accuracy on the validation set is 98.5\% after 3 epochs. We can also see that the loss on the validation set is still decreasing after 3 epochs, so we could train the model for more epochs to improve the accuracy.
+    After 4 epochs, we achieve an accuracy of 99.15\%, the best accuracy among all the models we have trained.
+    \cite{PhishBert} does not report the concrete accuracy outside their figures, but we can deduce that we have a similar score to their model, without going through a similar pre-training phase.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{report_img/bert_results/metric_accuracy}
+        \caption{Bert accuracy}
+        \label{fig:}
+    \end{figure}
 
+    We may have been able to get a higher accuracy by fine-tuning the learning rate and running the training for longer, but we are limited in computing power.
+    Perhaps using the complete dataset would also considerably improve the accuracy, considering that ~\cite{PhishBert} notes that from 10\% to 80\%, their accuracy increased several percentile points.
 
     \section{Conclusion}\label{sec:conclusion}
     % TODO the conclusion
