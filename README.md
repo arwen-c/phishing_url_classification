@@ -2,8 +2,9 @@
 
 Comparison of different ML techniques for the classification of phishing URL.
 
-Here below are the different models which performance has been compared.
-![Alt text](report/report_img/modelspresentation.png)
+All details can be found in the project report:
+[report.pdf](https://github.com/user-attachments/files/20457060/report.pdf)
 
+![Listing of all models tested in the repo](report/report_img/modelspresentation.png)
 
 
